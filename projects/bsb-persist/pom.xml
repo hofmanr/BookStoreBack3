@@ -16,9 +16,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <scope>compile</scope>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-exception</artifactId>
         </dependency>
     </dependencies>
 

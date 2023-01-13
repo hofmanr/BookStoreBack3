@@ -18,5 +18,5 @@
                   httpPort="9080"
                   httpsPort="9443" />
     
-    <enterpriseApplication id="BookStoreBack3-ear" location="BookStoreBack3-ear.ear" name="BookStoreBack3-ear"/>
+    <enterpriseApplication id="bsb-ear" location="bsd-ear-snapshot-3.0.ear" name="BookStoreBack3"/>
 </server>

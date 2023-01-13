@@ -10,7 +10,8 @@
     <version>3.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>primary-source</artifactId>
+  <!-- jar that is shared by EJBs en WARs -->
+  <artifactId>bsb-primary-source</artifactId>
   <packaging>jar</packaging>
 
   <name>Core Project Classes</name>
