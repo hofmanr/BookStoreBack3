@@ -2,8 +2,8 @@ package nl.rhofman.exception;
 
 import java.util.Collection;
 
-public class Validator {
-    private Validator() {
+public class ArgumentValidator {
+    private ArgumentValidator() {
     }
 
     public static void isTrue(boolean expression, String message) {

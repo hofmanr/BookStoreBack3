@@ -1,16 +1,16 @@
 package nl.rhofman.exception.domain;
 
-import nl.rhofman.exception.Validator;
+import nl.rhofman.exception.ArgumentValidator;
 
 public class ExceptionOrigin {
     private final String code;
     private final String origin;
 
     public ExceptionOrigin(String code, String origin) {
-        Validator.notNull(code, "The code should not be null");
-        Validator.notNull(origin, "The origin should not be null");
-        Validator.notEmpty(code, "The code should not be an empty string");
-        Validator.notEmpty(origin, "The origin should not be an empty string");
+        ArgumentValidator.notNull(code, "The code should not be null");
+        ArgumentValidator.notNull(origin, "The origin should not be null");
+        ArgumentValidator.notEmpty(code, "The code should not be an empty string");
+        ArgumentValidator.notEmpty(origin, "The origin should not be an empty string");
         this.code = code;
         this.origin = origin;
     }

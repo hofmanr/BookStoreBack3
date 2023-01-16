@@ -11,6 +11,10 @@ public class DataException extends AbstractException {
         super(exceptionOrigin, exceptionReason, message);
     }
 
+    public DataException(ExceptionOrigin exceptionOrigin, ExceptionReason exceptionReason, String message, Throwable cause) {
+        super(exceptionOrigin, exceptionReason, message, cause);
+    }
+
     public DataException(ExceptionOrigin exceptionOrigin, ExceptionReason exceptionReason, Throwable cause) {
         super(exceptionOrigin, exceptionReason, cause);
     }

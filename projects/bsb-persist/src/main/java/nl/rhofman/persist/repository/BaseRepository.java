@@ -7,7 +7,8 @@ import nl.rhofman.exception.domain.ExceptionOrigin;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class BaseDao<T> {
+public abstract class BaseRepository<T> {
+    public static final String DATA_ORIGIN = "JPA";
 
     private Class<T> clazz;
 
@@ -15,15 +16,15 @@ public abstract class BaseDao<T> {
     protected EntityManager entityManager;
 
     @Inject
-    private DbExceptionResolver exceptionResolver;
+    private DbExecutor exceptionResolver;
 
-    protected BaseDao() {
+    protected BaseRepository() {
         Type type = getClass().getGenericSuperclass();
         if(type.getTypeName().endsWith("GenericDaoImpl")) {
             return;
         }
 
-        while(!(type instanceof ParameterizedType) || ((ParameterizedType) type).getRawType() != BaseDao.class) {
+        while(!(type instanceof ParameterizedType) || ((ParameterizedType) type).getRawType() != BaseRepository.class) {
             if (type instanceof ParameterizedType) {
                 type = ((Class<?>) ((ParameterizedType) type).getRawType()).getGenericSuperclass();
             } else {

@@ -20,7 +20,15 @@
     <dependency>
       <groupId>nl.rhofman.bookstore</groupId>
       <artifactId>bsb-logging</artifactId>
-      <version>1.0-SNAPSHOT</version>
+    </dependency>
+      <dependency>
+          <groupId>nl.rhofman.bookstore</groupId>
+          <artifactId>bsb-persist</artifactId>
+      </dependency>
+    <dependency>
+      <groupId>nl.rhofman.bookstore</groupId>
+      <artifactId>bsb-exception</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
