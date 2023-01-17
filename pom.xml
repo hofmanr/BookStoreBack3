@@ -105,7 +105,7 @@
     
     <modules>
         <module>projects</module>
-        <module>bsb-primary-source</module>
+        <module>bsb-shared</module>
         <module>bsb-ejb</module>
         <module>bsb-web</module>
         <module>bsb-ear</module>

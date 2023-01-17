@@ -1,0 +1,5 @@
+create table Author (id bigint not null, bio varchar(5000), date_of_birth date, first_name varchar(50) not null, last_name varchar(50) not null, version integer, preferred_language varchar(255), primary key (id))
+create table Category (id bigint not null, name varchar(100) not null, version integer, primary key (id))
+create table Item (discriminator char(31) not null, id bigint not null, description varchar(10000), image_url varchar(255), rank integer, small_image_url varchar(255), title varchar(200) not null, unit_cost float check (unit_cost>=1), version integer, nb_of_discs integer, isbn varchar(50), language integer, nr_of_pages integer, publication_date date, genre_id bigint, label_id bigint, category_id bigint, publisher_id bigint, primary key (id))
+create table Item_Author (Book_id bigint not null, authors_id bigint not null, primary key (Book_id, authors_id))
+create table Publisher (id bigint not null, name varchar(30) not null, version integer, primary key (id))

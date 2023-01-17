@@ -1,14 +1,13 @@
 package nl.rhofman.bookstore.persist;
 
+import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.ws.rs.Produces;
 
 public class Configuration {
 
     @Produces
+    @BSB
     @PersistenceContext(name = "bookStorePU")
-    public EntityManager produceEntityManager(EntityManager em) {
-        return em;
-    }
+    private EntityManager entityManager;
 }

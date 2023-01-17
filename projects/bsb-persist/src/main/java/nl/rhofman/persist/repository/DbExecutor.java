@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import nl.rhofman.exception.dao.DataException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.persist.DbExceptionReason;
+import nl.rhofman.persist.DbFunction;
 
 import java.util.function.Supplier;
 
@@ -15,5 +16,12 @@ public class DbExecutor {
         } catch(IllegalStateException e) {
             throw new DataException(exceptionOrigin, DbExceptionReason.ILLEGAL_STATE, e);
         }
+    }
+
+    public void execute(DbFunction function, @NotNull(message = "{bookstore.validation.NotNull.origin}") ExceptionOrigin exceptionOrigin) {
+        execute(() -> {
+            function.exec();
+            return null;
+        }, exceptionOrigin);
     }
 }

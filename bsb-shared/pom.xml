@@ -11,7 +11,7 @@
   </parent>
 
   <!-- jar that is shared by EJBs en WARs -->
-  <artifactId>bsb-primary-source</artifactId>
+  <artifactId>bsb-shared</artifactId>
   <packaging>jar</packaging>
 
   <name>Core Project Classes</name>

@@ -1,16 +1,17 @@
 package nl.rhofman.exception.domain;
 
-import nl.rhofman.exception.ArgumentValidator;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class ExceptionOrigin {
+public class ExceptionOrigin implements Serializable {
+    private static final long serialVersionUID = 5463122075630251207L;
+
     private final String code;
     private final String origin;
 
     public ExceptionOrigin(String code, String origin) {
-        ArgumentValidator.notNull(code, "The code should not be null");
-        ArgumentValidator.notNull(origin, "The origin should not be null");
-        ArgumentValidator.notEmpty(code, "The code should not be an empty string");
-        ArgumentValidator.notEmpty(origin, "The origin should not be an empty string");
+        Objects.requireNonNull(code, "The code should not be null");
+        Objects.requireNonNull(origin, "The origin should not be null");
         this.code = code;
         this.origin = origin;
     }

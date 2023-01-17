@@ -1,0 +1,10 @@
+drop table Author if exists
+drop table Category if exists
+drop table Genre if exists
+drop table Item if exists
+drop table Item_Author if exists
+drop table Item_Musician if exists
+drop table Label if exists
+drop table Musician if exists
+drop table Musician_Item if exists
+drop table Publisher if exists
