@@ -22,4 +22,17 @@ public class ExceptionReason implements Serializable {
     public String getReason() {
         return reason;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExceptionReason that = (ExceptionReason) o;
+        return code.equals(that.code) && reason.equals(that.reason);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, reason);
+    }
 }

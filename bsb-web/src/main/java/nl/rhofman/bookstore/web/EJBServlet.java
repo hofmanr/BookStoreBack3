@@ -29,7 +29,7 @@ import nl.rhofman.bookstore.ejb.SampleStatelessBean;
 /**
  * A servlet which injects a stateless EJB
  */
-@WebServlet({"/", "/BookStoreBack3Servlet"})
+@WebServlet({"/", "/BookStoreServlet"})
 public class EJBServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

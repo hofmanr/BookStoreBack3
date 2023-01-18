@@ -1,9 +1,11 @@
 package nl.rhofman.persist.repository;
 
+import jakarta.persistence.*;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
-import nl.rhofman.exception.dao.DataException;
+import nl.rhofman.exception.dao.DataAccessException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
-import nl.rhofman.persist.DbExceptionReason;
+import nl.rhofman.persist.model.DbExceptionReason;
 import nl.rhofman.persist.DbFunction;
 
 import java.util.function.Supplier;
@@ -14,7 +16,28 @@ public class DbExecutor {
         try {
             return supplier == null ? null : supplier.get();
         } catch(IllegalStateException e) {
-            throw new DataException(exceptionOrigin, DbExceptionReason.ILLEGAL_STATE, e);
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.ILLEGAL_STATE, e.getMessage(), e);
+        } catch(LockTimeoutException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.LOCK_TIMEOUT, e.getMessage(), e);
+        } catch(EntityExistsException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.ENTITY_EXISTS, e.getMessage(), e);
+        } catch(EntityNotFoundException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.NO_DATA_FOUND, e.getMessage(), e);
+        } catch(PessimisticLockException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.PESSIMISTIC_LOCK, e.getMessage(), e);
+        } catch(OptimisticLockException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.OPTIMISTIC_LOCK, e.getMessage(), e);
+        } catch(NoResultException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.NO_RESULT, e.getMessage(), e);
+        } catch(NonUniqueResultException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.NON_UNIQUE_RESULT, e.getMessage(), e);
+        } catch(ConstraintViolationException e) {
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.CONSTRAINT_VIOLATION, e.getMessage(), e);
+        } catch(PersistenceException e) {
+            if (e.getMessage().contains("duplicate key")) {
+                throw new DataAccessException(exceptionOrigin, DbExceptionReason.DUPLICATE_KEY, e.getMessage(), e);
+            }
+            throw new DataAccessException(exceptionOrigin, DbExceptionReason.GENERAL_ORM_EXCEPTION, e.getMessage(), e);
         }
     }
 

@@ -44,11 +44,11 @@ public abstract class AbstractException extends RuntimeException {
         return creationDate;
     }
 
-    public ExceptionOrigin getExceptionOrigin() {
+    public ExceptionOrigin getOrigin() {
         return exceptionOrigin;
     }
 
-    public ExceptionReason getExceptionReason() {
+    public ExceptionReason getReason() {
         return exceptionReason;
     }
 }

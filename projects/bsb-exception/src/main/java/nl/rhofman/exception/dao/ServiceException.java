@@ -8,6 +8,10 @@ public class ServiceException extends AbstractException{
         super(exceptionOrigin, exceptionReason, message);
     }
 
+    public ServiceException(ExceptionOrigin exceptionOrigin, ExceptionReason exceptionReason, String message, Throwable cause) {
+        super(exceptionOrigin, exceptionReason, message, cause);
+    }
+
     public ServiceException(ExceptionOrigin exceptionOrigin, ExceptionReason exceptionReason, Throwable cause) {
         super(exceptionOrigin, exceptionReason, cause);
     }
