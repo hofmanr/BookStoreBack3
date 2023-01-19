@@ -70,6 +70,7 @@
             <webModule>
               <groupId>${project.groupId}</groupId>
               <artifactId>bsb-web</artifactId>
+              <context-root>/bookstore</context-root>
             </webModule>
           </modules>
           <archive>
