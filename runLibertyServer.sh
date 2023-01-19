@@ -1,0 +1,1 @@
+mvn  -pl bsb-ear clean package liberty:run

@@ -33,7 +33,7 @@ public class BookService extends AbstractService {
         return execute(() -> bookRepository.find(id), "Error searching a Book in BookService");
     }
 
-    public List<Book> get() {
+    public List<Book> getAll() {
         return execute(() -> bookRepository.findAll(), "Error searching Books in BookService");
     }
 
@@ -42,6 +42,6 @@ public class BookService extends AbstractService {
     }
 
     public void delete(Long id) {
-        execute(() -> bookRepository.countAll(), "Error deleting a Book in BookService");
+        execute(() -> bookRepository.remove(id), "Error deleting a Book in BookService");
     }
 }

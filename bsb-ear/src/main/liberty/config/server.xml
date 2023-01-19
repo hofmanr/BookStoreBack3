@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<server description="BookStore Server">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><server description="BookStore Server">
     <!-- Enable features -->
     <!--The Liberty Maven Plugin has generated Liberty features necessary for your application in configDropins/overrides/generated-features.xml-->
     <featureManager>
@@ -26,39 +25,40 @@
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" trustStoreRef="defaultTrustStore" trustDefaultCerts="true"/>
-    <httpEndpoint httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint">
-        <sslOptions sslRef="defaultSSLConfig" suppressHandshakeErrors="true" />
+    <httpEndpoint httpPort="9082" httpsPort="9445" id="defaultHttpEndpoint">
+        <sslOptions sslRef="defaultSSLConfig" suppressHandshakeErrors="true"/>
     </httpEndpoint>
-    <wasJmsEndpoint wasJmsPort="7276" wasJmsSSLPort="7286" />
-    <sipEndpoint sipTCPPort="5060" sipTLSPort="5061" sipUDPPort="5060" />
-    <iiopEndpoint iiopPort="2811">
-        <iiopsOptions iiopsPort="9404" sslRef="defaultSSLConfig" />
+    <wasJmsEndpoint wasJmsPort="7278" wasJmsSSLPort="7288"/>
+    <sipEndpoint sipTCPPort="5062" sipTLSPort="5063" sipUDPPort="5062"/>
+    <iiopEndpoint iiopPort="2813">
+        <iiopsOptions iiopsPort="9406" sslRef="defaultSSLConfig"/>
     </iiopEndpoint>
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
     <!-- Allow servlets to access file in META-INF and WEB-INF -->
-    <webContainer exposeWebInfOnDispatch="true" />
+    <webContainer exposeWebInfOnDispatch="true"/>
+    <remoteFileAccess>
+        <writeDir>${server.config.dir}</writeDir>
+    </remoteFileAccess>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 
     <!-- Application Resources -->
-    <jndiEntry jndiName="var/bsb/application" value="BookStore"></jndiEntry>
-    <jndiEntry jndiName="var/bsb/version" value="1.0-SNAPSHOT"></jndiEntry>
-    <jndiEntry jndiName="var/instance/environment" value="LOCal"></jndiEntry>
+    <jndiEntry jndiName="var/bsb/application" value="BookStore" id="applicationEntry"/>
+    <jndiEntry jndiName="var/bsb/version" value="1.0-SNAPSHOT" id="versionEntry"/>
+    <jndiEntry jndiName="var/instance/environment" value="LOCAL" id="envEntry"/>
 
     <!-- Declare the jar files for MySQL access through JDBC. -->
     <library id="MySQLLib">
         <fileset dir="${server.config.dir}/lib/global" includes="*.jar"/>
     </library>
 
-    <jpa defaultPersistenceProvider="org.eclipse.persistence.jpa.PersistenceProvider" />
-    <dataSource isolationLevel="TRANSACTION_READ_UNCOMMITTED" jndiName="jdbc/bsb/datasource" type="jakarta.sql.XADataSource">
-        <jdbcDriver libraryRef="MySQLLib"/>
-        <properties databaseName="bookstore"
-                    serverName="localhost" portNumber="3306"
-                    user="root" password="BB25"/>
+    <jpa defaultPersistenceProvider="org.eclipse.persistence.jpa.PersistenceProvider"/>
+    <dataSource isolationLevel="TRANSACTION_READ_UNCOMMITTED" jndiName="jdbc/BookstoreDatasource" type="javax.sql.XADataSource" id="bookstoreDatasource">
+        <jdbcDriver libraryRef="MySQLLib" javax.sql.XADataSource="com.mysql.cj.jdbc.MysqlXADataSource" javax.sql.ConnectionPoolDataSource="com.mysql.cj.jdbc.MysqlConnectionPoolDataSource" javax.sql.DataSource="com.mysql.cj.jdbc.MysqlDataSource"/>
+        <properties databaseName="bookstore" serverName="localhost" portNumber="3306" user="root" password="BB25"/>
     </dataSource>
 
 </server>

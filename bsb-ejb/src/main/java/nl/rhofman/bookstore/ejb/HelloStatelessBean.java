@@ -18,7 +18,7 @@ package nl.rhofman.bookstore.ejb;
 import jakarta.ejb.Stateless;
 
 @Stateless
-public class SampleStatelessBean {
+public class HelloStatelessBean {
 
     public String hello() {
         return "Hello EJB World.";

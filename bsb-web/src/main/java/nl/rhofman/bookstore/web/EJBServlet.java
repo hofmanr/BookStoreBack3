@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import nl.rhofman.bookstore.ejb.SampleStatelessBean;
+import nl.rhofman.bookstore.ejb.HelloStatelessBean;
 
 /**
  * A servlet which injects a stateless EJB
@@ -34,7 +34,7 @@ public class EJBServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @EJB
-    SampleStatelessBean statelessBean;
+    HelloStatelessBean statelessBean;
 
     @Override
     protected void doGet(HttpServletRequest request,

@@ -2,19 +2,13 @@ package nl.rhofman.bookstore.persist.repository;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import nl.rhofman.bookstore.persist.BSB;
 import nl.rhofman.bookstore.persist.model.Book;
 import nl.rhofman.bookstore.persist.model.Publisher;
-import nl.rhofman.bookstore.util.NumberGenerator;
-import nl.rhofman.bookstore.util.TextUtil;
-import nl.rhofman.bookstore.util.ThirteenDigits;
-import nl.rhofman.exception.dao.DataAccessException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
-import nl.rhofman.persist.model.DbExceptionReason;
 import nl.rhofman.persist.repository.AbstractRepository;
 
 import java.util.List;
