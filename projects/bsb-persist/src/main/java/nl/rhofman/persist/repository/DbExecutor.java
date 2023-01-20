@@ -1,5 +1,6 @@
 package nl.rhofman.persist.repository;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.*;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import nl.rhofman.persist.DbFunction;
 
 import java.util.function.Supplier;
 
+@Dependent
 public class DbExecutor {
 
     public <U> U execute(Supplier<U> supplier, @NotNull(message = "{bookstore.validation.NotNull.origin}") ExceptionOrigin exceptionOrigin) {

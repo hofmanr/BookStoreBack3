@@ -8,7 +8,7 @@ import nl.rhofman.persist.model.BaseEntityVersion;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "Item")
 @DiscriminatorColumn(name = "discriminator", discriminatorType = DiscriminatorType.CHAR)
 @DiscriminatorValue("I")
 @NamedQueries({
@@ -30,12 +30,12 @@ public class Item extends BaseEntityVersion implements Serializable {
     // =             Attributes             =
     // ======================================
 
-    @Column(length = 200, nullable = false)
+    @Column(name = "title", length = 200, nullable = false)
     @NotNull
     @Size(min = 1, max = 200)
     protected String title;
 
-    @Column(length = 10000)
+    @Column(name = "description", length = 10000)
     @Size(min = 1, max = 10000)
     protected String description;
 
@@ -43,6 +43,7 @@ public class Item extends BaseEntityVersion implements Serializable {
     @Min(1)
     protected Float unitCost;
 
+    @Column(name = "item_rank") // rank is a preserved word in MySQL
     protected Integer rank;
 
     @Column(name = "small_image_url")

@@ -1,10 +1,12 @@
 package nl.rhofman.exception.service;
 
+import jakarta.enterprise.context.Dependent;
 import nl.rhofman.exception.dao.DataAccessException;
 import nl.rhofman.exception.dao.ServiceException;
 
 import java.util.function.Supplier;
 
+@Dependent
 public class DataAccessExceptionResolver {
     private static final String DEFAULT_MESSAGE = "Service encountered a problem while interacting with the Data Layer";
 

@@ -1,0 +1,1 @@
+mvn -DskipTests -ff -pl nl.rhofman.bookstore:bsb-exception,nl.rhofman.bookstore:bsb-logging,nl.rhofman.bookstore:bsb-persist clean install

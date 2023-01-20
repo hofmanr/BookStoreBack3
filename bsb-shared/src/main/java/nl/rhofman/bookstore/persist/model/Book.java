@@ -6,15 +6,13 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
+@Entity(name = "Book")
 @DiscriminatorValue("B")
 public class Book extends Item {
     private static final long serialVersionUID = 7492632083922534l;
 
-    @Column(length = 50)
+    @Column(name = "isbn", length = 50)
     @NotNull
     @Size(min = 1, max = 50)
     private String isbn;
@@ -27,6 +25,7 @@ public class Book extends Item {
     @Column(name = "nr_of_pages")
     private Integer nbOfPages;
 
+    @Column(name = "language")
     @Enumerated
     private Language language;
 
@@ -36,8 +35,8 @@ public class Book extends Item {
     @ManyToOne
     private Category category;
 
-    @OneToMany(fetch=FetchType.EAGER)
-    private Set<Author> authors = new HashSet<>();
+//    @OneToMany(fetch=FetchType.EAGER)
+//    private Set<Author> authors = new HashSet<>();
 
     // ======================================
     // =            Constructors            =
@@ -148,20 +147,20 @@ public class Book extends Item {
         this.publisher = publisher;
     }
 
-    public Set<Author> getAuthors() {
-        return this.authors;
-    }
-
-    public void setAuthors(final Set<Author> authorEntities) {
-        this.authors = authorEntities;
-    }
-
-    public void addAuthor(Author authorEntity) {
-        if (authors == null) {
-            authors = new HashSet<>();
-        }
-        authors.add(authorEntity);
-    }
+//    public Set<Author> getAuthors() {
+//        return this.authors;
+//    }
+//
+//    public void setAuthors(final Set<Author> authorEntities) {
+//        this.authors = authorEntities;
+//    }
+//
+//    public void addAuthor(Author authorEntity) {
+//        if (authors == null) {
+//            authors = new HashSet<>();
+//        }
+//        authors.add(authorEntity);
+//    }
 
     // ======================================
     // =   Methods hash, equals, toString   =

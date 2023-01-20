@@ -12,7 +12,7 @@ import java.util.Date;
  * @author Rinus Hofman
  */
 
-@Entity
+//@Entity
 public class Author extends BaseEntityVersion {
     private static final long serialVersionUID = 648836203462534l;
 
@@ -20,30 +20,30 @@ public class Author extends BaseEntityVersion {
     // =             Attributes             =
     // ======================================
 
-    @Column(length = 50, name = "first_name", nullable = false)
+//    @Column(length = 50, name = "first_name", nullable = false)
     @NotNull
     @Size(min = 2, max = 50)
     protected String firstName;
 
-    @Column(length = 50, name = "last_name", nullable = false)
+//    @Column(length = 50, name = "last_name", nullable = false)
     @NotNull
     @Size(min = 2, max = 50)
     protected String lastName;
 
-    @Column(length = 5000)
+//    @Column(length = 5000)
     @Size(max = 5000)
     protected String bio;
 
-    @Column(name = "date_of_birth")
-    @Temporal(TemporalType.DATE)
+//    @Column(name = "date_of_birth")
+//    @Temporal(TemporalType.DATE)
     @Past
     protected Date dateOfBirth;
 
     @Transient
     protected Integer age;
 
-    @Column(name = "preferred_language")
-    @Convert(converter = LanguageConverter.class)
+//    @Column(name = "preferred_language")
+//    @Convert(converter = LanguageConverter.class)
     private Language preferredLanguage;
 
     // ======================================

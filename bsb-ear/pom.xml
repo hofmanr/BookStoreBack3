@@ -16,14 +16,15 @@
   <name>EAR Module</name>
 
   <dependencies>
+    <!-- EJB dependencies -->
     <dependency>
       <groupId>nl.rhofman.bookstore</groupId>
       <artifactId>bsb-logging</artifactId>
     </dependency>
-    <dependency>
-      <groupId>nl.rhofman.bookstore</groupId>
-      <artifactId>bsb-persist</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>nl.rhofman.bookstore</groupId>-->
+<!--      <artifactId>bsb-persist</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>nl.rhofman.bookstore</groupId>

@@ -1,9 +1,11 @@
 package nl.rhofman.bookstore.util;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.util.Random;
 
 @ThirteenDigits
+@Dependent
 public class IsbnGenerator implements NumberGenerator {
     // ======================================
     // =          Injection Points          =

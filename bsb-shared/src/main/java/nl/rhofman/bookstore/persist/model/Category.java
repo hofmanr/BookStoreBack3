@@ -8,7 +8,7 @@ import nl.rhofman.persist.model.BaseEntityVersion;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "Category")
 public class Category extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 835201203463782l;
 
@@ -16,7 +16,7 @@ public class Category extends BaseEntityVersion implements Serializable {
     // =             Attributes             =
     // ======================================
 
-    @Column(length = 100)
+    @Column(name = "name", length = 100)
     @NotNull
     @Size(max = 100)
     private String name;

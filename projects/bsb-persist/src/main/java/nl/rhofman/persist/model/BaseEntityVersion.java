@@ -1,8 +1,8 @@
 package nl.rhofman.persist.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 
+@MappedSuperclass
 public abstract class BaseEntityVersion extends BaseEntity {
     private static final long serialVersionUID = 898445026502862l;
 

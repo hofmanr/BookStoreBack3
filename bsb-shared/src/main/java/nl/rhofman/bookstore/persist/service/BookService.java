@@ -1,5 +1,6 @@
 package nl.rhofman.bookstore.persist.service;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.persist.model.Book;
 import nl.rhofman.bookstore.persist.repository.BookRepository;
@@ -10,6 +11,7 @@ import nl.rhofman.persist.Service.AbstractService;
 
 import java.util.List;
 
+@Dependent
 public class BookService extends AbstractService {
     @Inject
     private BookRepository bookRepository;

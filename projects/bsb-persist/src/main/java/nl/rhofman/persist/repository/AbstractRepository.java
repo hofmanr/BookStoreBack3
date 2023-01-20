@@ -92,15 +92,15 @@ public abstract class AbstractRepository<T extends BaseEntity> {
 
     @Transactional(REQUIRED)
     public void remove(@NotNull Long id) {
-        try {
+//        try {
             execute(() -> {
                 T storedEntity = em.getReference(clazz, id);
                 em.remove(storedEntity);
                 em.flush();
             });
-        } catch (EntityNotFoundException e) {
-            throw new DataAccessException(getExceptionOrigin(), DbExceptionReason.NO_DATA_FOUND, "Could not find " + clazz.getSimpleName() + "  with id: " + id, e);
-        }
+//        } catch (EntityNotFoundException e) {
+//            throw new DataAccessException(getExceptionOrigin(), DbExceptionReason.NO_DATA_FOUND, "Could not find " + clazz.getSimpleName() + "  with id: " + id, e);
+//        }
     }
 
     public Long countAll() {

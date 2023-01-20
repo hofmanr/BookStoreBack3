@@ -1,8 +1,10 @@
 package nl.rhofman.bookstore.util;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.inject.Produces;
 
+@ApplicationScoped
 public class NumberProducer {
 
     // ======================================

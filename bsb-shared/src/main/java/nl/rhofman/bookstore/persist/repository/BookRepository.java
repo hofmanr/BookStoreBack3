@@ -1,5 +1,6 @@
 package nl.rhofman.bookstore.persist.repository;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -17,6 +18,7 @@ import static jakarta.transaction.Transactional.TxType.REQUIRED;
 import static jakarta.transaction.Transactional.TxType.SUPPORTS;
 
 @Transactional(SUPPORTS)
+@Dependent
 public class BookRepository extends AbstractRepository<Book> {
 
     private static final ExceptionOrigin EXCEPTION_ORIGIN = new ExceptionOrigin(DATA_ORIGIN, "Data interaction with Book Entity");

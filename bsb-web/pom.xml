@@ -31,9 +31,28 @@
         <dependency>
             <groupId>nl.rhofman.bookstore</groupId>
             <artifactId>bsb-ejb</artifactId>
-            <version>3.0-SNAPSHOT</version>
+<!--            <version>3.0-SNAPSHOT</version>-->
             <type>ejb</type>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-shared</artifactId>
+        </dependency>
+
+        <!-- Project dependencies -->
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-exception</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-persist</artifactId>
         </dependency>
 
         <!-- test dependencies -->

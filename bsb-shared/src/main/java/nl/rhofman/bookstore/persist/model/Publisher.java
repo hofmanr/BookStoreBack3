@@ -7,7 +7,7 @@ import nl.rhofman.persist.model.BaseEntityVersion;
 
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "Publisher")
 public class Publisher extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 746746203462534l;
 
@@ -15,7 +15,7 @@ public class Publisher extends BaseEntityVersion implements Serializable {
     // =             Attributes             =
     // ======================================
 
-    @Column(length = 30, nullable = false)
+    @Column(name = "name", length = 30, nullable = false)
     @NotNull
     @Size(max = 30)
     private String name;

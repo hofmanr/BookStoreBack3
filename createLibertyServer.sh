@@ -1,1 +1,1 @@
-mvn liberty:create -pl bsb-ear
+mvn clean liberty:create -pl bsb-ear

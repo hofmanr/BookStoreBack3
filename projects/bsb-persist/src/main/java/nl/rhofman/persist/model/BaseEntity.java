@@ -1,13 +1,11 @@
 package nl.rhofman.persist.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 
+@MappedSuperclass
 public abstract class BaseEntity implements Serializable {
     private static final long serialVersionUID = 189872343479829l;
 

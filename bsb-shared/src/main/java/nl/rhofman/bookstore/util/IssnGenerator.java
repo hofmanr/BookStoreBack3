@@ -1,7 +1,9 @@
 package nl.rhofman.bookstore.util;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 @EightDigits
+@Dependent
 public class IssnGenerator implements NumberGenerator {
 
     // ======================================
