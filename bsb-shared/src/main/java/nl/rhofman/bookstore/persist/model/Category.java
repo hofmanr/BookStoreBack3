@@ -2,13 +2,16 @@ package nl.rhofman.bookstore.persist.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-@Entity(name = "Category")
+@Entity
+@Table(name = "Categories")
 public class Category extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 835201203463782l;
 
@@ -63,6 +66,20 @@ public class Category extends BaseEntityVersion implements Serializable {
     // ======================================
     // =   Methods hash, equals, toString   =
     // ======================================
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+        if (!super.equals(o)) return false;
+        Category category = (Category) o;
+        return name.equals(category.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name);
+    }
 
     @Override
     public String toString() {

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-bnd_1_1.xsd"
          version="1.1">
     <virtual-host name="default_host"/>
-    <resource-ref name="jdbc/bookstore" binding-name="jdbc/BookstoreDatasource" />
+    <resource-ref name="jdbc/bookstoreDS" binding-name="jdbc/BookstoreDatasource" />
     <resource-ref name="var/application" binding-name="var/bsb/application" />
 <!--    <resource-ref name="jms/QueueConnectionFactory" binding-name="jms/TradeBrokerQCF"/>-->
 <!--    <resource-ref name="jms/TopicConnectionFactory" binding-name="jms/TradeStreamerTCF"/>-->

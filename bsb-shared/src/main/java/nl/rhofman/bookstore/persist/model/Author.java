@@ -6,13 +6,17 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * @author Rinus Hofman
  */
 
-//@Entity
+@Entity
+@Table(name = "Authors")
 public class Author extends BaseEntityVersion {
     private static final long serialVersionUID = 648836203462534l;
 
@@ -20,30 +24,30 @@ public class Author extends BaseEntityVersion {
     // =             Attributes             =
     // ======================================
 
-//    @Column(length = 50, name = "first_name", nullable = false)
+    @Column(length = 50, name = "first_name", nullable = false)
     @NotNull
     @Size(min = 2, max = 50)
-    protected String firstName;
+    private String firstName;
 
-//    @Column(length = 50, name = "last_name", nullable = false)
+    @Column(length = 50, name = "last_name", nullable = false)
     @NotNull
     @Size(min = 2, max = 50)
-    protected String lastName;
+    private String lastName;
 
-//    @Column(length = 5000)
+    @Column(length = 5000, name = "bio")
     @Size(max = 5000)
-    protected String bio;
+    private String bio;
 
-//    @Column(name = "date_of_birth")
-//    @Temporal(TemporalType.DATE)
+    @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
     @Past
-    protected Date dateOfBirth;
+    private Date dateOfBirth;
 
     @Transient
-    protected Integer age;
+    private Integer age;
 
-//    @Column(name = "preferred_language")
-//    @Convert(converter = LanguageConverter.class)
+    @Column(name = "preferred_language")
+    @Convert(converter = LanguageConverter.class)
     private Language preferredLanguage;
 
     // ======================================
@@ -59,8 +63,68 @@ public class Author extends BaseEntityVersion {
     }
 
     // ======================================
+    // =         Lifecycle methods          =
+    // ======================================
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void calculateAge() {
+        if (dateOfBirth == null) {
+            age = null;
+            return;
+        }
+
+        Calendar birth = new GregorianCalendar();
+        birth.setTime(dateOfBirth);
+        Calendar now = new GregorianCalendar();
+        now.setTime(new Date());
+        int adjust = 0;
+        if (now.get(Calendar.DAY_OF_YEAR) - birth.get(Calendar.DAY_OF_YEAR) < 0) {
+            adjust = -1;
+        }
+        age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + adjust;
+    }
+
+    // ======================================
     // =        Getters and Setters         =
     // ======================================
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
 
     public Language getPreferredLanguage() {
         return preferredLanguage;
@@ -73,6 +137,20 @@ public class Author extends BaseEntityVersion {
     // ======================================
     // =   Methods hash, equals, toString   =
     // ======================================
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Author)) return false;
+        if (!super.equals(o)) return false;
+        Author author = (Author) o;
+        return firstName.equals(author.firstName) && lastName.equals(author.lastName) && Objects.equals(dateOfBirth, author.dateOfBirth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), firstName, lastName, dateOfBirth);
+    }
 
     @Override
     public String toString() {

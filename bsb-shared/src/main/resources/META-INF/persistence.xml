@@ -6,7 +6,7 @@
   <persistence-unit name="bookStorePU" transaction-type="JTA">
     <description>BookStore persistence unit</description>
 
-    <jta-data-source>java:comp/env/jdbc/bookstore</jta-data-source>
+    <jta-data-source>java:comp/env/jdbc/bookstoreDS</jta-data-source>
     <!-- disable caching -->
     <shared-cache-mode>NONE</shared-cache-mode>
 

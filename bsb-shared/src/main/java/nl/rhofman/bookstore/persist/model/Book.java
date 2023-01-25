@@ -1,16 +1,47 @@
 package nl.rhofman.bookstore.persist.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+import nl.rhofman.persist.model.BaseEntityVersion;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-@Entity(name = "Book")
-@DiscriminatorValue("B")
-public class Book extends Item {
+@Entity
+@Table(name = "Books")
+@NamedQueries({
+        @NamedQuery(name = Book.FIND_TOP_RATED, query = "SELECT b FROM Book b WHERE b.id in :ids"),
+        @NamedQuery(name = Book.SEARCH, query = "SELECT b FROM Book b WHERE UPPER(b.title) LIKE :keyword OR UPPER(b.description) LIKE :keyword ORDER BY b.title")
+})
+public class Book extends BaseEntityVersion {
     private static final long serialVersionUID = 7492632083922534l;
+
+    public static final String FIND_TOP_RATED = "Book.findTopRated";
+    public static final String SEARCH = "Book.search";
+
+    @Column(name = "title", length = 200, nullable = false)
+    @NotNull
+    @Size(min = 1, max = 200)
+    private String title;
+
+    @Column(name = "description", length = 10000)
+    @Size(min = 1, max = 10000)
+    private String description;
+
+    @Column(name = "unit_cost")
+    @Min(1)
+    private Float unitCost;
+
+    @Column(name = "book_rank") // rank is a preserved word in MySQL
+    private Integer rank;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "isbn", length = 50)
     @NotNull
@@ -165,6 +196,20 @@ public class Book extends Item {
     // ======================================
     // =   Methods hash, equals, toString   =
     // ======================================
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        if (!super.equals(o)) return false;
+        Book book = (Book) o;
+        return title.equals(book.title) && Objects.equals(isbn, book.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, isbn);
+    }
 
     @Override
     public String toString() {
