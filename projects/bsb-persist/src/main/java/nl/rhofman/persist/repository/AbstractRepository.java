@@ -2,15 +2,12 @@ package nl.rhofman.persist.repository;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
-import nl.rhofman.exception.dao.DataAccessException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.persist.DbFunction;
 import nl.rhofman.persist.model.BaseEntity;
-import nl.rhofman.persist.model.DbExceptionReason;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -92,15 +89,11 @@ public abstract class AbstractRepository<T extends BaseEntity> {
 
     @Transactional(REQUIRED)
     public void remove(@NotNull Long id) {
-//        try {
-            execute(() -> {
-                T storedEntity = em.getReference(clazz, id);
-                em.remove(storedEntity);
-                em.flush();
-            });
-//        } catch (EntityNotFoundException e) {
-//            throw new DataAccessException(getExceptionOrigin(), DbExceptionReason.NO_DATA_FOUND, "Could not find " + clazz.getSimpleName() + "  with id: " + id, e);
-//        }
+        execute(() -> {
+            T storedEntity = em.getReference(clazz, id);
+            em.remove(storedEntity);
+            em.flush();
+        });
     }
 
     public Long countAll() {

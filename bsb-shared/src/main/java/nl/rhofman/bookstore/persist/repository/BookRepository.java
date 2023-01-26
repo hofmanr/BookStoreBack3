@@ -15,9 +15,7 @@ import nl.rhofman.persist.repository.AbstractRepository;
 import java.util.List;
 
 import static jakarta.transaction.Transactional.TxType.REQUIRED;
-import static jakarta.transaction.Transactional.TxType.SUPPORTS;
 
-@Transactional(SUPPORTS)
 @Dependent
 public class BookRepository extends AbstractRepository<Book> {
 

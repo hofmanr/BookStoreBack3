@@ -1,53 +1,48 @@
 package nl.rhofman.bookstore.persist.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import nl.rhofman.persist.model.BaseEntityVersion;
-
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author Rinus Hofman
+ * No Entity. Only a helper class.
  */
 
-@Entity
-@Table(name = "Customers")
-public class Customer extends BaseEntityVersion {
+public class Customer implements Serializable {
     private static final long serialVersionUID = 233837455362534l;
 
     // ======================================
     // =             Attributes             =
     // ======================================
 
-    @Column(length = 40, name = "name", nullable = false)
-    @NotNull
-    @Size(min = 2, max = 40)
+    private String customerNumber;
+
     private String name;
 
-    @Column(length = 50, name = "address")
-    @Size(max = 50)
     private String address;
 
-    @Column(length = 10, name = "postal_code")
-    @Size(max = 10)
     private String postalCode;
 
-    @Column(length = 40, name = "city")
-    @Size(max = 40)
     private String city;
 
-    @Column(length = 12, name = "phone")
-    @Size(max = 12)
     private String phone;
 
-    @Column(length = 40, name = "email")
-    @Size(max = 40)
     private String email;
 
     public Customer() {
+    }
+
+    public Customer(String customerNumber, String name) {
+        this.customerNumber = customerNumber;
+        this.name = name;
+    }
+
+    public String getCustomerNumber() {
+        return customerNumber;
+    }
+
+    public void setCustomerNumber(String customerNumber) {
+        this.customerNumber = customerNumber;
     }
 
     public String getName() {
@@ -104,18 +99,19 @@ public class Customer extends BaseEntityVersion {
         if (!(o instanceof Customer)) return false;
         if (!super.equals(o)) return false;
         Customer customer = (Customer) o;
-        return name.equals(customer.name) && Objects.equals(postalCode, customer.postalCode) && Objects.equals(city, customer.city);
+        return customerNumber.equals(customer.customerNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, postalCode, city);
+        return Objects.hash(super.hashCode(), customerNumber);
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "name='" + name + '\'' +
+                "number='" + customerNumber + '\'' +
+                ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 ", city='" + city + '\'' +

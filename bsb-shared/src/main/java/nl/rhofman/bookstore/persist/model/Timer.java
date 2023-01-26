@@ -12,14 +12,17 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "timer_type", discriminatorType = DiscriminatorType.CHAR, length = 1)
 @NamedQueries({
-        @NamedQuery(name = Timer.FIND_EXPIRED, query = "SELECT t FROM Timer t WHERE t.timerDate <= CURRENT_DATE")
+        @NamedQuery(name = Timer.FIND_EXPIRED, query = "SELECT t FROM Timer t WHERE t.timerDate <= CURRENT_DATE"),
+        @NamedQuery(name = Timer.FIND_ORDER, query = "SELECT t FROM PaymentTimer t WHERE t.order = :order")
 })
 public class Timer extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 3766632083928336l;
 
     public static final String FIND_EXPIRED = "Timer.findByDate";
-    public static final String FIND_SHIPMENT = "Timer.findByShipment";
-    public static final String FIND_RETURNSHIPMENT = "Timer.findByReturnShipment";
+    public static final String FIND_ORDER = "Timer.findByOrder";
+
+    @ManyToOne
+    protected Order order;
 
     @Column(name = "timer_date")
     @Temporal(TemporalType.DATE)
