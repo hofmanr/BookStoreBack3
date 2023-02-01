@@ -39,6 +39,7 @@ public class BookRepository extends AbstractRepository<Book> {
                     execute(() -> em.getReference(bookPublisher.getClass(), bookPublisher.getId()));
             book.setPublisher(publisher);
         }
+        // TODO check authors...
         return execute(() -> {
             em.persist(book);
             em.flush();

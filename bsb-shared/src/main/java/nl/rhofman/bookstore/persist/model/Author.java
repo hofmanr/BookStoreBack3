@@ -1,15 +1,14 @@
 package nl.rhofman.bookstore.persist.model;
 
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Rinus Hofman
@@ -49,6 +48,10 @@ public class Author extends BaseEntityVersion {
     @Column(name = "preferred_language")
     @Convert(converter = LanguageConverter.class)
     private Language preferredLanguage;
+
+    @JsonbTransient
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books = new ArrayList<>();
 
     // ======================================
     // =            Constructors            =
@@ -134,7 +137,14 @@ public class Author extends BaseEntityVersion {
         this.preferredLanguage = preferredLanguage;
     }
 
-    // ======================================
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+// ======================================
     // =   Methods hash, equals, toString   =
     // ======================================
 

@@ -7,10 +7,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Books")
@@ -57,7 +54,7 @@ public class Book extends BaseEntityVersion {
     private Integer nbOfPages;
 
     @Column(name = "language")
-    @Enumerated
+    // use LanguageConverter and not @Enumerated
     private Language language;
 
     @ManyToOne
@@ -66,8 +63,13 @@ public class Book extends BaseEntityVersion {
     @ManyToOne
     private Category category;
 
-//    @OneToMany(fetch=FetchType.EAGER)
-//    private Set<Author> authors = new HashSet<>();
+    // The Book entity owns the association (only one side can own a relationship).
+    // Changes to the database are propagated to the database from the side.
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "BooksWritenByAuthors",
+        joinColumns = @JoinColumn(name="book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private List<Author> authors = new ArrayList<>();
 
     // ======================================
     // =            Constructors            =
@@ -178,20 +180,39 @@ public class Book extends BaseEntityVersion {
         this.publisher = publisher;
     }
 
-//    public Set<Author> getAuthors() {
-//        return this.authors;
-//    }
-//
-//    public void setAuthors(final Set<Author> authorEntities) {
-//        this.authors = authorEntities;
-//    }
-//
-//    public void addAuthor(Author authorEntity) {
-//        if (authors == null) {
-//            authors = new HashSet<>();
-//        }
-//        authors.add(authorEntity);
-//    }
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(final List<Author> authors) {
+        this.authors = authors;
+    }
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.getBooks().remove(this);
+    }
 
     // ======================================
     // =   Methods hash, equals, toString   =
