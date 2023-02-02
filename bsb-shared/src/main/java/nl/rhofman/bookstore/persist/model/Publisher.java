@@ -1,7 +1,5 @@
 package nl.rhofman.bookstore.persist.model;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
@@ -11,8 +9,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Publishers")
+@NamedQueries(
+    @NamedQuery(name = Publisher.FIND_BY_NAME, query = "SELECT p FROM Publisher p WHERE UPPER(p.name) = UPPER(:name)")
+)
 public class Publisher extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 746746203462534l;
+    public static final String FIND_BY_NAME = "Publisher.findByName";
 
     // ======================================
     // =             Attributes             =

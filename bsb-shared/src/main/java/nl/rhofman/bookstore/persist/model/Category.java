@@ -1,8 +1,6 @@
 package nl.rhofman.bookstore.persist.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import nl.rhofman.persist.model.BaseEntityVersion;
@@ -12,8 +10,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Categories")
+@NamedQueries(
+        @NamedQuery(name = Category.FIND_BY_NAME, query = "SELECT c FROM Category c WHERE UPPER(c.name) = UPPER(:name)")
+)
 public class Category extends BaseEntityVersion implements Serializable {
     private static final long serialVersionUID = 835201203463782l;
+    public static final String FIND_BY_NAME = "Category.findByName";
 
     // ======================================
     // =             Attributes             =

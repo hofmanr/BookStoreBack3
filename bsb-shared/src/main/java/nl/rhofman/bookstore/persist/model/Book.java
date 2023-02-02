@@ -64,7 +64,7 @@ public class Book extends BaseEntityVersion {
     private Category category;
 
     // The Book entity owns the association (only one side can own a relationship).
-    // Changes to the database are propagated to the database from the side.
+    // Changes to the database are propagated to the database from this side.
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "BooksWritenByAuthors",
         joinColumns = @JoinColumn(name="book_id"),
