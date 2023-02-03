@@ -1,7 +1,8 @@
 package nl.rhofman.bookstore.web.book.domain;
 
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
-import nl.rhofman.bookstore.persist.model.Language;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import nl.rhofman.bookstore.web.book.converter.LanguageAdapter;
 
 import java.time.LocalDate;
 
@@ -13,7 +14,8 @@ public class AuthorDTO {
     private String bio = null;
     private LocalDate dateOfBirth = null;
     private Integer age;
-    private Language preferredLanguage;
+    @JsonbTypeAdapter(LanguageAdapter.class)
+    private LanguageDTO preferredLanguage;
 
     public AuthorDTO() {
     }
@@ -66,11 +68,11 @@ public class AuthorDTO {
         this.age = age;
     }
 
-    public Language getPreferredLanguage() {
+    public LanguageDTO getPreferredLanguage() {
         return preferredLanguage;
     }
 
-    public void setPreferredLanguage(Language preferredLanguage) {
+    public void setPreferredLanguage(LanguageDTO preferredLanguage) {
         this.preferredLanguage = preferredLanguage;
     }
 

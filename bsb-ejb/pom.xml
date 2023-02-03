@@ -47,13 +47,17 @@
     </dependencies>
     
     <build>
+        <!-- Tell Maven that the resulting file should not have a file name containing the version -
+		     a non versioned name is required e.g. when building a deployable artifact using the ShrinkWrap API -->
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${ejb.plugin.version}</version>
                 <configuration>
-                    <ejbVersion>3.1</ejbVersion>
+                    <!-- Tell Maven we are using EJB 3.2 -->
+                    <ejbVersion>3.2</ejbVersion>
                 </configuration>
             </plugin>
         </plugins>

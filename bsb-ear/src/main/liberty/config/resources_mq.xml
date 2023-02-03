@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="BookStore Server for ${project.root}">
+
+    <!-- Resource Adapter for MQ connections -->
+    <!-- see https://repo1.maven.org/maven2/com/ibm/mq/wmq.jmsra/ -->
+    <resourceAdapter id="mqJms" location="${server.config.dir}/lib/global/wmq.jmsra-9.3.1.0.rar" />
+
+    <!-- Local JMS queues -->
+    <jmsQueue id="jmsBookstoreOrderInput" jndiName="jms/bookstore/order/input">
+        <properties.mqJms
+                baseQueueName="BSB_DEV1.CUSTOMER_TO_APP"
+                baseQueueManagerName="QMDEV1"
+        />
+    </jmsQueue>
+    <jmsQueue id="jmsBookstoreOrderOutput" jndiName="jms/bookstore/order/output">
+        <properties.mqJms
+                baseQueueName="BSB_DEV1.APP_TO_CUSTOMER"
+                baseQueueManagerName="QMDEV1"
+        />
+    </jmsQueue>
+
+    <!-- Activation Spec for JMS Listeners (onMessage) -->
+    <jmsActivationSpec id="eis/bookstore/as">
+        <properties.mqJms
+                destinationRef="jms/bookstore/order/input"
+                destinationType="javax.jms.queue"
+                transportType="CLIENT"
+                hostName="localhost"
+                port="1414"
+                channel="USERS"
+                userName="user"
+                password="s3cr3t"
+                sslCipherSuite="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+                queueManager="QMDEV1"
+        />
+    </jmsActivationSpec>
+
+    <!-- Connection Factory for outgoing messages -->
+    <connectionManager id="jmsBookstoreCM1" minPoolSize="2" maxPoolSize="10" />
+    <jmsConnectionFactory id="jmsBookstoreCF" jndiName="jms/bookstore/connectionFactory" connectionManager="jmsBookstoreCM1">
+        <properties.mqJms
+                destinationRef="jms/bookstore/order/input"
+                destinationType="javax.jms.queue"
+                transportType="CLIENT"
+                hostName="localhost"
+                port="1414"
+                channel="USERS"
+                userName="user"
+                password="s3cr3t"
+                sslCipherSuite="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+                queueManager="QMDEV1"
+        />
+    </jmsConnectionFactory>
+
+</server>

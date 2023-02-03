@@ -1,13 +1,11 @@
 package nl.rhofman.bookstore.web.book.domain;
 
-import jakarta.json.bind.annotation.JsonbDateFormat;
-import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.json.bind.annotation.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import nl.rhofman.bookstore.persist.model.Language;
+import nl.rhofman.bookstore.web.book.converter.LanguageAdapter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -35,7 +33,8 @@ public class BookDTO {
 
     private Integer nbOfPages;
 
-    private Language language;
+    @JsonbTypeAdapter(LanguageAdapter.class)
+    private LanguageDTO language;
 
     private String publisher;
 
@@ -102,11 +101,11 @@ public class BookDTO {
         this.nbOfPages = nbOfPages;
     }
 
-    public Language getLanguage() {
+    public LanguageDTO getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(LanguageDTO language) {
         this.language = language;
     }
 

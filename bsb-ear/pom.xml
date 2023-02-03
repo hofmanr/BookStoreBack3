@@ -60,7 +60,13 @@
     <plugins>
       <plugin>
         <artifactId>maven-ear-plugin</artifactId>
+        <version>${ear.plugin.version}</version>
         <configuration>
+          <!-- Tell Maven we are using Jakarta EE version 9 -->
+          <version>9</version>
+          <!-- Use Jakarta EE ear libraries as needed. Jakarta EE ear libraries
+              are in easy way to package any libraries needed in the ear, and automatically
+              have any modules (EJB-JARs and WARs) use them -->
           <defaultLibBundleDir>lib</defaultLibBundleDir>
 
           <modules>
@@ -68,6 +74,9 @@
               <groupId>${project.groupId}</groupId>
               <artifactId>bsb-ejb</artifactId>
             </ejbModule>
+            <!-- Default context root of the web app is /bsb-web.
+                If a custom context root is needed, uncomment the following snippet to
+                register our War as a web module and set the contextRoot property -->
             <webModule>
               <groupId>${project.groupId}</groupId>
               <artifactId>bsb-web</artifactId>

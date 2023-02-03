@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="BookStore Server for ${project.root}">
+
+    <basicRegistry id="basic">
+        <user name="admin" password="s3cr3t"/>
+        <user name="reader" password="s3cr3t"/>
+    </basicRegistry>
+    <administrator-role>
+        <user>admin</user>
+    </administrator-role>
+    <reader-role>
+        <user>reader</user>
+    </reader-role>
+
+    <!-- Application Resources -->
+    <jndiEntry jndiName="var/bsb/application" value="BookStore" id="applicationEntry"/>
+    <jndiEntry jndiName="var/bsb/version" value="1.0-SNAPSHOT" id="versionEntry"/>
+    <jndiEntry jndiName="var/instance/environment" value="LOCAL" id="envEntry"/>
+
+    <!-- Declare the jar files for MySQL access through JDBC. -->
+    <library id="MySQLLib">
+        <fileset dir="${server.config.dir}/lib/global" includes="mysql*.jar"/>
+    </library>
+
+    <jpa defaultPersistenceProvider="org.eclipse.persistence.jpa.PersistenceProvider"/>
+    <dataSource id="bookstoreDatasource"
+            isolationLevel="TRANSACTION_READ_UNCOMMITTED"
+            jndiName="jdbc/BookstoreDatasource"
+            type="javax.sql.XADataSource">
+        <jdbcDriver
+                libraryRef="MySQLLib"
+                javax.sql.XADataSource="com.mysql.cj.jdbc.MysqlXADataSource"
+                javax.sql.ConnectionPoolDataSource="com.mysql.cj.jdbc.MysqlConnectionPoolDataSource"
+                javax.sql.DataSource="com.mysql.cj.jdbc.MysqlDataSource"
+        />
+        <properties
+                databaseName="bookstore"
+                serverName="localhost"
+                portNumber="3306"
+                user="root"
+                password="BB25"
+        />
+    </dataSource>
+
+</server>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="BookStore Server for ${project.root}">
+
+    <!-- Generate default keystore in directory 'resources > security' -->
+    <keyStore id="defaultKeyStore" password="bookstore" />
+    <!-- Truststore to hold certificates for communication with (external) systems; e.g. MQ -->
+    <keyStore id="defaultTrustStore"
+              password="bookstore"
+              type="JKS"
+              location="${server.config.dir}/truststore.jks"
+    />
+    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig"
+         keyStoreRef="defaultKeyStore"
+         trustStoreRef="defaultTrustStore"
+         trustDefaultCerts="true"
+         sslProtocol="TLSv1.2"
+    />
+
+    <httpEndpoint httpPort="9082" httpsPort="9445" id="defaultHttpEndpoint">
+        <sslOptions sslRef="defaultSSLConfig" suppressHandshakeErrors="true"/>
+    </httpEndpoint>
+    <wasJmsEndpoint wasJmsPort="7278" wasJmsSSLPort="7288"/>
+    <sipEndpoint sipTCPPort="5062" sipTLSPort="5063" sipUDPPort="5062"/>
+    <iiopEndpoint iiopPort="2813">
+        <iiopsOptions iiopsPort="9406" sslRef="defaultSSLConfig"/>
+    </iiopEndpoint>
+
+</server>

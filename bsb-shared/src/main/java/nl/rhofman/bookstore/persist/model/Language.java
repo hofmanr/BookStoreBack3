@@ -14,18 +14,12 @@ public enum Language {
     }
 
     public static Language fromShortName(String shortName) {
-        switch (shortName) {
-            case "NL":
-                return Language.DUTCH;
-            case "EN":
-                return Language.ENGLISH;
-            case "FR":
-                return Language.FRENCH;
-            case "SP":
-                return Language.SPANISH;
-            default:
-                throw new IllegalArgumentException("ShortName [" + shortName
-                        + "] not supported.");
+        for(Language v: Language.values()) {
+            if (v.shortName.equals(shortName)) {
+                return v;
+            }
         }
+        throw new IllegalArgumentException("ShortName [" + shortName
+                + "] not supported.");
     }
 }

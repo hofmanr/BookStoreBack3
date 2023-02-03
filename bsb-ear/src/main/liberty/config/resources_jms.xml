@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="BookStore Server for ${project.root}">
+
+    <!-- Local JMS queues -->
+    <messagingEngine>
+        <queue  id="BSB_LOC.CUSTOMER_TO_APP"
+                forceReliability="ReliablePersistent"
+                maxRedeliveryCount="0"
+                maxMessageDepth="3200"
+        />
+        <queue  id="BSB_LOC.APP_TO_CUSTOMER"
+                forceReliability="ReliablePersistent"
+                maxRedeliveryCount="0"
+                maxMessageDepth="3200"
+        />
+    </messagingEngine>
+    <jmsQueue id="jmsBookstoreOrderInput" jndiName="jms/bookstore/order/input">
+        <properties.wasJms
+                queueName="BSB_LOC.CUSTOMER_TO_APP"
+                deliveryMode="Application"
+                priority="1"
+                readAhead="AsConnection"
+                timeToLive="0"
+        />
+    </jmsQueue>
+    <jmsQueue id="jmsBookstoreOrderOutput" jndiName="jms/bookstore/order/output">
+        <properties.wasJms
+                queueName="BSB_LOC.APP_TO_CUSTOMER"
+                deliveryMode="Application"
+                priority="1"
+                readAhead="AsConnection"
+                timeToLive="0"
+        />
+    </jmsQueue>
+
+    <!-- Activation Spec for JMS Listeners (onMessage) -->
+    <jmsActivationSpec id="eis/bookstore/as">
+        <properties.wasJms destinationRef="jms/bookstore/order/input" />
+    </jmsActivationSpec>
+
+    <!-- Connection Factory for outgoing messages -->
+    <connectionManager id="jmsBookstoreCM1" minPoolSize="2" maxPoolSize="10" />
+    <jmsConnectionFactory id="jmsBookstoreCF" jndiName="jms/bookstore/connectionFactory" connectionManager="jmsBookstoreCM1">
+        <properties.wasJms
+                persistentMapping="ReliablePersistent"
+                nonPersistentMapping="ExpressNonPersistent"
+        />
+    </jmsConnectionFactory>
+
+</server>
