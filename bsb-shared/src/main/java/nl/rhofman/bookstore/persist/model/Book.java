@@ -13,12 +13,14 @@ import java.util.*;
 @Table(name = "Books")
 @NamedQueries({
         @NamedQuery(name = Book.FIND_TOP_RATED, query = "SELECT b FROM Book b WHERE b.id in :ids"),
+        @NamedQuery(name = Book.FIND_BY_ISBN, query = "SELECT b FROM Book b WHERE b.isbn in :isbn"),
         @NamedQuery(name = Book.SEARCH, query = "SELECT b FROM Book b WHERE UPPER(b.title) LIKE :keyword OR UPPER(b.description) LIKE :keyword ORDER BY b.title")
 })
 public class Book extends BaseEntityVersion {
     private static final long serialVersionUID = 7492632083922534l;
 
     public static final String FIND_TOP_RATED = "Book.findTopRated";
+    public static final String FIND_BY_ISBN = "Book.findByIsbn";
     public static final String SEARCH = "Book.search";
 
     @Column(name = "title", length = 200, nullable = false)
@@ -240,8 +242,6 @@ public class Book extends BaseEntityVersion {
         result += ", version: " + version;
         if (title != null && !title.trim().isEmpty())
             result += ", title: " + title;
-        if (description != null && !description.trim().isEmpty())
-            result += ", description: " + description;
         if (unitCost != null)
             result += ", unitCost: " + unitCost;
         if (isbn != null && !isbn.trim().isEmpty())
