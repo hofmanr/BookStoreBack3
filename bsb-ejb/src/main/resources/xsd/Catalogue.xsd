@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.bookstore.org/v1/Catalogue"
+        xmlns:cat="http://www.bookstore.org/v1/Catalogue"
+        elementFormDefault="qualified">
+
+    <element name="Books">
+        <complexType>
+            <sequence>
+                <element name="Book" type="cat:BookType" maxOccurs="unbounded"></element>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="BookType">
+        <sequence>
+            <element name="title" type="string"></element>
+            <element name="description" type="string" minOccurs="0"></element>
+            <element name="authors">
+                <complexType>
+                    <sequence>
+                        <element name="author" type="cat:AuthorType" maxOccurs="unbounded"></element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="isbn" type="string" minOccurs="0"></element>
+            <element name="publicationDate" type="date" minOccurs="0"></element>
+            <element name="language" type="cat:Language"></element>
+            <element name="unitCost" type="double"></element>
+            <element name="nrOfPages" type="int" minOccurs="0"></element>
+            <element name="publisher" type="string" minOccurs="0"></element>
+            <element name="category" type="string" minOccurs="0"></element>
+            <element name="imageURL" type="string" minOccurs="0"></element>
+        </sequence>
+    </complexType>
+
+    <complexType name="AuthorType">
+        <sequence>
+            <element name="lastName" type="string"></element>
+            <element name="firstName" type="string"></element>
+            <element name="dateOfBirth" type="date" minOccurs="0"></element>
+            <element name="preferredLanguage" type="cat:Language" minOccurs="0"></element>
+            <element name="bio" type="string" minOccurs="0"></element>
+        </sequence>
+    </complexType>
+
+    <simpleType name="Language">
+        <restriction base="string">
+            <enumeration value="ENGLISH"></enumeration>
+            <enumeration value="FRENCH"></enumeration>
+            <enumeration value="GERMAN"></enumeration>
+            <enumeration value="ITALIAN"></enumeration>
+            <enumeration value="SPANISH"></enumeration>
+            <enumeration value="DUTCH"></enumeration>
+        </restriction>
+    </simpleType>
+</schema>
