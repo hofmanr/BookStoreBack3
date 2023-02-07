@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import nl.rhofman.bookstore.persist.model.Book;
 import nl.rhofman.bookstore.persist.model.BookInStock;
 import nl.rhofman.bookstore.persist.repository.BookInStockRepository;
-import nl.rhofman.bookstore.persist.repository.BookRepository;
 import nl.rhofman.exception.dao.ServiceException;
 import nl.rhofman.persist.Service.AbstractService;
 import nl.rhofman.persist.model.DbExceptionReason;
@@ -23,7 +22,7 @@ public class StockService extends AbstractService {
     private BookInStockRepository bookInStockRepository;
 
     @Inject
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     /**
      * Update quantity in stock if there is already a record.
@@ -39,7 +38,7 @@ public class StockService extends AbstractService {
             throw new ServiceException(bookInStockRepository.EXCEPTION_ORIGIN, DbExceptionReason.NO_DATA_FOUND, "Book not found");
         }
 
-        final Book bookRef = bookRepository.getReference(book.getId());
+        final Book bookRef = bookService.getReference(book.getId());
         if (bookRef == null) {
             throw new ServiceException(bookInStockRepository.EXCEPTION_ORIGIN, DbExceptionReason.NO_DATA_FOUND, "Book not found");
         }

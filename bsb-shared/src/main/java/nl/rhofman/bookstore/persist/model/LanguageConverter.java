@@ -17,7 +17,7 @@ public class LanguageConverter implements AttributeConverter<Language, String> {
 
     @Override
     public String convertToDatabaseColumn(Language language) {
-        return language.getShortName();
+        return Objects.isNull(language) ? null : language.getShortName();
     }
 
     @Override

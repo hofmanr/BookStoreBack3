@@ -16,8 +16,14 @@ import java.util.*;
 
 @Entity
 @Table(name = "Authors")
+@NamedQueries(
+        @NamedQuery(name= Author.FIND_BY_LASTNAME,
+                query = "SELECT a FROM Author a WHERE UPPER(a.lastName) = UPPER(:lastName)")
+)
 public class Author extends BaseEntityVersion {
     private static final long serialVersionUID = 648836203462534l;
+
+    public static final String FIND_BY_LASTNAME = "Author.findByLastName";
 
     // ======================================
     // =             Attributes             =

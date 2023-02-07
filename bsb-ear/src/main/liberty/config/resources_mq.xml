@@ -5,7 +5,13 @@
     <!-- see https://repo1.maven.org/maven2/com/ibm/mq/wmq.jmsra/ -->
     <resourceAdapter id="mqJms" location="${server.config.dir}/lib/global/wmq.jmsra-9.3.1.0.rar" />
 
-    <!-- Local JMS queues -->
+    <!-- MQ queues -->
+    <jmsQueue id="jmsBookstoreSupplierInput" jndiName="jms/bookstore/supplier/input">
+        <properties.mqJms
+                baseQueueName="BSB_DEV1.SUPPLIER_TO_APP"
+                baseQueueManagerName="QMDEV1"
+        />
+    </jmsQueue>
     <jmsQueue id="jmsBookstoreOrderInput" jndiName="jms/bookstore/order/input">
         <properties.mqJms
                 baseQueueName="BSB_DEV1.CUSTOMER_TO_APP"
@@ -20,7 +26,21 @@
     </jmsQueue>
 
     <!-- Activation Spec for JMS Listeners (onMessage) -->
-    <jmsActivationSpec id="eis/bookstore/as">
+    <jmsActivationSpec id="eis/bookstore/supplier/as">
+        <properties.mqJms
+                destinationRef="jms/bookstore/supplier/input"
+                destinationType="javax.jms.queue"
+                transportType="CLIENT"
+                hostName="localhost"
+                port="1414"
+                channel="USERS"
+                userName="user"
+                password="s3cr3t"
+                sslCipherSuite="TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256"
+                queueManager="QMDEV1"
+        />
+    </jmsActivationSpec>
+    <jmsActivationSpec id="eis/bookstore/order/as">
         <properties.mqJms
                 destinationRef="jms/bookstore/order/input"
                 destinationType="javax.jms.queue"

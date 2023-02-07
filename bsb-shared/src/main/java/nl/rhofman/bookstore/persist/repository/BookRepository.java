@@ -23,7 +23,7 @@ public class BookRepository extends AbstractRepository<Book> {
     }
 
     @Override
-    protected ExceptionOrigin getExceptionOrigin() {
+    public ExceptionOrigin getExceptionOrigin() {
         return EXCEPTION_ORIGIN;
     }
 

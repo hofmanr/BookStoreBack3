@@ -3,6 +3,11 @@
 
     <!-- Local JMS queues -->
     <messagingEngine>
+        <queue  id="BSB_LOC.SUPPLIER_TO_APP"
+                forceReliability="ReliablePersistent"
+                maxRedeliveryCount="0"
+                maxMessageDepth="3200"
+        />
         <queue  id="BSB_LOC.CUSTOMER_TO_APP"
                 forceReliability="ReliablePersistent"
                 maxRedeliveryCount="0"
@@ -14,6 +19,16 @@
                 maxMessageDepth="3200"
         />
     </messagingEngine>
+
+    <jmsQueue id="jmsBookstoreSupplierInput" jndiName="jms/bookstore/supplier/input">
+        <properties.wasJms
+                queueName="BSB_LOC.SUPPLIER_TO_APP"
+                deliveryMode="Application"
+                priority="1"
+                readAhead="AsConnection"
+                timeToLive="0"
+        />
+    </jmsQueue>
     <jmsQueue id="jmsBookstoreOrderInput" jndiName="jms/bookstore/order/input">
         <properties.wasJms
                 queueName="BSB_LOC.CUSTOMER_TO_APP"
@@ -34,7 +49,10 @@
     </jmsQueue>
 
     <!-- Activation Spec for JMS Listeners (onMessage) -->
-    <jmsActivationSpec id="eis/bookstore/as">
+    <jmsActivationSpec id="eis/bookstore/supplier/as">
+        <properties.wasJms destinationRef="jms/bookstore/supplier/input" />
+    </jmsActivationSpec>
+    <jmsActivationSpec id="eis/bookstore/order/as">
         <properties.wasJms destinationRef="jms/bookstore/order/input" />
     </jmsActivationSpec>
 

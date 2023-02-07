@@ -24,7 +24,7 @@ public class BookResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response allBooks() {
-        List<Book> books = bookService.getAll();
+        List<Book> books = bookService.findAll();
         if (books.isEmpty()) {
             return Response.noContent().build();
         }

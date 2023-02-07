@@ -30,7 +30,7 @@ public class DbExecutor {
         } catch(OptimisticLockException e) {
             throw new DataAccessException(exceptionOrigin, DbExceptionReason.OPTIMISTIC_LOCK, e.getMessage(), e);
         } catch(NoResultException e) {
-            throw new DataAccessException(exceptionOrigin, DbExceptionReason.NO_RESULT, e.getMessage(), e);
+            return null; // getSingleResult doesn't have a result
         } catch(NonUniqueResultException e) {
             throw new DataAccessException(exceptionOrigin, DbExceptionReason.NON_UNIQUE_RESULT, e.getMessage(), e);
         } catch(ConstraintViolationException e) {
