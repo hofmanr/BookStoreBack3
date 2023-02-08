@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+        version="3.0">
+
+    <!-- Alternative for 'packageName' in jaxb2-maven-plugin -->
+<!--    <jaxb:bindings schemaLocation="../../../xsd/cat/v1/Catalogue.xsd">-->
+<!--        <jaxb:schemaBindings>-->
+<!--            <jaxb:package name="nl.rhofman.bookstore.jaxb.catalogue2.v1"/>-->
+<!--        </jaxb:schemaBindings>-->
+<!--    </jaxb:bindings>-->
+
+    <jaxb:bindings schemaLocation="../../../xsd/cat/v1/Book.xsd">
+        <jaxb:bindings node="/xs:schema/xs:simpleType[@name='Language']">
+            <jaxb:typesafeEnumClass>
+                <jaxb:typesafeEnumMember value="NL" name="DUTCH"/>
+                <jaxb:typesafeEnumMember value="EN" name="ENGLISH"/>
+                <jaxb:typesafeEnumMember value="FR" name="FRENCH"/>
+                <jaxb:typesafeEnumMember value="DE" name="GERMAN"/>
+                <jaxb:typesafeEnumMember value="SP" name="SPANISH"/>
+                <jaxb:typesafeEnumMember value="IT" name="ITALIAN"/>
+            </jaxb:typesafeEnumClass>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

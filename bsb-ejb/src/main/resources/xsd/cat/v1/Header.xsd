@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.bookstore.org/v1/Header"
+        xmlns:hdr="http://www.bookstore.org/v1/Header"
+        elementFormDefault="qualified">
+
+    <complexType name="HeaderType">
+        <sequence>
+            <element name="sender" type="string"></element>
+            <element name="recipient" type="string"></element>
+            <element name="messageId" type="string"></element>
+            <element name="correlationId" type="string"></element>
+            <element name="dateOfPreparation" type="date"></element>
+            <element name="timeOfPreparation" type="time"></element>
+        </sequence>
+    </complexType>
+</schema>

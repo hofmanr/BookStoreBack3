@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>nl.rhofman.bookstore</groupId>
         <artifactId>bookstore-backend</artifactId>
         <version>3.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>bsb-ejb</artifactId>
     <packaging>ejb</packaging>
-    
+
     <name>EJB Module</name>
     <description>Module for batch processing</description>
-    
+
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
@@ -45,11 +45,12 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
-    
+
     <build>
         <!-- Tell Maven that the resulting file should not have a file name containing the version -
 		     a non versioned name is required e.g. when building a deployable artifact using the ShrinkWrap API -->
         <finalName>${project.artifactId}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -59,6 +60,49 @@
                     <!-- Tell Maven we are using EJB 3.2 -->
                     <ejbVersion>3.2</ejbVersion>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>catalogue</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/cat/v1</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xjb/global.xjb</xjbSource>
+                                <xjbSource>src/main/resources/xjb/cat/v1/bindings.xjb</xjbSource>
+                            </xjbSources>
+                            <arguments>
+                                <argument>-Xxew</argument>
+                                <argument>-Xnamespace-prefix</argument>
+                            </arguments>
+                            <outputDirectory>target/generated-sources/catalogue/</outputDirectory>
+                            <packageName>nl.rhofman.bookstore.jaxb.catalogue.v1</packageName>
+                            <clearOutputDir>true</clearOutputDir>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!-- see https://github.com/dmak/jaxb-xew-plugin -->
+                    <dependency>
+                        <groupId>com.github.jaxb-xew-plugin</groupId>
+                        <artifactId>jaxb-xew-plugin</artifactId>
+                        <version>2.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jvnet.jaxb2_commons</groupId>
+                        <artifactId>jaxb2-namespace-prefix</artifactId>
+                        <version>2.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

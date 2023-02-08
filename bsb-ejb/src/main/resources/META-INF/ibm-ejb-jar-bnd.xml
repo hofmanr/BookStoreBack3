@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar-bnd xmlns="http://websphere.ibm.com/xml/ns/javaee"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd"
+             version="1.1">
+<!--    <session name="MySessionBean">-->
+<!--        <resource-ref name="" binding-name=""/>-->
+<!--    </session>-->
+    <message-driven name="CatalogueMessageListener">
+        <jca-adapter activation-spec-binding-name="eis/bookstore/catalogue/as"
+                     destination-binding-name="jms/bookstoreAS"/>
+        <resource-ref name="jms/bookstoreCF" binding-name="jms/bookstore/connectionFactory" />
+        <resource-ref name="jms/catalogueInputQE" binding-name="jms/bookstore/catalogue/input" />
+        <resource-ref name="jdbc/bookstoreDS" binding-name="jdbc/BookstoreDatasource" />
+    </message-driven>
+
+</ejb-jar-bnd>

@@ -6,9 +6,9 @@
     <resourceAdapter id="mqJms" location="${server.config.dir}/lib/global/wmq.jmsra-9.3.1.0.rar" />
 
     <!-- MQ queues -->
-    <jmsQueue id="jmsBookstoreSupplierInput" jndiName="jms/bookstore/supplier/input">
+    <jmsQueue id="jmsBookstoreCatalogueInput" jndiName="jms/bookstore/catalogue/input">
         <properties.mqJms
-                baseQueueName="BSB_DEV1.SUPPLIER_TO_APP"
+                baseQueueName="BSB_DEV1.CATALOGUE_TO_APP"
                 baseQueueManagerName="QMDEV1"
         />
     </jmsQueue>
@@ -26,9 +26,9 @@
     </jmsQueue>
 
     <!-- Activation Spec for JMS Listeners (onMessage) -->
-    <jmsActivationSpec id="eis/bookstore/supplier/as">
+    <jmsActivationSpec id="eis/bookstore/catalogue/as">
         <properties.mqJms
-                destinationRef="jms/bookstore/supplier/input"
+                destinationRef="jms/bookstore/catalogue/input"
                 destinationType="javax.jms.queue"
                 transportType="CLIENT"
                 hostName="localhost"
