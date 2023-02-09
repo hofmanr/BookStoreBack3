@@ -50,10 +50,16 @@
 
     <!-- Activation Spec for JMS Listeners (onMessage) -->
     <jmsActivationSpec id="eis/bookstore/catalogue/as">
-        <properties.wasJms destinationRef="jms/bookstore/catalogue/input" />
+        <properties.wasJms destinationRef="jmsBookstoreCatalogueInput"
+                           subscriptionDurability="DurableShared"
+                           targetTransportChain="InboundBasicMessaging"
+        />
     </jmsActivationSpec>
     <jmsActivationSpec id="eis/bookstore/order/as">
-        <properties.wasJms destinationRef="jms/bookstore/order/input" />
+        <properties.wasJms destinationRef="jmsBookstoreOrderInput"
+                           subscriptionDurability="DurableShared"
+                           targetTransportChain="InboundBasicMessaging"
+        />
     </jmsActivationSpec>
 
     <!-- Connection Factory for outgoing messages -->

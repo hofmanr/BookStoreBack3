@@ -28,7 +28,7 @@
     <!-- Activation Spec for JMS Listeners (onMessage) -->
     <jmsActivationSpec id="eis/bookstore/catalogue/as">
         <properties.mqJms
-                destinationRef="jms/bookstore/catalogue/input"
+                destinationRef="jmsBookstoreCatalogueInput"
                 destinationType="javax.jms.queue"
                 transportType="CLIENT"
                 hostName="localhost"
@@ -42,7 +42,7 @@
     </jmsActivationSpec>
     <jmsActivationSpec id="eis/bookstore/order/as">
         <properties.mqJms
-                destinationRef="jms/bookstore/order/input"
+                destinationRef="jmsBookstoreOrderInput"
                 destinationType="javax.jms.queue"
                 transportType="CLIENT"
                 hostName="localhost"
@@ -59,7 +59,7 @@
     <connectionManager id="jmsBookstoreCM1" minPoolSize="2" maxPoolSize="10" />
     <jmsConnectionFactory id="jmsBookstoreCF" jndiName="jms/bookstore/connectionFactory" connectionManager="jmsBookstoreCM1">
         <properties.mqJms
-                destinationRef="jms/bookstore/order/input"
+                destinationRef="jmsBookstoreOrderOutput"
                 destinationType="javax.jms.queue"
                 transportType="CLIENT"
                 hostName="localhost"

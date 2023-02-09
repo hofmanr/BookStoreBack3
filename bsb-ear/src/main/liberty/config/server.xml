@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <server description="BookStore Server for ${project.root}">
-    <!-- Enable features -->
+    <!-- Enable features; see https://www.ibm.com/docs/en/was-liberty/base?topic=management-liberty-features -->
     <!--The Liberty Maven Plugin has generated Liberty features necessary for your application in configDropins/overrides/generated-features.xml-->
     <featureManager>
         <feature>microProfile-5.0</feature>
         <feature>beanValidation-3.0</feature>
-        <feature>enterpriseBeansLite-4.0</feature>
+<!--        <feature>enterpriseBeansLite-4.0</feature>-->
+        <feature>enterpriseBeans-4.0</feature>
+        <feature>messagingServer-3.0</feature>
+        <feature>messagingClient-3.0</feature>
         <feature>persistence-3.0</feature>
 
         <!-- For deploying the application with a configuration in IntelliJ  -->
