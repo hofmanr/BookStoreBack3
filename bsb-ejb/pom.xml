@@ -27,6 +27,12 @@
             <type>pom</type>
         </dependency>
 
+        <!-- Project dependencies -->
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-exception</artifactId>
+        </dependency>
+
         <!-- test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
