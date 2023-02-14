@@ -8,7 +8,7 @@ public interface JaxbConfiguration {
 
     List<String> getXsdFiles();
 
-    String getContextPath(String messageType);
+    String getJaxbPackage(String messageType);
 
     <T,U> Assembler<T,U> getJaxbAssembler(Object jaxbObject);
 

@@ -19,7 +19,6 @@ public class MetadataExtractor {
         try {
             Node node = (Node) xPath.evaluate("//*[local-name()='header']", inputXML, XPathConstants.NODE);
             if (node == null) {
-                System.out.println("No header found");
                 return metadata;
             }
             String messageSender = xPath.evaluate(".//*[local-name()='sender']", node);

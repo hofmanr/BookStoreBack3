@@ -21,7 +21,17 @@
       <groupId>nl.rhofman.bookstore</groupId>
       <artifactId>bsb-logging</artifactId>
     </dependency>
-<!--    <dependency>-->
+    <dependency>
+      <groupId>nl.rhofman.bookstore</groupId>
+      <artifactId>bsb-exception</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+    </dependency>
+
+    <!--    <dependency>-->
 <!--      <groupId>nl.rhofman.bookstore</groupId>-->
 <!--      <artifactId>bsb-persist</artifactId>-->
 <!--    </dependency>-->

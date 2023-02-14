@@ -33,6 +33,12 @@
             <artifactId>bsb-exception</artifactId>
         </dependency>
 
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
         <!-- test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -91,7 +97,7 @@
                                 <argument>-Xnamespace-prefix</argument>
                             </arguments>
                             <outputDirectory>target/generated-sources/catalogue/</outputDirectory>
-                            <packageName>nl.rhofman.bookstore.jaxb.catalogue.v1</packageName>
+                            <packageName>nl.rhofman.bookstore.jaxb.v1.catalogue</packageName>
                             <clearOutputDir>true</clearOutputDir>
                         </configuration>
                     </execution>
