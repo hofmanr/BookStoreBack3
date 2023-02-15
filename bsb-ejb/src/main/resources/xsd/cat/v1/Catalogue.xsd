@@ -12,19 +12,20 @@
     <import schemaLocation="Book.xsd"
             namespace="http://www.bookstore.org/v1/Book"></import>
 
-    <element name="Catalogue">
-        <complexType>
-            <sequence>
-                <element name="header" type="hdr:HeaderType"></element>
-                <element name="books">
-                    <complexType>
-                        <sequence>
-                            <element name="book" type="bok:BookType" maxOccurs="unbounded"></element>
-                        </sequence>
-                    </complexType>
-                </element>
-            </sequence>
-        </complexType>
-    </element>
+    <element name="Catalogue" type="cat:CatalogueType"></element>
 
+    <complexType name="CatalogueType">
+        <sequence>
+            <element name="header" type="hdr:HeaderType"></element>
+            <element name="books">
+                <complexType>
+                    <sequence>
+                        <element name="book" type="bok:BookType"
+                                 maxOccurs="unbounded">
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
 </schema>

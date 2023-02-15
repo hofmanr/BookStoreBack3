@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.jms.Message;
 import nl.rhofman.bookstore.ejb.catalogue.service.CatalogueMessageService;
 import nl.rhofman.bookstore.ejb.jms.AbstractJmsListener;
+import nl.rhofman.exception.dao.ServiceException;
 
 //@MessageDriven(name = "CatalogueMessageListener",
 //        activationConfig = {
@@ -29,8 +30,17 @@ public class CatalogueMessageListener extends AbstractJmsListener {
 
     @Override
     public void onMessage(Message message) {
-        String payload = getPayload(message);
-        System.out.println("Received message " + payload);
-        messageService.processMessageReceived(payload);
+        try {
+            String payload = getPayload(message);
+            messageService.processMessageReceived(payload);
+        } catch (ServiceException ex) {
+            System.out.println("Service exception with" +
+                    "\n   > origin : " + ex.getOrigin().getCode() +
+                    "\n   > reason : " + ex.getReason().getCode()  +
+                    "\n   > cause  : " + ex.getCause().getMessage() +
+                    "\n   > message: " + ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.dao.Assembler;
 import nl.rhofman.bookstore.ejb.xml.dao.JaxbConfiguration;
-import nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler.CatalogAssembler;
+import nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler.CatalogDao;
 import org.mapstruct.factory.Mappers;
 
 import java.util.*;
@@ -28,9 +28,9 @@ public class CatalogConfiguration implements JaxbConfiguration {
 
 
     static {
-        JAXB_ASSEMBLER_MAP.put("CATALOGUE", CatalogAssembler.class);
+        JAXB_ASSEMBLER_MAP.put("CATALOGUETYPE", CatalogDao.class);
 
-        DOMAIN_ASSEMBLER_MAP.put("CATALOGUE", CatalogAssembler.class);
+        DOMAIN_ASSEMBLER_MAP.put("CATALOGUE", CatalogDao.class);
     }
 
     public CatalogConfiguration() {

@@ -1,10 +1,7 @@
 package nl.rhofman.bookstore.ejb.xml.service;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.*;
 import jakarta.xml.bind.util.JAXBSource;
-import nl.rhofman.bookstore.ejb.xml.XmlUtil;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.*;
@@ -24,13 +21,10 @@ public abstract class JaxbService {
     protected abstract Map<String, JAXBContext> marshallContexts();
 
 
-    public Object unmarshall(String xml) {
-        String messageType = XmlUtil.getRootElementName(xml);
-
+    public Object unmarshall(String messageType, String xml) {
         try {
             JAXBContext jaxbContext = unmarshallContexts().get(messageType);
             if (jaxbContext == null) {
-                System.out.println("**** CREATE NEW JAXB CONTEXT for message " + messageType);
                 jaxbContext = JAXBContext.newInstance(getJaxbPackage(messageType));
                 unmarshallContexts().put(messageType, jaxbContext);
             }
@@ -39,8 +33,10 @@ public abstract class JaxbService {
             // see https://stackoverflow.com/questions/10243679/when-does-jaxb-unmarshaller-unmarshal-returns-a-jaxbelementmyschemaobject-or-a
             InputStream xmlStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            return unmarshaller.unmarshal(xmlStream);
-        } catch (JAXBException e) {
+            JAXBIntrospector jaxbIntrospector = jaxbContext.createJAXBIntrospector();
+            Object jaxbElement = unmarshaller.unmarshal(xmlStream);
+            return jaxbIntrospector.getValue(jaxbElement);
+         } catch (JAXBException e) {
             e.printStackTrace();
         }
         return null;

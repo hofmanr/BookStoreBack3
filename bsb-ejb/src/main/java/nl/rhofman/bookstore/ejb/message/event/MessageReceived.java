@@ -8,8 +8,8 @@ public class MessageReceived extends Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    public MessageReceived(Long messageID, MessageMetadata metadata, Object domainObject) {
-        super(messageID, metadata, domainObject);
+    public MessageReceived(Long messageID, String messageType, MessageMetadata metadata, Object domainObject) {
+        super(messageID, messageType, metadata, domainObject);
     }
 
 }
