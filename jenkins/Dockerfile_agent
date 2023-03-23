@@ -1,0 +1,62 @@
+ARG JAVA_VERSION=11.0.18_10
+FROM eclipse-temurin:"${JAVA_VERSION}"-jdk-alpine
+
+ARG user=jenkins
+ARG group=jenkins
+ARG uid=1000
+ARG gid=1000
+
+RUN addgroup -g "${gid}" "${group}" \
+  && adduser -h /home/"${user}" -u "${uid}" -G "${group}" -D "${user}"
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+ENV TZ=Etc/UTC
+
+## Always use the latest Alpine packages: no need for versions
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
+     bash \
+     curl \
+     wget \
+     git \
+     git-lfs \
+     musl-locales \
+     openssh-client \
+     openssl \
+     procps \
+     tzdata \
+     tzdata-utils \
+    && rm -rf /tmp/*.apk /tmp/gcc /tmp/gcc-libs.tar* /tmp/libz /tmp/libz.tar.xz /var/cache/apk/*
+
+ENV MAVEN_VERSION 3.8.6
+ENV MAVEN_HOME /usr/lib/mvn
+ENV PATH $MAVEN_HOME/bin:$PATH
+
+RUN wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  rm apache-maven-$MAVEN_VERSION-bin.tar.gz && \
+  mv apache-maven-$MAVEN_VERSION /usr/lib/mvn
+
+
+ARG VERSION=3107.v665000b_51092
+ADD --chown="${user}":"${group}" "https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar" /usr/share/jenkins/agent.jar
+RUN chmod 0644 /usr/share/jenkins/agent.jar \
+  && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
+
+USER "${user}"
+ARG AGENT_WORKDIR=/home/"${user}"/agent
+ENV AGENT_WORKDIR="${AGENT_WORKDIR}"
+RUN mkdir /home/"${user}"/.jenkins && mkdir -p "${AGENT_WORKDIR}"
+
+VOLUME /home/"${user}"/.jenkins
+VOLUME "${AGENT_WORKDIR}"
+WORKDIR /home/"${user}"
+
+LABEL \
+    org.opencontainers.image.vendor="Jenkins project" \
+    org.opencontainers.image.title="Jenkins Agent Docker image with Maven and Git" \
+    org.opencontainers.image.description="This image provides the Jenkins agent executable (agent.jar)" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.url="https://www.jenkins.io/" \
+    org.opencontainers.image.source="https://github.com/jenkinsci/docker-agent" \
+    org.opencontainers.image.licenses="MIT"
