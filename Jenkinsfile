@@ -42,13 +42,15 @@ pipeline {
 
         stage('InitBuild') {
             steps {
-                if (GIT_AUTHOR.startsWith(gitUse) ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Skipping build triggered by version bump')
-                    // return instead of throwing an error to keep the build 'green'
-                    return
+                script {
+                    if (GIT_AUTHOR.startsWith(gitUse)) {
+                        currentBuild.result = 'ABORTED'
+                        error('Skipping build triggered by version bump')
+                        // return instead of throwing an error to keep the build 'green'
+                        return
+                    }
+                    initBuild pomLocation: appPom
                 }
-                initBuild pomLocation: appPom
             }
         }
     }
