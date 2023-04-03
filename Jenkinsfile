@@ -36,7 +36,6 @@ pipeline {
                     mvn --version
                     java -version
                     '''
-                sh 'printenv'
                 sh 'ls -l "$WORKSPACE"'
             }
         }
@@ -52,17 +51,51 @@ pipeline {
                     }
                     initBuild pomLocation: appPom
                 }
+                sh 'printenv'
             }
         }
     }
 }
 
 void initBuild(Map<String, Object> params = [:]) {
+    def defaultParams = [
+            pomLocation: 'pom.xml',
+            deleteBuildOnBump: false,
+            renameJenkinsBuild: false
+    ]
+    map<String, Object> resolvedParams = [:] << defaultParams << params
+
+    if (!env.BRANCH_NAME) {
+        env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dve/null').trim()
+    }
+
     def authors = currentBuild.changeSets.collectMany {
         it.toList().collect {
             it.getAuthor().getId()
         }
     }
+    // Verwijder de Jenkins user (commits die jenkins doet, bijv. voor een nieuwe release, tellen dan niet mee)
+    // Dit voorkomt dat de builds in een loop geraken
+    authors -= 'jenkins'
+    env.isAutomatedBuild = true
+    def causedByUser = 'Jenkins_Scheduled_TriggeredByGit' // e.g. scheduled or triggered by Git via a hook
+    // Check if the build is initiated by a user
+    if (currentBuild.rawBuild.getCause(Cause.UserIdCause)) {
+        // The user who has started the job:
+        causedByUser = urrentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId().toString()
+        env.isAutomatedBuild = false
+    }
+    // if authors is empty (no commit by user) and the job is not started by a user, then abort the job
+    if (authors.empty && Boolean.valueOf(env.isAutomatedBuild) && (Integer.valueOf(env.BUILD_NUMBER) > 1)) {
+        sh "Abort pipeline job"
+        if (resolvedParams.deleteOnBump) {
+            currentBuild.rawBuild.delete()
+        }
+        currentBuild.result = Result.ABORTED
+        currentBuild.displayName = "#${env.BUILD_NUMBER} aborted. No new commits"
+        error("Last commit bumped the version, aborting the build to prevent looping")
+    }
+
     env.lastCommitter = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%an'").trim()
     sh "logger fullProjectName='${currentBuild.fullProjectName}', build='${currentBuild.displayName}', lastCommitter='${env.lastCommitter}', authors='${authors.unique()}'"
 }
