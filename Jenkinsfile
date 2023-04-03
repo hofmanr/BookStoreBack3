@@ -6,7 +6,7 @@ def appPom = "pom.xml"
 def ejbPom = "bsb-ejb/pom.xml"
 def webPom = "bsb-web/pom.xml"
 
-def gutUse = "jenkins"
+def gitUse = "jenkins"
 
 pipeline {
     agent {
@@ -19,9 +19,9 @@ pipeline {
 
     environment {
         POM = readMavenPom file: appPom
-        GITREV = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
+        GIT_REVISION = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
         GIT_AUTHOR = sh(returnStdout: true, script: 'git log -1 --pretty=%cn')
-        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GITREV)
+        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
     }
 
     options {
