@@ -11,7 +11,8 @@ def gutUse = "jenkins"
 pipeline {
     agent {
         docker {
-            image 'maven:3.9.0-eclipse-temurin-11-alpine'
+            image 'rhofman14/maven-agent:3.8.6-jdk11'
+/*            image 'maven:3.9.0-eclipse-temurin-11-alpine' */
             args '-v $HOME/.m2:/root/.m2'
         }
     }
