@@ -65,7 +65,7 @@ void initBuild(Map<String, Object> params = [:]) {
     ]
     Map<String, Object> resolvedParams = [:] << defaultParams << params
 
-    env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dev/null').trim()
+    env.GIT_BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dev/null').trim()
 
     def authors = currentBuild.changeSets.collectMany {
         it.toList().collect {
