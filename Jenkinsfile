@@ -63,7 +63,7 @@ void initBuild(Map<String, Object> params = [:]) {
             deleteBuildOnBump: false,
             renameJenkinsBuild: false
     ]
-    map<String, Object> resolvedParams = [:] << defaultParams << params
+    Map<String, Object> resolvedParams = [:] << defaultParams << params
 
     if (!env.BRANCH_NAME) {
         env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dve/null').trim()
