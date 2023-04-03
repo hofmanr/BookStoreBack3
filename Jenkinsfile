@@ -82,7 +82,7 @@ void initBuild(Map<String, Object> params = [:]) {
     // Check if the build is initiated by a user
     if (currentBuild.rawBuild.getCause(Cause.UserIdCause)) {
         // The user who has started the job:
-        causedByUser = urrentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId().toString()
+        causedByUser = currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId().toString()
         env.isAutomatedBuild = false
     }
     // if authors is empty (no commit by user) and the job is not started by a user, then abort the job
