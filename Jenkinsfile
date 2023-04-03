@@ -74,19 +74,21 @@ void initBuild(Map<String, Object> params = [:]) {
             it.getAuthor().getId()
         }
     }
-    // Verwijder de Jenkins user (commits die jenkins doet, bijv. voor een nieuwe release, tellen dan niet mee)
-    // Dit voorkomt dat de builds in een loop geraken
+    sh "logger authors='${authors}'"
+
+    // Remove the Jenkins user (commits by jenkins, e.g. for a new release, don't count)
+    // This prevents that builds get into a loop
     authors -= 'jenkins'
-    env.isAutomatedBuild = true
+    env.IS_AUTOMATED_BUILD = true
     def causedByUser = 'Jenkins_Scheduled_TriggeredByGit' // e.g. scheduled or triggered by Git via a hook
     // Check if the build is initiated by a user
     if (currentBuild.rawBuild.getCause(Cause.UserIdCause)) {
         // The user who has started the job:
         causedByUser = currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId().toString()
-        env.isAutomatedBuild = false
+        env.IS_AUTOMATED_BUILD = false
     }
     // if authors is empty (no commit by user) and the job is not started by a user, then abort the job
-    if (authors.empty && Boolean.valueOf(env.isAutomatedBuild) && (Integer.valueOf(env.BUILD_NUMBER) > 1)) {
+    if (authors.empty && Boolean.valueOf(env.IS_AUTOMATED_BUILD) && (Integer.valueOf(env.BUILD_NUMBER) > 1)) {
         sh "Abort pipeline job"
         if (resolvedParams.deleteOnBump) {
             currentBuild.rawBuild.delete()
@@ -96,6 +98,6 @@ void initBuild(Map<String, Object> params = [:]) {
         error("Last commit bumped the version, aborting the build to prevent looping")
     }
 
-    env.lastCommitter = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%an'").trim()
-    sh "logger fullProjectName='${currentBuild.fullProjectName}', build='${currentBuild.displayName}', lastCommitter='${env.lastCommitter}', authors='${authors.unique()}'"
+    env.LAST_COMMITTER = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%an'").trim()
+    sh "logger fullProjectName='${currentBuild.fullProjectName}', build='${currentBuild.displayName}', lastCommitter='${env.LAST_COMMITTER}', authors='${authors.unique()}'"
 }
