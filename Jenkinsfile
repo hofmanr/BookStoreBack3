@@ -57,7 +57,7 @@ pipeline {
     }
 }
 
-initBuild(Map<String, Object> params = [:]) {
+void initBuild(Map<String, Object> params = [:]) {
     def authors = currentBuild.changeSets.collectMany {
         it.toList().collect {
             it.getAuthor().getId()
