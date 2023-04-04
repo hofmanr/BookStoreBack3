@@ -6,8 +6,6 @@ def appPom = "pom.xml"
 def ejbPom = "bsb-ejb/pom.xml"
 def webPom = "bsb-web/pom.xml"
 
-def gitUse = "jenkins"
-
 pipeline {
     agent {
         docker {
@@ -40,41 +38,81 @@ pipeline {
             }
         }
 
-        stage('InitBuild') {
+        stage('Init') {
             steps {
                 script {
-                    if (GIT_AUTHOR.startsWith(gitUse)) {
-                        currentBuild.result = 'ABORTED'
-                        error('Skipping build triggered by version bump')
-                        // return instead of throwing an error to keep the build 'green'
-                        return
-                    }
                     initBuild pomLocation: appPom
                 }
                 sh 'printenv'
             }
         }
+
+        stage('Build') {
+            when {
+                anyOf {
+                    branch 'release/*'
+                    branch 'hotfix/*'
+                    branch 'feature/*'
+                    branch 'PR-*'
+                    branch 'main'
+                }
+            }
+            steps {
+                mavenBuild(pomLocation: appPom, argumants: 'clean package -DskipTests')
+            }
+        }
+
+        stage('Build for Deploy') {
+            when { anyOf { branch: 'main'}}
+            steps {
+                sh '''
+                    mvn -f ${appPom} versions:set -DprocessAllModules -DnewVersion=${VERSION}
+                    mvn versions:commit -DprocessAllModules
+                '''
+                mavenBuild(pomLocation: appPom, argumants: 'clean package -DskipTests')
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                mavenBuild(pomLocation: appPom, argumants: 'test')
+            }
+            post {
+                always {
+                    dir('./target/surefire-reports') {
+                        junit '*.xml'
+                    }
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts 'target/*.jar'
+            }
+        }
+
     }
 }
 
 void initBuild(Map<String, Object> params = [:]) {
-    def defaultParams = [
+    Map<String, Object> resolvedParams = [
             pomLocation: 'pom.xml',
             deleteBuildOnBump: false,
             renameJenkinsBuild: false
-    ]
-    Map<String, Object> resolvedParams = [:] << defaultParams << params
+    ] << params
 
     if (!env.BRANCH_NAME) {
         env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dev/null').trim()
     }
+    sh "logger branchname='${BRANCH_NAME}', branch='${branch}'"
 
     def authors = currentBuild.changeSets.collectMany {
         it.toList().collect {
             it.getAuthor().getId()
         }
     }
-    sh "logger authors='${authors}'"
+    sh "logger authors='${authors.unique()}'"
 
     // Remove the Jenkins user (commits by jenkins, e.g. for a new release, don't count)
     // This prevents that builds get into a loop
@@ -87,7 +125,7 @@ void initBuild(Map<String, Object> params = [:]) {
         causedByUser = currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId().toString()
         env.IS_AUTOMATED_BUILD = false
     }
-    // if authors is empty (no commit by user) and the job is not started by a user, then abort the job
+    // if authors is empty (no GIT-commit by user) and the job is not started by a user, then abort the job
     if (authors.empty && Boolean.valueOf(env.IS_AUTOMATED_BUILD) && (Integer.valueOf(env.BUILD_NUMBER) > 1)) {
         sh "Abort pipeline job"
         if (resolvedParams.deleteOnBump) {
@@ -95,9 +133,20 @@ void initBuild(Map<String, Object> params = [:]) {
         }
         currentBuild.result = Result.ABORTED
         currentBuild.displayName = "#${env.BUILD_NUMBER} aborted. No new commits"
-        error("Last commit bumped the version, aborting the build to prevent looping")
+        error("Last commit bumped the version, aborting build to prevent looping")
     }
 
     env.LAST_COMMITTER = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%an'").trim()
     sh "logger fullProjectName='${currentBuild.fullProjectName}', build='${currentBuild.displayName}', lastCommitter='${env.LAST_COMMITTER}', authors='${authors.unique()}'"
+}
+
+void mavenBuild(Map<String, Object> params = [:]) {
+    Map<String, Object> resolvedParams = [
+            pomLocation: 'pom.xml',
+            mavenSettingsFile: 'default-maven-settings',
+            arguments: 'clean package'
+    ] << params
+
+    // withMaven(mavenSettingsConfig: resolvedParams.mavenSettingsFile) {sh "mvn clean package"}
+    sh "mvn -f ${resolvedParams.pomLocation} ${resolvedParams.arguments}"
 }
