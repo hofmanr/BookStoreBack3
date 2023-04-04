@@ -63,7 +63,7 @@ pipeline {
         }
 
         stage('Build for Deploy') {
-            when { anyOf { branch: 'main'}}
+            when { anyOf { branch 'main'}}
             steps {
                 sh '''
                     mvn -f ${appPom} versions:set -DprocessAllModules -DnewVersion=${VERSION}
