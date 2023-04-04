@@ -10,8 +10,9 @@ pipeline {
     agent {
         docker {
             image 'rhofman14/maven-agent:3.8.6-jdk11'
+            args '-v $HOME/.m2:/home/jenkins/.m2'
 /*            image 'maven:3.9.0-eclipse-temurin-11-alpine' */
-            args '-v $HOME/.m2:/root/.m2'
+/*            args '-v $HOME/.m2:/root/.m2' */
         }
     }
 
