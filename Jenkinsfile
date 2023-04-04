@@ -112,7 +112,6 @@ void initBuild(Map<String, Object> params = [:]) {
             it.getAuthor().getId()
         }
     }
-    sh "logger authors='${authors.unique()}'"
 
     // Remove the Jenkins user (commits by jenkins, e.g. for a new release, don't count)
     // This prevents that builds get into a loop
