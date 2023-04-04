@@ -63,9 +63,12 @@ pipeline {
 
         stage('Build for Deploy') {
             when { anyOf { branch '*main'}}
+            environment {
+                pomfile = "${appPom}".toString()
+            }
             steps {
                 sh '''
-                    mvn -f ${appPom} versions:set -DprocessAllModules -DnewVersion=${VERSION}
+                    mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
                     mvn versions:commit -DprocessAllModules
                 '''
                 mavenBuild(pomLocation: appPom, argumants: 'clean package -DskipTests')
