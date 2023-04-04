@@ -71,7 +71,7 @@ pipeline {
                     mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
                     mvn versions:commit -DprocessAllModules
                 '''
-                mavenBuild(pomLocation: appPom, argumants: 'clean package -DskipTests')
+                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests')
             }
         }
 
@@ -90,7 +90,7 @@ pipeline {
 
         stage('Publish') {
             steps {
-                archiveArtifacts 'target/*.jar'
+                archiveArtifacts 'bsb-ear/target/*.ear'
             }
         }
 
