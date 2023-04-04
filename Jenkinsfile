@@ -54,7 +54,6 @@ pipeline {
                     branch 'hotfix/*'
                     branch 'feature/*'
                     branch 'PR-*'
-                    branch 'main'
                 }
             }
             steps {
@@ -63,7 +62,7 @@ pipeline {
         }
 
         stage('Build for Deploy') {
-            when { anyOf { branch 'main'}}
+            when { anyOf { branch '*main'}}
             steps {
                 sh '''
                     mvn -f ${appPom} versions:set -DprocessAllModules -DnewVersion=${VERSION}
@@ -75,7 +74,7 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                mavenBuild(pomLocation: appPom, argumants: 'test')
+                mavenBuild(pomLocation: appPom, arguments: 'test')
             }
             post {
                 always {
@@ -102,10 +101,11 @@ void initBuild(Map<String, Object> params = [:]) {
             renameJenkinsBuild: false
     ] << params
 
+    // Multibranch pipeline jobs possesses the environment variable BRANCH_NAME; normal pipeline jobs not
     if (!env.BRANCH_NAME) {
-        env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dev/null').trim()
+        //env.BRANCH_NAME = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD 2> /dev/null').trim()
+        env.BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"  // e.g. origin/main
     }
-//    sh "logger branchname='${env.BRANCH_NAME}'"
 
     def authors = currentBuild.changeSets.collectMany {
         it.toList().collect {
