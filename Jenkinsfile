@@ -30,10 +30,7 @@ pipeline {
     stages {
         stage('Verify') {
             steps {
-                sh  '''
-                    mvn --version
-                    java -version
-                    '''
+                sh  'mvn --version'
                 sh 'ls -l "$WORKSPACE"'
             }
         }
