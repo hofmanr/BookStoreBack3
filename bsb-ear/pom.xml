@@ -10,9 +10,7 @@
   </parent>
 
   <artifactId>bsb-ear</artifactId>
-
   <packaging>ear</packaging>
-
   <name>EAR Module</name>
 
   <dependencies>
@@ -65,7 +63,6 @@
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
 
     <plugins>
       <plugin>
