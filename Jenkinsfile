@@ -60,7 +60,7 @@ pipeline {
             }
         }
 
-        stage('Build for Deploy') {
+        stage('Build with Deploy') {
             when { anyOf { branch '*main'}} // or 'develop'
             environment {
                 pomfile = "${appPom}".toString()
@@ -77,7 +77,7 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                mavenBuild(pomLocation: appPom, arguments: 'test')
+                mavenBuild(pomLocation: appPom, arguments: 'surefire:test')
             }
             post {
                 always {
