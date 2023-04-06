@@ -89,7 +89,9 @@ pipeline {
         }
 
         stage('Create Release') {
-            when { anyOf { branch 'release/*'; branch: 'hotfix/*'}}
+            when {
+                anyOf { branch 'release/*'; branch 'hotfix/*' }
+            }
             steps {
                 script {
                     releaseVersion = mavenRelease(pomlocation: appPom)
