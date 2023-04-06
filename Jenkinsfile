@@ -5,6 +5,7 @@
 def appPom = "pom.xml"
 def ejbPom = "bsb-ejb/pom.xml"
 def webPom = "bsb-web/pom.xml"
+def jenkinsSettings = "bsb-maven-settings" // mavens settings file with Nexus URL and credentials
 
 pipeline {
     agent {
@@ -60,7 +61,7 @@ pipeline {
         }
 
         stage('Build for Deploy') {
-            when { anyOf { branch '*main'}}
+            when { anyOf { branch '*main'}} // or 'develop'
             environment {
                 pomfile = "${appPom}".toString()
             }
@@ -69,6 +70,7 @@ pipeline {
                     mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
                     mvn versions:commit -DprocessAllModules
                 '''
+                // Should be clean deploy if Nexus is used
                 mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests')
             }
         }
@@ -79,9 +81,29 @@ pipeline {
             }
             post {
                 always {
-                    dir('./target/surefire-reports') {
-                        junit '*.xml'
+                    dir('**/target/surefire-reports') {
+                        junit allowEmptyResults: true, testResults: '*.xml'
                     }
+                }
+            }
+        }
+
+        stage('Create Release') {
+            when { anyOf { branch 'release/*'; branch: 'hotfix/*'}}
+            steps {
+                releaseVersion = mavenRelease(pomlocation: appPom)
+                echo 'Release ${releaseVersion}'
+            }
+        }
+
+        stage('Delay for Release Deployment') {
+            when { anyOf { branch 'release/*'}}
+            steps {
+                script {
+                    def delay = load "jenkins/delay.groovy"
+                    def delayUntil = delay.getDateTime("23:00")
+                    echo 'Delay for deployment'
+                    delay.sleepUntil(delayUntil, this)
                 }
             }
         }
@@ -150,3 +172,53 @@ void mavenBuild(Map<String, Object> params = [:]) {
     // withMaven(mavenSettingsConfig: resolvedParams.mavenSettingsFile) {sh "mvn clean package"}
     sh "mvn -f ${resolvedParams.pomLocation} ${resolvedParams.arguments}"
 }
+
+String mavenRelease(Map params = [:]) {
+    Map<String, Object> resolvedParams = [
+            pomLocation: 'pom.xml',
+            mavenSettingsFile: 'default-maven-settings',
+            arguments: ''
+    ] << params
+
+    if (env.gitSemVersion) {
+        releaseWithVersionStrategy(resolvedParams)
+        return env.gitSemVersion
+    } else {
+        return releaseWithoutVersionStrategy(resolvedParams)
+    }
+}
+
+private void releaseWithVersionStrategy(Map resolvedParams) {
+//    withMaven(mavenSettingsConfig: resolvedParams.mavenSettingsFile) {
+    sh "mvn -f ${resolvedParams.pomLocation} -DskipTests deploy"
+//    }
+
+    // Cleanup local modifications
+    sh "git reset --hard"
+}
+
+private String releaseWithoutVersionStrategy(Map resolvedParams) {
+    def version = null
+//    withMaven(mavenSettingsConfig: resolvedParams.mavenSettingsFile) {
+        version = getReleaseVersion(resolvedParams.pomLocation)
+        sh "mvn -f ${resolvedParams.pomLocation} release:prepare -Darguments='-DskipTests ${resolvedParams.arguments}'"
+        sh "mvn -f ${resolvedParams.pomLocation} release:perform -Darguments='-DskipTests ${resolvedParams.arguments}'"
+//    }
+
+    sh "git status"
+    sh "git pull --rebase origin ${env.BRANCH_NAME}"
+    sh "git push --tags origin ${env.BRANCH_NAME}"
+
+    return version
+}
+
+private String getReleaseVersion(pomLocation) {
+    def pom = readMavenPom file: pomLocation
+    def version = pom.version
+    if (version == null || version.toString().trim() == '') {
+        version = pom.parent.version
+    }
+    return version?.replace('-SNAPSHOT', '')
+}
+
+
