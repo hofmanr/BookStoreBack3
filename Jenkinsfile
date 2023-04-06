@@ -77,7 +77,7 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                mavenBuild(pomLocation: appPom, arguments: 'surefire:test')
+                mavenBuild(pomLocation: appPom, arguments: 'test')
             }
             post {
                 always {
