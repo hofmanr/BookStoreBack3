@@ -56,7 +56,7 @@ pipeline {
                 }
             }
             steps {
-                mavenBuild(pomLocation: appPom, argumants: 'clean package -DskipTests')
+                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests')
             }
         }
 
