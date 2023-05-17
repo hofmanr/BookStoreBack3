@@ -61,7 +61,7 @@ pipeline {
             }
         }
 
-        stage('Build with Deploy') {
+        stage('Build for Deploy') {
             when { anyOf { branch '*main'}} // or 'develop'
             environment {
                 pomfile = "${appPom}".toString()
@@ -124,7 +124,14 @@ pipeline {
             parallel {
                 stage('Database') {
                     steps {
-                        echo 'Echo Database'
+                        script {
+                            deployToDb(
+                                    artifactId: 'package-db-bsb',
+                                    destination: new Destination(name: 'BSB-DB', stage: 'Test'),
+                                    releaseVersion: releaseVersion,
+                                    credentials: 'BSB_USER_DB'
+                            )
+                        }
                     }
                 }
                 stage('Application') {
@@ -150,7 +157,7 @@ pipeline {
                 stage('Database') {
                     steps {
                         script {
-                            deployDb(
+                            deployToDb(
                                     artifactId: 'package-db-bsb',
                                     destination: new Destination(name: 'BSB-DB', stage: 'Test'),
                                     releaseVersion: releaseVersion,
@@ -162,7 +169,7 @@ pipeline {
                 stage('Application') {
                     steps {
                         script {
-                            deployApp(
+                            deployToAppServer(
                                     artifactId: 'bsb-ear',
                                     destination: new Destination(name: 'BSB-APP', stage: 'Test'),
                                     releaseVersion: releaseVersion,
