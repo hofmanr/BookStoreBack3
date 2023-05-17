@@ -1,6 +1,7 @@
 #!groovy
 
 @Library('common-lib')
+import nl.rhofman.jenkins.utils.domain.Destination
 
 def appPom = "pom.xml"
 def ejbPom = "bsb-ejb/pom.xml"
@@ -32,7 +33,7 @@ pipeline {
     stages {
         stage('Verify') {
             steps {
-                sh  'mvn --version'
+                auditTools()
                 sh 'ls -l "$WORKSPACE"'
             }
         }
@@ -118,6 +119,75 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            when { anyOf { branch '*main'}} // or 'develop'
+            parallel {
+                stage('Database') {
+                    script {
+                        deployToDb(
+                                artifactId: 'package-db-bsb',
+                                destination: new Destination(name: 'BSB-DB', stage: 'Develop'),
+                                releaseVersion: releaseVersion,
+                                credentials: 'BSB_USER_DB'
+                        )
+                    }
+                }
+                stage('Application') {
+                    script {
+                        deployToAppServer(
+                                artifactId: 'bsb-ear',
+                                destination: new Destination(name: 'BSB-APPSERVER', stage: 'Develop'),
+                                releaseVersion: releaseVersion,
+                                credentials: 'BSB_USER_LIBERTY'
+                        )
+                    }
+                }
+            }
+            post {
+                success {
+                    notifyBuildResult(deployEnv: 'Develop', isSuccess: true)
+                }
+                failure {
+                    notifyBuildResult(deployEnv: 'Develop', isSuccess: false)
+                }
+            }
+
+        }
+
+        stage('Deploy Release') {
+            when { anyOf { branch 'release/*'}}
+            parallel {
+                stage('Database') {
+                    script {
+                        deployDb(
+                                artifactId: 'package-db-bsb',
+                                destination: new Destination(name: 'BSB-DB', stage: 'Test'),
+                                releaseVersion: releaseVersion,
+                                credentials: 'BSB_USER_DB'
+                        )
+                    }
+                }
+                stage('Application') {
+                    script {
+                        deployApp(
+                                artifactId: 'bsb-ear',
+                                destination: new Destination(name: 'BSB-APP', stage: 'Test'),
+                                releaseVersion: releaseVersion,
+                                credentials: 'BSB_USER_LIBERTY'
+                        )
+                    }
+                }
+            }
+            post {
+                success {
+                    notifyBuildResult(deployEnv: 'Ontwikkel', isSuccess: true)
+                }
+                failure {
+                    notifyBuildResult(deployEnv: 'Ontwikkel', isSuccess: false)
+                }
+            }
+
+        }
     }
 }
 
