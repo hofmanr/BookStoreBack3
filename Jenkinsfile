@@ -33,7 +33,7 @@ pipeline {
     stages {
         stage('Verify') {
             steps {
-                auditTools()
+                auditTools message: "BookStore App"
                 sh 'ls -l "$WORKSPACE"'
             }
         }
