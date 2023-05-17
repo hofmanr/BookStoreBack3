@@ -128,7 +128,6 @@ pipeline {
                             deployToDb(
                                     artifactId: 'package-db-bsb',
                                     destination: new Destination(name: 'BSB-DB', stage: 'Test'),
-                                    releaseVersion: releaseVersion,
                                     credentials: 'BSB_USER_DB'
                             )
                         }
