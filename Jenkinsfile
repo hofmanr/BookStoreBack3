@@ -120,30 +120,16 @@ pipeline {
         }
 
         stage('Deploy') {
-            when { anyOf { branch '*main'}} // or 'develop'
+            when { anyOf { branch '*main'} } // or 'develop'
             parallel {
                 stage('Database') {
                     steps {
-                        script {
-                            deployToDb(
-                                    artifactId: 'package-db-bsb',
-                                    destination: new Destination(name: 'BSB-DB', stage: 'Develop'),
-                                    releaseVersion: releaseVersion,
-                                    credentials: 'BSB_USER_DB'
-                            )
-                        }
+                        echo 'Echo Database'
                     }
                 }
                 stage('Application') {
                     steps {
-                        script {
-                            deployToAppServer(
-                                    artifactId: 'bsb-ear',
-                                    destination: new Destination(name: 'BSB-APPSERVER', stage: 'Develop'),
-                                    releaseVersion: releaseVersion,
-                                    credentials: 'BSB_USER_LIBERTY'
-                            )
-                        }
+                        echo 'Echo Application'
                     }
                 }
             }
