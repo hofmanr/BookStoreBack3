@@ -13,6 +13,10 @@
   <packaging>ear</packaging>
   <name>EAR Module</name>
 
+  <properties>
+    <maven.deploy.skip>false</maven.deploy.skip>
+  </properties>
+
   <dependencies>
     <!-- EJB dependencies -->
     <dependency>

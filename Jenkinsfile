@@ -127,7 +127,7 @@ pipeline {
                         script {
                             deployToDb(
                                     artifactId: 'package-db-bsb',
-                                    destination: new Destination(name: 'BSB-DB', stage: 'Test'),
+                                    destination: new Destination(name: 'BSB-DB', stage: 'Develop'),
                                     credentials: 'BSB_USER_DB'
                             )
                         }
