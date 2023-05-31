@@ -122,7 +122,7 @@ pipeline {
         stage('Nexus Deploy') {
             steps {
                 configFileProvider(
-                        [configFile(fileId: 'bsb-maven-settings', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+                        [configFile(fileId: '62010aed-1511-4b11-a4e4-17d7de8f0690', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
                 }
             }
