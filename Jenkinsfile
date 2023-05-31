@@ -119,6 +119,15 @@ pipeline {
             }
         }
 
+        stage('Nexus Deploy') {
+            steps {
+                configFileProvider(
+                        [configFile(fileId: 'bsb-maven-settings', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
+                }
+            }
+        }
+
         stage('Deploy') {
             when { anyOf { branch '*main'} } // or 'develop'
             parallel {
