@@ -16,26 +16,28 @@
 
     <name>Bookstore Project</name>
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>nexus-local</id>-->
-<!--            <name>Release Repository</name>-->
-<!--            <url>http://localhost:8081/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-local</id>-->
-<!--            <name>Snapshot Repository</name>-->
-<!--            <url>http://localhost:8081/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
-
+    <!-- The ip-address is the address of the Nexus server (is running in a container) -->
+    <!-- The Nexus server must be reachable from de Jenkins-agent (which is running in its own container) -->
     <distributionManagement>
         <repository>
             <id>nexus-local</id>
             <name>Release Repository</name>
-            <url>http://localhost:8081/repository/maven-internal//</url>
+            <url>http://172.19.0.5:8081/repository/maven-releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>nexus-local</id>
+            <name>Snapshot Repository</name>
+            <url>http://172.19.0.5:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
+
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>nexus-local</id>-->
+<!--            <name>Release Repository</name>-->
+<!--            <url>http://localhost:8081/repository/maven-internal//</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
