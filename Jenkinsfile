@@ -73,7 +73,7 @@ pipeline {
                 '''
                 // Should be clean deploy if Nexus is used
                 configFileProvider(
-                        [configFile(fileId: '62010aed-1511-4b11-a4e4-17d7de8f0690', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS clean package -DskipTests'
                 }
 /*                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests') */
