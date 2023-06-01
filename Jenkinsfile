@@ -57,7 +57,7 @@ pipeline {
                 }
             }
             steps {
-                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests')
+                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests', mavenSettingsFile: jenkinsSettings)
             }
         }
 
@@ -82,7 +82,7 @@ pipeline {
 
         stage('Unit Test') {
             steps {
-                mavenBuild(pomLocation: appPom, arguments: 'test')
+                mavenBuild(pomLocation: appPom, arguments: 'test', mavenSettingsFile: jenkinsSettings)
             }
             post {
                 always {
@@ -126,7 +126,7 @@ pipeline {
         stage('Nexus Deploy') {
             steps {
                 configFileProvider(
-                        [configFile(fileId: '62010aed-1511-4b11-a4e4-17d7de8f0690', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+                        [configFile(fileId: 'bsb-maven-settings', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
                 }
             }
