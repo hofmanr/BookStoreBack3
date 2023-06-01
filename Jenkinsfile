@@ -71,12 +71,7 @@ pipeline {
                     mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
                     mvn versions:commit -DprocessAllModules
                 '''
-                // Should be clean deploy if Nexus is used
-                configFileProvider(
-                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS clean package -DskipTests'
-                }
-/*                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests') */
+                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests', mavenSettingsFile: jenkinsSettings)
             }
         }
 
@@ -125,8 +120,9 @@ pipeline {
 
         stage('Nexus Deploy') {
             steps {
+                /* alternative for withMaven (in mavenBuild) */
                 configFileProvider(
-                        [configFile(fileId: 'bsb-maven-settings', variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
                 }
             }
