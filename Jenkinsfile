@@ -3,6 +3,7 @@
 @Library('common-lib')
 import nl.rhofman.jenkins.utils.domain.Destination
 
+def appPrefix = "BSB"
 def appPom = "pom.xml"
 def ejbPom = "bsb-ejb/pom.xml"
 def webPom = "bsb-web/pom.xml"
@@ -19,10 +20,11 @@ pipeline {
     }
 
     environment {
-        POM = readMavenPom file: appPom
         GIT_REVISION = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
         GIT_AUTHOR = sh(returnStdout: true, script: 'git log -1 --pretty=%cn')
-        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
+        POM = readMavenPom file: appPom
+        VERSION = getVersion appPrefix: appPrefix, pomVersion: POM.getVersion()
+//        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
     }
 
     options {
@@ -31,19 +33,16 @@ pipeline {
     }
 
     stages {
-        stage('Verify') {
-            steps {
-                auditTools message: "BookStore App"
-                sh 'ls -l "$WORKSPACE"'
-            }
-        }
-
         stage('Init') {
             steps {
                 script {
+                    auditTools message: "BookStore Backend"
                     initBuild pomLocation: appPom
                 }
-                sh 'printenv'
+                sh '''
+                    printenv
+                    ls -l "$WORKSPACE"
+                '''
             }
         }
 
@@ -57,7 +56,14 @@ pipeline {
                 }
             }
             steps {
-                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests', mavenSettingsFile: jenkinsSettings)
+                mavenBuild(pomLocation: appPom, arguments: 'clean package', mavenSettingsFile: jenkinsSettings)
+            }
+            post {
+                always {
+                    dir('**/target/surefire-reports') {
+                        junit allowEmptyResults: true, testResults: '*.xml'
+                    }
+                }
             }
         }
 
@@ -71,13 +77,7 @@ pipeline {
                     mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
                     mvn versions:commit -DprocessAllModules
                 '''
-                mavenBuild(pomLocation: appPom, arguments: 'clean package -DskipTests', mavenSettingsFile: jenkinsSettings)
-            }
-        }
-
-        stage('Unit Test') {
-            steps {
-                mavenBuild(pomLocation: appPom, arguments: 'test', mavenSettingsFile: jenkinsSettings)
+                mavenBuild(pomLocation: appPom, arguments: 'clean package', mavenSettingsFile: jenkinsSettings)
             }
             post {
                 always {
@@ -120,11 +120,32 @@ pipeline {
 
         stage('Nexus Deploy') {
             steps {
-                /* alternative for withMaven (in mavenBuild) */
-                configFileProvider(
-                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
+                script {
+                    String version = "$VERSION"
+                    // DeployToRepo uses mvn deploy:deploy-file; deploy only one ear-file
+                    if (version.contains("-SNAPSHOT")) {
+                        deployToRepo(
+                                pomLocation: ejbPom,
+                                url: 'http://172.19.0.5:8081/repository/maven-snapshots/',
+                                packaging: 'ear',
+                                repositoryId: 'nexus-local',
+                                mavenSettingsFile: 'bsb-maven-settings'
+                        )
+                    } else {
+                        deployToRepo(
+                                pomLocation: ejbPom,
+                                url: 'http://172.19.0.5:8081/repository/maven-releases/',
+                                packaging: 'ear',
+                                repositoryId: 'nexus-local',
+                                mavenSettingsFile: 'bsb-maven-settings'
+                        )
+                    }
                 }
+                /* or use 'mvn deploy' with withMaven or with configFileProvider (alternative for withMaven) */
+//                configFileProvider(
+//                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
+//                    sh 'mvn -gs $MAVEN_GLOBAL_SETTINGS deploy'
+//                }
             }
         }
 
@@ -198,6 +219,24 @@ pipeline {
 
         }
     }
+}
+
+String getVersion(String appPrefix, String pomVersion) {
+    String branch = "${env.BRANCH_NAME}"  // e.g. feature/BSB-3454 (BSB-3454 could be a ticket in Jira)
+    // pomVersion e.g. 1.1.0-SNAPSHOT
+    if (pomVersion.toUpperCase().endsWith('SNAPSHOT')) {
+        if (branch.contains('release')) {
+            // release
+            return pomVersion.toUpperCase().replaceAll('-SNAPSHOT', "")
+        }
+        String prefix = "$appPrefix-"  // e.g. BSB-
+        if (branch.contains(prefix)) {
+            // Ticket
+            def ticketNo = branch.split(prefix)[1]
+            return pomVersion.toUpperCase().replaceAll('-SNAPSHOT', "-$ticketNo-SNAPSHOT")
+        }
+    }
+    return pomVersion
 }
 
 //void initBuild(Map<String, Object> params = [:]) {
