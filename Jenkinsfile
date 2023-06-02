@@ -23,7 +23,7 @@ pipeline {
         GIT_REVISION = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
         GIT_AUTHOR = sh(returnStdout: true, script: 'git log -1 --pretty=%cn')
         POM = readMavenPom file: appPom
-        VERSION = getVersion appPrefix: appPrefix, pomVersion: POM.getVersion()
+        VERSION = getVersion(appPrefix, "${env.POM.getVersion()}")
 //        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
     }
 
