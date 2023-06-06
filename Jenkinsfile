@@ -118,7 +118,7 @@ pipeline {
                     String version = "$VERSION"
                     // DeployToRepo uses mvn deploy:deploy-file; deploy only one ear-file
                     if (version.contains("-SNAPSHOT")) {
-                        deployToRepo(
+                        mavenPublish(
                                 pomLocation: earPom,
                                 url: 'http://172.19.0.5:8081/repository/maven-snapshots/',
                                 packaging: 'ear',
@@ -126,7 +126,7 @@ pipeline {
                                 mavenSettingsFile: 'bsb-maven-settings'
                         )
                     } else {
-                        deployToRepo(
+                        mavenPublish(
                                 pomLocation: earPom,
                                 url: 'http://172.19.0.5:8081/repository/maven-releases/',
                                 packaging: 'ear',
