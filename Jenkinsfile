@@ -5,8 +5,7 @@ import nl.rhofman.jenkins.utils.domain.Destination
 
 def appPrefix = "BSB"
 def appPom = "pom.xml"
-def ejbPom = "bsb-ejb/pom.xml"
-def webPom = "bsb-web/pom.xml"
+def earPom = "bsb-ear/pom.xml"
 def jenkinsSettings = "bsb-maven-settings" // mavens settings file with Nexus URL and credentials
 
 pipeline {
@@ -118,14 +117,14 @@ pipeline {
             }
         }
 
-        stage('Nexus Deploy') {
+        stage('Save Artifacts') {
             steps {
                 script {
                     String version = "$VERSION"
                     // DeployToRepo uses mvn deploy:deploy-file; deploy only one ear-file
                     if (version.contains("-SNAPSHOT")) {
                         deployToRepo(
-                                pomLocation: ejbPom,
+                                pomLocation: earPom,
                                 url: 'http://172.19.0.5:8081/repository/maven-snapshots/',
                                 packaging: 'ear',
                                 repositoryId: 'nexus-local',
@@ -133,7 +132,7 @@ pipeline {
                         )
                     } else {
                         deployToRepo(
-                                pomLocation: ejbPom,
+                                pomLocation: earPom,
                                 url: 'http://172.19.0.5:8081/repository/maven-releases/',
                                 packaging: 'ear',
                                 repositoryId: 'nexus-local',
