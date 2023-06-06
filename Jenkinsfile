@@ -114,11 +114,6 @@ pipeline {
         stage('Publish') {
             steps {
                 archiveArtifacts 'bsb-ear/target/*.ear'
-            }
-        }
-
-        stage('Save Artifacts') {
-            steps {
                 script {
                     String version = "$VERSION"
                     // DeployToRepo uses mvn deploy:deploy-file; deploy only one ear-file
