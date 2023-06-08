@@ -114,27 +114,13 @@ pipeline {
         stage('Publish') {
             steps {
                 archiveArtifacts 'bsb-ear/target/*.ear'
-                script {
-                    String version = "$VERSION"
-                    // DeployToRepo uses mvn deploy:deploy-file; deploy only one ear-file
-                    if (version.contains("-SNAPSHOT")) {
-                        mavenPublish(
-                                pomLocation: earPom,
-                                url: 'http://172.19.0.5:8081/repository/maven-snapshots/',
-                                packaging: 'ear',
-                                repositoryId: 'nexus-local',
-                                mavenSettingsFile: 'bsb-maven-settings'
-                        )
-                    } else {
-                        mavenPublish(
-                                pomLocation: earPom,
-                                url: 'http://172.19.0.5:8081/repository/maven-releases/',
-                                packaging: 'ear',
-                                repositoryId: 'nexus-local',
-                                mavenSettingsFile: 'bsb-maven-settings'
-                        )
-                    }
-                }
+                // Save artifact(s) in Nexus
+                mavenPublish(
+                        pomLocation: earPom,
+                        packaging: 'ear',
+                        repositoryId: 'nexus-local',
+                        mavenSettingsFile: jenkinsSettings
+                )
                 /* or use 'mvn deploy' with withMaven or with configFileProvider (alternative for withMaven) */
 //                configFileProvider(
 //                        [configFile(fileId: jenkinsSettings, variable: 'MAVEN_GLOBAL_SETTINGS')]) {
