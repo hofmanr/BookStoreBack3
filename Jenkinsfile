@@ -21,9 +21,9 @@ pipeline {
     environment {
         GIT_REVISION = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
         GIT_AUTHOR = sh(returnStdout: true, script: 'git log -1 --pretty=%cn')
-        POM = readMavenPom file: appPom
-        VERSION = getVersion(appPrefix, "${env.POM.getVersion()}")
+//        POM = readMavenPom file: appPom
 //        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
+        VERSION = getVersion(appPrefix)
     }
 
     options {
@@ -215,22 +215,38 @@ pipeline {
     }
 }
 
-String getVersion(String appPrefix, String pomVersion) {
-    String branch = "${env.BRANCH_NAME}"  // e.g. feature/BSB-3454 (BSB-3454 could be a ticket in Jira)
-    // pomVersion e.g. 1.1.0-SNAPSHOT
-    if (pomVersion.toUpperCase().endsWith('SNAPSHOT')) {
-        if (branch.contains('release')) {
-            // release
-            return pomVersion.toUpperCase().replaceAll('-SNAPSHOT', "")
-        }
-        String prefix = "$appPrefix-"  // e.g. BSB-
-        if (branch.contains(prefix)) {
-            // Ticket
-            def ticketNo = branch.split(prefix)[1]
-            return pomVersion.toUpperCase().replaceAll('-SNAPSHOT', "-$ticketNo-SNAPSHOT")
+String getVersion(String appPrefix, String pomLocation = "pom.xml", boolean useTag = false) {
+    // Use tag strategy
+    if (useTag) {
+        String lastTag = sh(returnStdout: true, script: "git describe --tags --abbrev=0").trim()
+        if (lastTag.contains("No names found") || lastTag.startsWith("fatal")) {
+            useTag = false // no tag found
+        } else {
+            return lastTag // use branch strategy
         }
     }
-    return pomVersion
+
+    // Use branch strategy (with pom version)
+    if (!useTag) {
+        String branch = "${env.BRANCH_NAME}"  // e.g. feature/BSB-3454 (BSB-3454 could be a ticket in Jira)
+        def pom = readMavenPom file: pomLocation
+        String version = pom.version
+        // pomVersion e.g. 1.1.0-SNAPSHOT
+        if (version.toUpperCase().endsWith('SNAPSHOT')) {
+            if (branch.contains('release')) {
+                // release
+                return version.toUpperCase().replaceAll('-SNAPSHOT', "")
+            }
+            String prefix = "$appPrefix-"  // e.g. BSB-
+            if (branch.contains(prefix)) {
+                // Ticket
+                def ticketNo = branch.split(prefix)[1]
+                return version.toUpperCase().replaceAll('-SNAPSHOT', "-$ticketNo-SNAPSHOT")
+            }
+        }
+        return version
+    }
+    return "1.0.0"
 }
 
 //void initBuild(Map<String, Object> params = [:]) {
