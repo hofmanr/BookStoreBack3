@@ -23,7 +23,7 @@ pipeline {
         GIT_AUTHOR = sh(returnStdout: true, script: 'git log -1 --pretty=%cn')
 //        POM = readMavenPom file: appPom
 //        VERSION = POM.getVersion().toLowerCase().replaceAll('-snapshot', '-' + GIT_REVISION)
-        VERSION = getVersion("GitFlow", appPrefix)
+//        VERSION = getVersion("GitFlow", appPrefix)
     }
 
     options {
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     auditTools message: "BookStore Backend"
-                    initBuild pomLocation: appPom
+                    initBuild pomLocation: appPom, versionStrategy: 'GitFlow', prefix: 'bsb'
                 }
                 sh '''
                     printenv
@@ -72,10 +72,10 @@ pipeline {
                 pomfile = "${appPom}".toString()
             }
             steps {
-                sh '''
-                    mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
-                    mvn versions:commit -DprocessAllModules
-                '''
+//                sh '''
+//                    mvn -f ${pomfile} versions:set -DprocessAllModules -DnewVersion=${VERSION}
+//                    mvn versions:commit -DprocessAllModules
+//                '''
                 mavenBuild(pomLocation: appPom, arguments: 'clean package', mavenSettingsFile: jenkinsSettings)
             }
             post {
@@ -202,75 +202,77 @@ pipeline {
 }
 
 // VersionStrategy: GitFlow or FeatureBranch
-String getVersion(String versionStrategy = "GitFlow", String prefix, String pomLocation = "pom.xml") {
-    String strategy = versionStrategy.toUpperCase()
-    String branch = "${env.BRANCH_NAME}"  // e.g. feature/BSB-3454 (BSB-3454 could be a ticket in Jira) or develop or master or release/1.2.0
+//String getVersion(String versionStrategy = "GitFlow", String prefix, String pomLocation = "pom.xml") {
+//    String strategy = versionStrategy.toUpperCase()
+//    String branch = "${env.BRANCH_NAME}"  // e.g. feature/BSB-3454 (BSB-3454 could be a ticket in Jira) or develop or master or release/1.2.0
+//
+//    // Always use the tag if it's set
+//    if (branch.contains('master') || branch.contains('main') || branch.contains('develop')) {
+//        String lastTag = sh(returnStdout: true, script: "git describe --tags --abbrev=0").trim()
+//        if (!lastTag.toUpperCase().contains("NO NAMES FOUND") && !lastTag.toUpperCase().contains("FATAL")) {
+//            return lastTag // use last tag
+//        }
+//    }
+//
+//    // Use feature branching strategy
+//    if (strategy == "FEATUREBRANCH") {
+//        // Get version from pom.xml and remove '-SNAPSHOT'
+//        String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
+//        String prefixSep = "$prefix-"  // e.g. BSB-
+//        // Get total commit count
+//        if (branch.contains('master') || branch.contains('main') || branch.contains('develop')) {
+//            String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
+//            return "${pomVersion}-${commitCount}"
+//        }
+//        if (branch.contains(prefixSep)) {
+//            def ticketNo = branch.split(prefixSep)[1]
+//            return "${pomVersion}-${ticketNo}-SNAPSHOT"
+//        }
+//        return "${pomVersion}-${branch}-SNAPSHOT"
+//    }
+//
+//    if (strategy == "GITFLOW") {
+//        if (branch.contains('release')) {
+//            // release; e.g. release/1.2.0
+//            return branch.replace('release/', '')
+//        }
+//
+//        // Get version from pom.xml and remove '-SNAPSHOT'
+//        String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
+//        String prefixSep = "$prefix-"  // e.g. BSB-
+//        if (branch.contains("feature") || branch.contains("hotfix")) {
+//            if (branch.contains(prefixSep)) {
+//                // Ticket for feature branches e.g. feature/BSB-4536
+//                def ticketNo = branch.split(prefixSep)[1]
+//                return "${pomVersion}-${ticketNo}-SNAPSHOT"
+//            }
+//            String branchName = branch
+//            if (branch.contains("feature")) {
+//                branchName = branch.replace('feature/', '')
+//            }
+//            if (branch.contains("hotfix")) {
+//                branchName = branch.replace('hotfix/', '')
+//            }
+//            return "${pomVersion}-${branchName}-SNAPSHOT"
+//        }
+//
+//        if (branch.contains("develop")) {
+//            return "${pomVersion}-SNAPSHOT"
+//        }
+//        // Get total commit count
+//        String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
+//        return "${pomVersion}-${commitCount}"
+//    }
+//
+//    return getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
+//}
+//
+//String getPomVersion(String pomLocation) {
+//    def pom = readMavenPom file: pomLocation
+//    return pom.version
+//}
 
-    // Always use the tag if it's set
-    if (branch.contains('master') || branch.contains('main') || branch.contains('develop')) {
-        String lastTag = sh(returnStdout: true, script: "git describe --tags --abbrev=0").trim()
-        if (!lastTag.toUpperCase().contains("NO NAMES FOUND") && !lastTag.toUpperCase().contains("FATAL")) {
-            return lastTag // use last tag
-        }
-    }
 
-    // Use feature branching strategy
-    if (strategy == "FEATUREBRANCH") {
-        // Get version from pom.xml and remove '-SNAPSHOT'
-        String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
-        String prefixSep = "$prefix-"  // e.g. BSB-
-        // Get total commit count
-        if (branch.contains('master') || branch.contains('main') || branch.contains('develop')) {
-            String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
-            return "${pomVersion}-${commitCount}"
-        }
-        if (branch.contains(prefixSep)) {
-            def ticketNo = branch.split(prefixSep)[1]
-            return "${pomVersion}-${ticketNo}-SNAPSHOT"
-        }
-        return "${pomVersion}-${branch}-SNAPSHOT"
-    }
-
-    if (strategy == "GITFLOW") {
-        if (branch.contains('release')) {
-            // release; e.g. release/1.2.0
-            return branch.replace('release/', '')
-        }
-
-        // Get version from pom.xml and remove '-SNAPSHOT'
-        String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
-        String prefixSep = "$prefix-"  // e.g. BSB-
-        if (branch.contains("feature") || branch.contains("hotfix")) {
-            if (branch.contains(prefixSep)) {
-                // Ticket for feature branches e.g. feature/BSB-4536
-                def ticketNo = branch.split(prefixSep)[1]
-                return "${pomVersion}-${ticketNo}-SNAPSHOT"
-            }
-            String branchName = branch
-            if (branch.contains("feature")) {
-                branchName = branch.replace('feature/', '')
-            }
-            if (branch.contains("hotfix")) {
-                branchName = branch.replace('hotfix/', '')
-            }
-            return "${pomVersion}-${branchName}-SNAPSHOT"
-        }
-
-        if (branch.contains("develop")) {
-            return "${pomVersion}-SNAPSHOT"
-        }
-        // Get total commit count
-        String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
-        return "${pomVersion}-${commitCount}"
-    }
-
-    return getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
-}
-
-String getPomVersion(String pomLocation) {
-    def pom = readMavenPom file: pomLocation
-    return pom.version
-}
 
 //void initBuild(Map<String, Object> params = [:]) {
 //    Map<String, Object> resolvedParams = [
