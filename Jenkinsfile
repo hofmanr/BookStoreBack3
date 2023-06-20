@@ -67,7 +67,7 @@ pipeline {
         }
 
         stage('Build for Deploy') {
-            when { anyOf { branch '*main'}} // or 'develop'
+            when { anyOf { branch 'master'; branch 'develop' }}
             environment {
                 pomfile = "${appPom}".toString()
             }
@@ -130,7 +130,7 @@ pipeline {
         }
 
         stage('Deploy') {
-            when { anyOf { branch '*main'} } // or 'develop'
+            when { anyOf { branch 'master'; branch 'develop' } }
             parallel {
                 stage('Database') {
                     steps {
