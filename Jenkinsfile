@@ -220,15 +220,15 @@ String getVersion(String versionStrategy = "GitFlow", String prefix, String pomL
         String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
         String prefixSep = "$prefix-"  // e.g. BSB-
         // Get total commit count
-        String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
         if (branch.contains('master') || branch.contains('main') || branch.contains('develop')) {
+            String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
             return "${pomVersion}-${commitCount}"
         }
         if (branch.contains(prefixSep)) {
             def ticketNo = branch.split(prefixSep)[1]
-            return "${pomVersion}-${ticketNo}-${commitCount}-SNAPSHOT"
+            return "${pomVersion}-${ticketNo}-SNAPSHOT"
         }
-        return "${pomVersion}-${branch}-${commitCount}-SNAPSHOT"
+        return "${pomVersion}-${branch}-SNAPSHOT"
     }
 
     if (strategy == "GITFLOW") {
@@ -240,13 +240,11 @@ String getVersion(String versionStrategy = "GitFlow", String prefix, String pomL
         // Get version from pom.xml and remove '-SNAPSHOT'
         String pomVersion = getPomVersion(pomLocation).replaceAll('-SNAPSHOT', "")
         String prefixSep = "$prefix-"  // e.g. BSB-
-        // Get total commit count
-        String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
         if (branch.contains("feature") || branch.contains("hotfix")) {
             if (branch.contains(prefixSep)) {
                 // Ticket for feature branches e.g. feature/BSB-4536
                 def ticketNo = branch.split(prefixSep)[1]
-                return "${pomVersion}-${ticketNo}-${commitCount}-SNAPSHOT"
+                return "${pomVersion}-${ticketNo}-SNAPSHOT"
             }
             String branchName = branch
             if (branch.contains("feature")) {
@@ -255,12 +253,14 @@ String getVersion(String versionStrategy = "GitFlow", String prefix, String pomL
             if (branch.contains("hotfix")) {
                 branchName = branch.replace('hotfix/', '')
             }
-            return "${pomVersion}-${branchName}-${commitCount}-SNAPSHOT"
+            return "${pomVersion}-${branchName}-SNAPSHOT"
         }
 
         if (branch.contains("develop")) {
-            return "${pomVersion}-${commitCount}-SNAPSHOT"
+            return "${pomVersion}-SNAPSHOT"
         }
+        // Get total commit count
+        String commitCount = sh(returnStdout: true, script: "git rev-list --all --count").trim()
         return "${pomVersion}-${commitCount}"
     }
 
