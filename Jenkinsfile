@@ -258,6 +258,9 @@ String getVersion(String versionStrategy = "GitFlow", String prefix, String pomL
             return "${pomVersion}-${branchName}-${commitCount}-SNAPSHOT"
         }
 
+        if (branch.contains("develop")) {
+            return "${pomVersion}-${commitCount}-SNAPSHOT"
+        }
         return "${pomVersion}-${commitCount}"
     }
 
