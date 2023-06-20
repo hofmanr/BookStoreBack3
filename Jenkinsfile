@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     auditTools message: "BookStore Backend"
-                    initBuild pomLocation: appPom, versionStrategy: 'GitFlow', prefix: 'bsb'
+                    initBuild pomLocation: appPom, versionStrategy: 'GitFlow', prefix: 'bsb', mavenSettingsFile: jenkinsSettings
                 }
                 sh '''
                     printenv
