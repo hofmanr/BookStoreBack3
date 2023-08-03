@@ -32,6 +32,10 @@
             <groupId>nl.rhofman.bookstore</groupId>
             <artifactId>bsb-exception</artifactId>
         </dependency>
+        <dependency>
+            <groupId>nl.rhofman.bookstore</groupId>
+            <artifactId>bsb-shared</artifactId>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>

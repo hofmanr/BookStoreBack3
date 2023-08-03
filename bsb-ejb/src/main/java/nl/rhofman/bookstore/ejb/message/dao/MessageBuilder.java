@@ -1,6 +1,6 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
-import nl.rhofman.bookstore.ejb.message.domain.MessageMetadata;
+import nl.rhofman.bookstore.ejb.message.domain.Metadata;
 import nl.rhofman.bookstore.ejb.message.event.Message;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 public class MessageBuilder {
     private Long messageID;
     private String messageType;
-    private MessageMetadata messageMetadata;
+    private Metadata metadata;
     private Object domainObject;
 
     public MessageBuilder withMessageID(Long messageID) {
@@ -21,8 +21,8 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder withMessageMetadata(MessageMetadata messageMetadata) {
-        this.messageMetadata = messageMetadata;
+    public MessageBuilder withMessageMetadata(Metadata metadata) {
+        this.metadata = metadata;
         return this;
     }
 
@@ -41,7 +41,7 @@ public class MessageBuilder {
         if (messageType == null) {
             throw new NullPointerException("Unknown MessageType");
         }
-        if (messageMetadata == null) {
+        if (metadata == null) {
             throw new NullPointerException("Metadata missing");
         }
     }
@@ -49,8 +49,8 @@ public class MessageBuilder {
     public <T extends Message> T build(Class<T> clazz) {
         validate();
         try {
-            return clazz.getConstructor(Long.class, String.class, MessageMetadata.class, Object.class)
-                    .newInstance(messageID, messageType,messageMetadata, domainObject);
+            return clazz.getConstructor(Long.class, String.class, Metadata.class, Object.class)
+                    .newInstance(messageID, messageType, metadata, domainObject);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

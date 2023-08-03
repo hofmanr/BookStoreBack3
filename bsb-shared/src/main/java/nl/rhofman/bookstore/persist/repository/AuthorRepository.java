@@ -10,7 +10,6 @@ import nl.rhofman.bookstore.persist.model.Author;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.persist.repository.AbstractRepository;
 
-import java.util.Date;
 import java.util.List;
 
 @Dependent

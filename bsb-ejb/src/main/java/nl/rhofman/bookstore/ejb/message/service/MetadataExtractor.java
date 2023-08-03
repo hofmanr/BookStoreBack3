@@ -1,7 +1,7 @@
 package nl.rhofman.bookstore.ejb.message.service;
 
 import jakarta.enterprise.context.Dependent;
-import nl.rhofman.bookstore.ejb.message.domain.MessageMetadata;
+import nl.rhofman.bookstore.ejb.message.domain.Metadata;
 import nl.rhofman.exception.dao.ServiceException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.exception.domain.ExceptionReason;
@@ -23,7 +23,7 @@ public class MetadataExtractor {
     private InputSource inputXML;
     private XPath xPath;
 
-    public MessageMetadata extractHeader(String xml) {
+    public Metadata extractHeader(String xml) {
         inputXML = new InputSource(new StringReader(xml));
         xPath = XPathFactory.newInstance().newXPath();
 
@@ -34,8 +34,8 @@ public class MetadataExtractor {
         }
     }
 
-    private MessageMetadata getMetadata() throws XPathExpressionException {
-        MessageMetadata metadata = new MessageMetadata();
+    private Metadata getMetadata() throws XPathExpressionException {
+        Metadata metadata = new Metadata();
 
         Node node = (Node) xPath.evaluate("//*[local-name()='header']", inputXML, XPathConstants.NODE);
         if (node == null) {
