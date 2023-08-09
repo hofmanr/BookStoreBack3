@@ -1,7 +1,7 @@
 package nl.rhofman.bookstore.ejb.message.service;
 
 import jakarta.enterprise.context.Dependent;
-import nl.rhofman.bookstore.ejb.message.domain.Metadata;
+import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.exception.dao.ServiceException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.exception.domain.ExceptionReason;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Dependent
-public class MetadataExtractor {
+public class HeaderExtractor {
     private static final ExceptionReason EXCEPTION_REASON = new ExceptionReason("XPT", "XPath expression failed");
     private static final ExceptionOrigin EXCEPTION_ORIGIN =
             new ExceptionOrigin("EMD", "Extract Metadata");
@@ -23,23 +23,23 @@ public class MetadataExtractor {
     private InputSource inputXML;
     private XPath xPath;
 
-    public Metadata extractHeader(String xml) {
+    public Header extract(String xml) {
         inputXML = new InputSource(new StringReader(xml));
         xPath = XPathFactory.newInstance().newXPath();
 
         try {
-            return getMetadata();
+            return getHeader();
         } catch (XPathExpressionException e) {
             throw new ServiceException(EXCEPTION_ORIGIN, EXCEPTION_REASON, e.getMessage(), e);
         }
     }
 
-    private Metadata getMetadata() throws XPathExpressionException {
-        Metadata metadata = new Metadata();
+    private Header getHeader() throws XPathExpressionException {
+        Header header = new Header();
 
         Node node = (Node) xPath.evaluate("//*[local-name()='header']", inputXML, XPathConstants.NODE);
         if (node == null) {
-            return metadata;
+            return header;
         }
         String messageSender = xPath.evaluate(".//*[local-name()='sender']", node);
         String messageRecipient = xPath.evaluate(".//*[local-name()='recipient']", node);
@@ -48,14 +48,14 @@ public class MetadataExtractor {
         String dateOfPreparation = xPath.evaluate(".//*[local-name()='dateOfPreparation']", node);
         String timeOfPreparation = xPath.evaluate(".//*[local-name()='timeOfPreparation']", node);
 
-        metadata.setMessageSender(messageSender);
-        metadata.setMessageRecipient(messageRecipient);
-        metadata.setMessageID(messageID);
-        metadata.setCorrelationID(correlationID);
+        header.setMessageSender(messageSender);
+        header.setMessageRecipient(messageRecipient);
+        header.setMessageID(messageID);
+        header.setCorrelationID(correlationID);
         LocalDate date = LocalDate.parse(dateOfPreparation);
         LocalTime time = LocalTime.parse(timeOfPreparation);
-        metadata.setTimestamp(LocalDateTime.of(date,time));
+        header.setTimestamp(LocalDateTime.of(date,time));
 
-        return metadata;
+        return header;
     }
 }

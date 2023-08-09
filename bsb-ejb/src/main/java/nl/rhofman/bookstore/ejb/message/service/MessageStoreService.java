@@ -2,7 +2,7 @@ package nl.rhofman.bookstore.ejb.message.service;
 
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
-import nl.rhofman.bookstore.ejb.message.dao.MessageBuilder;
+import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.xml.XmlUtil;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
 import nl.rhofman.bookstore.ejb.xml.service.JaxbService;
@@ -15,7 +15,7 @@ public abstract class MessageStoreService {
     protected AssemblerService assemblerService;
 
     @Inject
-    private MetadataExtractor metadataExtractor;
+    private HeaderExtractor headerExtractor;
 
     @Inject
     private Event<MessageReceived> event;
@@ -35,7 +35,7 @@ public abstract class MessageStoreService {
         event.fire(message);
     }
 
-    protected MessageBuilder assembleMessage(String message) {
+    protected Object getDomainObject(String message) {
         // Validate XML against the schema
         xmlValidationService.validateXml(message);
 
@@ -43,11 +43,26 @@ public abstract class MessageStoreService {
         message = XmlUtil.normalizeXml(message);
         String messageType = XmlUtil.getRootElementName(message);
         // Unmarshall XML message
-        Object jaxbObject = jaxbService.unmarshall(messageType, message);
-
-        return new MessageBuilder()
-                .withMessageMetadata(metadataExtractor.extractHeader(message))
-                .withMessageType(messageType)
-                .withDomainObject(assemblerService.toDomain(jaxbObject));
+        return jaxbService.unmarshall(messageType, message);
     }
+
+    protected Header getHeader(String message) {
+        return headerExtractor.extract(message);
+    }
+
+//    protected MessageBuilder assembleMessage(String message) {
+//        // Validate XML against the schema
+//        xmlValidationService.validateXml(message);
+//
+//        // Remove empty elements and leading and trailing spaces
+//        message = XmlUtil.normalizeXml(message);
+//        String messageType = XmlUtil.getRootElementName(message);
+//        // Unmarshall XML message
+//        Object jaxbObject = jaxbService.unmarshall(messageType, message);
+//
+//        return new MessageBuilder()
+//                .withMessageMetadata(metadataExtractor.extractHeader(message))
+//                .withMessageType(messageType)
+//                .withDomainObject(assemblerService.toDomain(jaxbObject));
+//    }
 }

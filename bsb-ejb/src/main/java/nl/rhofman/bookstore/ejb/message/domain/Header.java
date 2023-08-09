@@ -2,14 +2,14 @@ package nl.rhofman.bookstore.ejb.message.domain;
 
 import java.time.LocalDateTime;
 
-public class Metadata {
+public class Header {
     private String messageSender;
     private String messageRecipient;
     private String messageID;
     private String correlationID;
     private LocalDateTime timestamp;
 
-    public Metadata() {
+    public Header() {
     }
 
     public String getMessageSender() {

@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "message_metadata")
-public class MessageMetadata extends BaseEntityVersion {
+@Table(name = "MessageMetadata")
+public class Metadata extends BaseEntityVersion {
     private static final long serialVersionUID = 64966350836372843l;
 
     @Basic(optional = false)
@@ -35,6 +35,10 @@ public class MessageMetadata extends BaseEntityVersion {
     @NotNull
     @Size(min = 1, max = 3)
     private String direction;
+
+    @Column(name = "order_number", length = 18)
+    @Size(min = 1, max = 18)
+    private String orderNumber;
 
     @Basic(optional = false)
     @Column(name = "message_sender", length = 16, nullable = false)
@@ -62,7 +66,7 @@ public class MessageMetadata extends BaseEntityVersion {
     @NotNull
     private Long messageId;
 
-    @Column(name = "parent_message_id")
+    @Column(name = "message_parent_id")
     private Long parentId;
 
     @OneToOne(optional = false)
@@ -73,7 +77,7 @@ public class MessageMetadata extends BaseEntityVersion {
     @JoinColumn(name = "parent_message_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Message parentMessage;
 
-    public MessageMetadata() {
+    public Metadata() {
     }
 
     public String getIdentification() {
@@ -106,6 +110,14 @@ public class MessageMetadata extends BaseEntityVersion {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public String getMessageSender() {
@@ -167,9 +179,9 @@ public class MessageMetadata extends BaseEntityVersion {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MessageMetadata)) return false;
+        if (!(o instanceof Metadata)) return false;
         if (!super.equals(o)) return false;
-        MessageMetadata that = (MessageMetadata) o;
+        Metadata that = (Metadata) o;
         return Objects.equals(identification, that.identification);
     }
 
@@ -180,8 +192,9 @@ public class MessageMetadata extends BaseEntityVersion {
 
     @Override
     public String toString() {
-        return "MessageMetadata{" +
+        return "Metadata{" +
                 "identification='" + identification + '\'' +
+                ", orderNumber='" + orderNumber + '\'' +
                 ", messageType='" + messageType + '\'' +
                 ", direction='" + direction + '\'' +
                 ", messageSender='" + messageSender + '\'' +
