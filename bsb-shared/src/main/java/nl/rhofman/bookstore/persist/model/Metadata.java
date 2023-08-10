@@ -54,11 +54,9 @@ public class Metadata extends BaseEntityVersion {
 
     // Date of preparation in message (header)
     @Column(name = "created", columnDefinition = "TIMESTAMP", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime created;
 
     @Column(name = "processed", columnDefinition = "TIMESTAMP", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime processed;
 
     @Basic(optional = false)

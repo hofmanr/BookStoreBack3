@@ -43,7 +43,9 @@ public abstract class MessageStoreService {
         message = XmlUtil.normalizeXml(message);
         String messageType = XmlUtil.getRootElementName(message);
         // Unmarshall XML message
-        return jaxbService.unmarshall(messageType, message);
+        Object jaxbObject = jaxbService.unmarshall(messageType, message);
+        // Transform to domain object
+        return assemblerService.toDomain(jaxbObject);
     }
 
     protected Header getHeader(String message) {

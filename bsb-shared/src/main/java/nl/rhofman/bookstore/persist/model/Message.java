@@ -11,7 +11,6 @@ public class Message extends BaseEntity {
     private static final long serialVersionUID = 34965320836372534l;
 
     @Column(name = "created", columnDefinition = "TIMESTAMP", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime created;
 
     @Column(name = "message", length = 32672, nullable = false)
