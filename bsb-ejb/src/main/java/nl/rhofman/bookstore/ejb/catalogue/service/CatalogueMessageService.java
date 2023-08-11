@@ -33,11 +33,12 @@ public class CatalogueMessageService extends MessageStoreService {
     public void processMessageReceived(String xmlMessage) {
         System.out.println("[MessageService] - Incoming catalog message");
         Header header = getHeader(xmlMessage);
+        String messageType = getMessageType(xmlMessage);
 
         // Store the message in the database
-        Long storedMessageId = storeMessage(xmlMessage, header);
+        Long storedMessageId = storeMessage(xmlMessage, messageType, header);
 
-        Object domainObject = getDomainObject(xmlMessage);
+        Object domainObject = getDomainObject(messageType, xmlMessage);
         MessageReceived messageReceived = new MessageBuilder(header)
                 .withMessageID(storedMessageId)
                 .withDomainObject(domainObject)
@@ -51,14 +52,16 @@ public class CatalogueMessageService extends MessageStoreService {
         fireEvent(messageReceived);
     }
 
-    private Long storeMessage(String xmlMessage, Header header) {
+    private Long storeMessage(String xmlMessage, String messageType, Header header) {
         // Store the XML
         Message storedMessage = messageService.saveMessage(xmlMessage);
         // Store the message metadata
         Metadata metadata = new MetadataBuilder(header)
                 .withMessageId(storedMessage.getId())
+                .withMessageType(messageType)
                 .withDirection("IN")
                 .build();
+        System.out.println("Metadata: " + metadata);
         messageService.saveMetadata(metadata);
 
         return storedMessage.getId();

@@ -16,6 +16,7 @@ import nl.rhofman.exception.dao.ServiceException;
 import nl.rhofman.persist.Service.AbstractService;
 import nl.rhofman.persist.model.DbExceptionReason;
 
+import java.util.Date;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -115,21 +116,21 @@ public class BookService extends AbstractService {
     private List<Author> getDbAuthors(List<Author> authors) {
         UnaryOperator<Author> findAuthor = author -> {
             Author dbAuthor = null;
-          if (author.getId() != null) {
-              dbAuthor = authorService.getReference(author.getId());
-          }
-          if (dbAuthor == null && author.getLastName() != null) {
-              dbAuthor = authorService.search(author.getLastName(), author.getFirstName(), author.getDateOfBirth());
-          }
+            if (author.getId() != null) {
+                dbAuthor = authorService.getReference(author.getId());
+            }
+            if (dbAuthor == null && author.getLastName() != null) {
+                dbAuthor = authorService.search(author.getLastName(), author.getFirstName(), author.getDateOfBirth());
+            }
 
-          // Add a new author if the author doesn't exist
-          if (dbAuthor == null && author.getId() == null) {
-              dbAuthor = authorService.create(author);
-          }
-          if (dbAuthor == null) {
-              throw new ServiceException(bookRepository.getExceptionOrigin(), DbExceptionReason.NO_DATA_FOUND, "Author not found");
-          }
-          return dbAuthor;
+            // Add a new author if the author doesn't exist
+            if (dbAuthor == null && author.getId() == null) {
+                dbAuthor = authorService.create(author);
+            }
+            if (dbAuthor == null) {
+                throw new ServiceException(bookRepository.getExceptionOrigin(), DbExceptionReason.NO_DATA_FOUND, "Author not found");
+            }
+            return dbAuthor;
         };
 
         return authors.stream()

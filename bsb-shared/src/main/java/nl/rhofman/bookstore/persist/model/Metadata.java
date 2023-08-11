@@ -10,8 +10,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "MessageMetadata")
+@NamedQueries({
+        @NamedQuery(name = Metadata.FIND_BY_IDENTIFICATION, query = "SELECT m FROM Metadata m WHERE m.identification = :identification"),
+        @NamedQuery(name = Metadata.FIND_BY_MESSAGE_TYPE, query = "SELECT m FROM Metadata m WHERE m.messageType = :messageType ORDER BY m.created DESC")
+})
 public class Metadata extends BaseEntityVersion {
     private static final long serialVersionUID = 64966350836372843l;
+    public static final String FIND_BY_IDENTIFICATION = "Metadata.findByIdentification";
+    public static final String FIND_BY_MESSAGE_TYPE = "Metadata.findByMessageType";
 
     @Basic(optional = false)
     @Column(name = "identification", length = 44, nullable = false)
@@ -19,8 +25,8 @@ public class Metadata extends BaseEntityVersion {
     @Size(min = 1, max = 44)
     private String identification;
 
-    @Column(name = "correlation_id", length = 44, nullable = false)
-    @Size(min = 1, max = 44)
+    @Column(name = "correlation_id", length = 44)
+    @Size(max = 44)
     private String correlationId;
 
     @Basic(optional = false)
@@ -33,7 +39,7 @@ public class Metadata extends BaseEntityVersion {
     @Basic(optional = false)
     @Column(name = "direction", length = 3, nullable = false)
     @NotNull
-    @Size(min = 1, max = 3)
+    @Size(min = 2, max = 3)
     private String direction;
 
     @Column(name = "order_number", length = 18)
@@ -192,6 +198,7 @@ public class Metadata extends BaseEntityVersion {
     public String toString() {
         return "Metadata{" +
                 "identification='" + identification + '\'' +
+                ", correlationId='" + correlationId + '\'' +
                 ", orderNumber='" + orderNumber + '\'' +
                 ", messageType='" + messageType + '\'' +
                 ", direction='" + direction + '\'' +

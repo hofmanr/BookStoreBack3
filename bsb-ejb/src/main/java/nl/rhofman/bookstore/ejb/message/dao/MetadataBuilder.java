@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class MetadataBuilder {
     private final Header header;
     private Long messageId;
+    private String messageType;
     private String direction;
     private String orderNumber;
 
@@ -17,6 +18,11 @@ public class MetadataBuilder {
 
     public MetadataBuilder withMessageId(Long messageId) {
         this.messageId = messageId;
+        return this;
+    }
+
+    public MetadataBuilder withMessageType(String messageType) {
+        this.messageType = messageType;
         return this;
     }
 
@@ -37,6 +43,9 @@ public class MetadataBuilder {
         if (messageId == null) {
             throw new NullPointerException("MessageId is missing");
         }
+        if (messageId == null) {
+            throw new NullPointerException("MessageType is missing");
+        }
         if (direction == null) {
             throw new NullPointerException("Direction is missing");
         }
@@ -50,6 +59,7 @@ public class MetadataBuilder {
         Metadata metadata = MetadataMapper.instance()
                 .mapToMessageMetadata(header);
         metadata.setMessageId(messageId);
+        metadata.setMessageType(messageType);
         metadata.setDirection(direction);
         metadata.setOrderNumber(orderNumber);
         metadata.setProcessed(LocalDateTime.now());

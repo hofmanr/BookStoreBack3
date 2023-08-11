@@ -35,13 +35,16 @@ public abstract class MessageStoreService {
         event.fire(message);
     }
 
-    protected Object getDomainObject(String message) {
+    protected String getMessageType(String message) {
+        return XmlUtil.getRootElementName(message);
+    }
+
+    protected Object getDomainObject(String messageType, String message) {
         // Validate XML against the schema
         xmlValidationService.validateXml(message);
 
         // Remove empty elements and leading and trailing spaces
         message = XmlUtil.normalizeXml(message);
-        String messageType = XmlUtil.getRootElementName(message);
         // Unmarshall XML message
         Object jaxbObject = jaxbService.unmarshall(messageType, message);
         // Transform to domain object
@@ -52,19 +55,4 @@ public abstract class MessageStoreService {
         return headerExtractor.extract(message);
     }
 
-//    protected MessageBuilder assembleMessage(String message) {
-//        // Validate XML against the schema
-//        xmlValidationService.validateXml(message);
-//
-//        // Remove empty elements and leading and trailing spaces
-//        message = XmlUtil.normalizeXml(message);
-//        String messageType = XmlUtil.getRootElementName(message);
-//        // Unmarshall XML message
-//        Object jaxbObject = jaxbService.unmarshall(messageType, message);
-//
-//        return new MessageBuilder()
-//                .withMessageMetadata(metadataExtractor.extractHeader(message))
-//                .withMessageType(messageType)
-//                .withDomainObject(assemblerService.toDomain(jaxbObject));
-//    }
 }

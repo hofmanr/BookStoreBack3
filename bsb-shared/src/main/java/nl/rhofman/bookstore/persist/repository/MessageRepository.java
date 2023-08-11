@@ -3,10 +3,17 @@ package nl.rhofman.bookstore.persist.repository;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 import nl.rhofman.bookstore.persist.BSB;
+import nl.rhofman.bookstore.persist.model.Book;
 import nl.rhofman.bookstore.persist.model.Message;
+import nl.rhofman.bookstore.persist.model.Metadata;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.persist.repository.AbstractRepository;
+
+import java.util.Collection;
+import java.util.List;
 
 @Dependent
 public class MessageRepository extends AbstractRepository<Message> {
@@ -23,31 +30,12 @@ public class MessageRepository extends AbstractRepository<Message> {
     }
 
     @Override
-    public Message create(Message entity) {
-        throw new UnsupportedOperationException("This is not the way to create a message; use an other method");
-    }
-
-    @Override
     public Message update(Message entity) {
         throw new UnsupportedOperationException("Message can not be updated");
     }
 
     @Override
-    public void remove(Message entity) {
-        throw new UnsupportedOperationException("It is not allowed to remove messages");
-    }
-
-    @Override
-    public void remove(Long id) {
-        throw new UnsupportedOperationException("It is not allowed to remove messages");
-    }
-
-    public Message saveMessage(String Message) {
-        Message message = new MessageBuilder(Message).build();
-        return execute(() -> {
-            em.persist(message);
-            em.flush();
-            return message;
-        });
+    public Collection<Message> findAll() {
+        throw new UnsupportedOperationException("It is not allowed to get all messages");
     }
 }
