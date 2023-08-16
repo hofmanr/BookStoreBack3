@@ -13,6 +13,7 @@ import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Dependent
 public class HeaderExtractor {
@@ -48,14 +49,28 @@ public class HeaderExtractor {
         String dateOfPreparation = xPath.evaluate(".//*[local-name()='dateOfPreparation']", node);
         String timeOfPreparation = xPath.evaluate(".//*[local-name()='timeOfPreparation']", node);
 
-        header.setMessageSender(messageSender);
-        header.setMessageRecipient(messageRecipient);
-        header.setMessageID(messageID);
-        header.setCorrelationID(correlationID);
-        LocalDate date = LocalDate.parse(dateOfPreparation);
-        LocalTime time = LocalTime.parse(timeOfPreparation);
-        header.setTimestamp(LocalDateTime.of(date,time));
+        header.setMessageSender(nullValue(messageSender));
+        header.setMessageRecipient(nullValue(messageRecipient));
+        header.setMessageID(nullValue(messageID));
+        header.setCorrelationID(nullValue(correlationID));
+        LocalDate date = isNullOrEmpty(dateOfPreparation) ? null : LocalDate.parse(dateOfPreparation);
+        LocalTime time = isNullOrEmpty(timeOfPreparation) ? null : LocalTime.parse(timeOfPreparation);
+        if (date != null) {
+            if (time != null) {
+                header.setTimestamp(LocalDateTime.of(date, time));
+            } else {
+                header.setTimestamp(LocalDateTime.of(date, LocalTime.MIDNIGHT));
+            }
+        }
 
         return header;
+    }
+
+    private String nullValue(String value) {
+        return isNullOrEmpty(value) ? null : value;
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return Objects.isNull(value) || value.isEmpty();
     }
 }

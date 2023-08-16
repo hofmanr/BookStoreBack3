@@ -31,7 +31,6 @@ public class CatalogueMessageService extends MessageStoreService {
 
     @Override
     public void processMessageReceived(String xmlMessage) {
-        System.out.println("[MessageService] - Incoming catalog message");
         Header header = getHeader(xmlMessage);
         String messageType = getMessageType(xmlMessage);
 
@@ -45,9 +44,6 @@ public class CatalogueMessageService extends MessageStoreService {
                 .build(MessageReceived.class);
 
         Catalogue catalogue = (Catalogue) messageReceived.getDomainObject();
-        System.out.println("[MessageService] - Message type: " + messageReceived.getMessageType());
-        System.out.println("[MessageService] - Header: " + messageReceived.getHeader().toString());
-        System.out.println("[MessageService] - Number of books: " + (catalogue == null ? "Unknown" : catalogue.getBooks().size()));
 
         fireEvent(messageReceived);
     }
@@ -61,7 +57,6 @@ public class CatalogueMessageService extends MessageStoreService {
                 .withMessageType(messageType)
                 .withDirection("IN")
                 .build();
-        System.out.println("Metadata: " + metadata);
         messageService.saveMetadata(metadata);
 
         return storedMessage.getId();
