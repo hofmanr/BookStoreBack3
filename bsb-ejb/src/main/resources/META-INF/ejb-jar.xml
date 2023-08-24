@@ -9,7 +9,7 @@
     <enterprise-beans>
         <message-driven>
             <ejb-name>CatalogueMessageListener</ejb-name>
-            <ejb-class>nl.rhofman.bookstore.ejb.catalogue.facade.CatalogueMessageListener</ejb-class>
+            <ejb-class>nl.rhofman.bookstore.ejb.receive.facade.CatalogueMessageListener</ejb-class>
             <transaction-type>Container</transaction-type>
             <message-destination-type>jakarta.jms.Queue</message-destination-type>
             <resource-ref>

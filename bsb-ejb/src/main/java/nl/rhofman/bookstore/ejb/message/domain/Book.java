@@ -104,4 +104,14 @@ public class Book {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", publicationDate=" + publicationDate +
+                ", publisher='" + publisher + '\'' +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.catalogue.service;
+package nl.rhofman.bookstore.ejb.receive.service;
 
 import jakarta.enterprise.event.Event;
 import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
@@ -76,7 +76,7 @@ class CatalogueMessageServiceTest {
 
     @Test
     void whenProcessMessageReceived() {
-        // Given
+        // Prepare
         Message storedMessage = new Message(LocalDateTime.now(), catalogueMessage);
         storedMessage.setId(1L);
         Catalogue catalogue = new Catalogue();
@@ -86,10 +86,10 @@ class CatalogueMessageServiceTest {
         when(messageService.saveMessage(anyString())).thenReturn(storedMessage);
         when(assemblerService.toDomain(any())).thenReturn(catalogue);
 
-        // When
+        // Execute
         catalogueMessageService.processMessageReceived(catalogueMessage);
 
-        // Then
+        // Verify
         verify(xmlValidationService).validateXml(anyString());
         verify(jaxbService).unmarshall(anyString(), anyString());
 

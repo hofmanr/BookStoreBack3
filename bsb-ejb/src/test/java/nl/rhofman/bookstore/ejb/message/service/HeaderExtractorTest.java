@@ -14,20 +14,18 @@ import static org.hamcrest.CoreMatchers.*;
 
 class HeaderExtractorTest {
 
-    String message;
-
     @Test
     void givenRealMessage_whenExtract_thenSuccess() throws IOException {
-        // Given
+        // Prepare
         ClassLoader classLoader = HeaderExtractorTest.class.getClassLoader();
         File catalogue = new File(classLoader.getResource("Catalogue.xml").getFile());
-        message = FileUtils.readFileToString(catalogue, "UTF-8");
+        String message = FileUtils.readFileToString(catalogue, "UTF-8");
         HeaderExtractor headerExtractor = new HeaderExtractor();
 
-        // When
+        // Execute
         Header header = headerExtractor.extract(message);
 
-        // Then
+        // Verify
         assertNotNull(header);
         assertThat(header.getMessageID(), is("20230213203456854"));
         assertThat(header.getCorrelationID(), nullValue());
@@ -39,8 +37,8 @@ class HeaderExtractorTest {
 
     @Test
     void givenOnlyDate_whenExtract_thenMidnight() throws IOException {
-        // Given
-        message = "<Message>\n" +
+        // Prepare
+        String message = "<Message>\n" +
                 "    <header>\n" +
                 "        <sender>BookDelivero</sender>\n" +
                 "        <recipient>Bookstore</recipient>\n" +
@@ -51,10 +49,10 @@ class HeaderExtractorTest {
                 "</Message>";
         HeaderExtractor headerExtractor = new HeaderExtractor();
 
-        // When
+        // Execute
         Header header = headerExtractor.extract(message);
 
-        // Then
+        // Verify
         assertNotNull(header);
         assertThat(header.getMessageID(), is("20230213203456854"));
         assertThat(header.getCorrelationID(), nullValue());
@@ -66,8 +64,8 @@ class HeaderExtractorTest {
 
     @Test
     void givenNoDateAndTime_whenExtract_thenEmptyDate() throws IOException {
-        // Given
-        message = "<Message>\n" +
+        // Prepare
+        String message = "<Message>\n" +
                 "    <header>\n" +
                 "        <sender>BookDelivero</sender>\n" +
                 "        <recipient>Bookstore</recipient>\n" +
@@ -77,10 +75,10 @@ class HeaderExtractorTest {
                 "</Message>";
         HeaderExtractor headerExtractor = new HeaderExtractor();
 
-        // When
+        // Execute
         Header header = headerExtractor.extract(message);
 
-        // Then
+        // Verify
         assertNotNull(header);
         assertThat(header.getMessageID(), is("20230213203456854"));
         assertThat(header.getCorrelationID(), nullValue());

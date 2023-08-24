@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.catalogue.service;
+package nl.rhofman.bookstore.ejb.receive.service;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -37,6 +37,7 @@ public class CatalogueMessageService extends MessageStoreService {
         // Store the message in the database
         Long storedMessageId = storeMessage(xmlMessage, messageType, header);
 
+        // Get the (internal) object/representation for the XML-message
         Object domainObject = getDomainObject(messageType, xmlMessage);
         MessageReceived messageReceived = new MessageBuilder(header)
                 .withMessageID(storedMessageId)
