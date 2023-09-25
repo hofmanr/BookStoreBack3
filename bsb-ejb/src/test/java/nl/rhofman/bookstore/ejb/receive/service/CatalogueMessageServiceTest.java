@@ -3,9 +3,7 @@ package nl.rhofman.bookstore.ejb.receive.service;
 import jakarta.enterprise.event.Event;
 import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
-import nl.rhofman.bookstore.ejb.message.domain.HeaderStub;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
-import nl.rhofman.bookstore.ejb.message.service.HeaderExtractor;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
 import nl.rhofman.bookstore.ejb.xml.service.JaxbService;
@@ -28,6 +26,7 @@ import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasToString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -38,9 +37,6 @@ class CatalogueMessageServiceTest {
 
     @Mock
     Event<MessageReceived> event;
-
-    @Mock
-    HeaderExtractor headerExtractor;
 
     @Mock
     MessageService messageService;
@@ -71,7 +67,7 @@ class CatalogueMessageServiceTest {
         File catalogue = new File(classLoader.getResource("Catalogue.xml").getFile());
         catalogueMessage = FileUtils.readFileToString(catalogue, "UTF-8");
 
-        header = new HeaderStub();
+        header = new Header.HeaderBuilder(catalogueMessage).build();
     }
 
     @Test
@@ -82,7 +78,6 @@ class CatalogueMessageServiceTest {
         Catalogue catalogue = new Catalogue();
         catalogue.setBooks(Collections.emptyList());
 
-        when(headerExtractor.extract(anyString())).thenReturn(header);
         when(messageService.saveMessage(anyString())).thenReturn(storedMessage);
         when(assemblerService.toDomain(any())).thenReturn(catalogue);
 
@@ -103,6 +98,6 @@ class CatalogueMessageServiceTest {
         Catalogue messageCatalogue = (Catalogue) messageReceived.getDomainObject();
         assertThat(messageCatalogue.getBooks().size(), is(0));
         Header messageHeader = messageReceived.getHeader();
-        assertThat(messageHeader, is(header));
+        assertThat(messageHeader, hasToString(header.toString()));
     }
 }

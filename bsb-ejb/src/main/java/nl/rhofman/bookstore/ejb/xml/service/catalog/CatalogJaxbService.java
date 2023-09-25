@@ -20,11 +20,11 @@ public class CatalogJaxbService extends JaxbService {
     // Cache JAXB contexts for marshallers
     private static final Map<String, JAXBContext> marshallContexts = new ConcurrentHashMap<>();
 
-    @Inject
-    @Catalog
     private JaxbConfiguration configuration;
 
-    public CatalogJaxbService() {
+    @Inject
+    public CatalogJaxbService(@Catalog JaxbConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     @Override

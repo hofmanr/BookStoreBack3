@@ -1,6 +1,5 @@
-package nl.rhofman.bookstore.ejb.message.service;
+package nl.rhofman.bookstore.ejb.message.domain;
 
-import nl.rhofman.bookstore.ejb.message.domain.Header;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
@@ -12,18 +11,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.*;
 
-class HeaderExtractorTest {
+class HeaderTest {
 
     @Test
     void givenRealMessage_whenExtract_thenSuccess() throws IOException {
         // Prepare
-        ClassLoader classLoader = HeaderExtractorTest.class.getClassLoader();
+        ClassLoader classLoader = HeaderTest.class.getClassLoader();
         File catalogue = new File(classLoader.getResource("Catalogue.xml").getFile());
         String message = FileUtils.readFileToString(catalogue, "UTF-8");
-        HeaderExtractor headerExtractor = new HeaderExtractor();
 
         // Execute
-        Header header = headerExtractor.extract(message);
+        Header header = new Header.HeaderBuilder(message).build();
 
         // Verify
         assertNotNull(header);
@@ -47,10 +45,9 @@ class HeaderExtractorTest {
                 "    </header>\n" +
                 "    <Body />\n" +
                 "</Message>";
-        HeaderExtractor headerExtractor = new HeaderExtractor();
 
         // Execute
-        Header header = headerExtractor.extract(message);
+        Header header = new Header.HeaderBuilder(message).build();
 
         // Verify
         assertNotNull(header);
@@ -73,10 +70,9 @@ class HeaderExtractorTest {
                 "    </header>\n" +
                 "    <Body />\n" +
                 "</Message>";
-        HeaderExtractor headerExtractor = new HeaderExtractor();
 
         // Execute
-        Header header = headerExtractor.extract(message);
+        Header header = new Header.HeaderBuilder(message).build();
 
         // Verify
         assertNotNull(header);

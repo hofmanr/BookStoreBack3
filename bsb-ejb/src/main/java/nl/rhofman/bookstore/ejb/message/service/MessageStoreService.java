@@ -15,9 +15,6 @@ public abstract class MessageStoreService {
     protected AssemblerService assemblerService;
 
     @Inject
-    private HeaderExtractor headerExtractor;
-
-    @Inject
     private Event<MessageReceived> event;
 
     @Inject
@@ -52,7 +49,7 @@ public abstract class MessageStoreService {
     }
 
     protected Header getHeader(String message) {
-        return headerExtractor.extract(message);
+        return new Header.HeaderBuilder(message).build();
     }
 
 }
