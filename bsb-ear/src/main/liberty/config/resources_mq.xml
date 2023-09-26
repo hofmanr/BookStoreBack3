@@ -12,6 +12,12 @@
                 baseQueueManagerName="QMDEV1"
         />
     </jmsQueue>
+    <jmsQueue id="jmsBookstoreCatalogueOutput" jndiName="jms/bookstore/catalogue/output">
+        <properties.mqJms
+                baseQueueName="BSB_DEV1.APP_TO_CATALOGUE"
+                baseQueueManagerName="QMDEV1"
+        />
+    </jmsQueue>
     <jmsQueue id="jmsBookstoreOrderInput" jndiName="jms/bookstore/order/input">
         <properties.mqJms
                 baseQueueName="BSB_DEV1.CUSTOMER_TO_APP"

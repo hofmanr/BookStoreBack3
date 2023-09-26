@@ -8,6 +8,11 @@
                 maxRedeliveryCount="0"
                 maxMessageDepth="3200"
         />
+        <queue  id="BSB_LOC.APP_TO_CATALOGUE"
+                forceReliability="ReliablePersistent"
+                maxRedeliveryCount="0"
+                maxMessageDepth="3200"
+        />
         <queue  id="BSB_LOC.CUSTOMER_TO_APP"
                 forceReliability="ReliablePersistent"
                 maxRedeliveryCount="0"
@@ -23,6 +28,15 @@
     <jmsQueue id="jmsBookstoreCatalogueInput" jndiName="jms/bookstore/catalogue/input">
         <properties.wasJms
                 queueName="BSB_LOC.CATALOGUE_TO_APP"
+                deliveryMode="Application"
+                priority="1"
+                readAhead="AsConnection"
+                timeToLive="0"
+        />
+    </jmsQueue>
+    <jmsQueue id="jmsBookstoreCatalogueOutput" jndiName="jms/bookstore/catalogue/output">
+        <properties.wasJms
+                queueName="BSB_LOC.APP_TO_CATALOGUE"
                 deliveryMode="Application"
                 priority="1"
                 readAhead="AsConnection"

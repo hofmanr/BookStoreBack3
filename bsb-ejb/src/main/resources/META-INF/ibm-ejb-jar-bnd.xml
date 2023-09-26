@@ -11,6 +11,7 @@
 <!--                     destination-binding-name="jms/bookstoreAS"/>-->
         <resource-ref name="jms/bookstoreCF" binding-name="jms/bookstore/connectionFactory" />
         <resource-ref name="jms/catalogueInputQE" binding-name="jms/bookstore/catalogue/input" />
+        <resource-ref name="jms/catalogueOutputQE" binding-name="jms/bookstore/catalogue/output" />
         <resource-ref name="jdbc/bookstoreDS" binding-name="jdbc/BookstoreDatasource" />
     </message-driven>
 
