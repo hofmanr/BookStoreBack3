@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.message.domain;
+package nl.rhofman.bookstore.ejb.catalogue.domain;
 
 import java.util.ArrayList;
 import java.util.List;

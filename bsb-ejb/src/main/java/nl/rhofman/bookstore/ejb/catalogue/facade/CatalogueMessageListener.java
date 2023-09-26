@@ -1,9 +1,9 @@
-package nl.rhofman.bookstore.ejb.receive.facade;
+package nl.rhofman.bookstore.ejb.catalogue.facade;
 
 import jakarta.ejb.MessageDriven;
 import jakarta.inject.Inject;
 import jakarta.jms.Message;
-import nl.rhofman.bookstore.ejb.receive.service.CatalogueMessageService;
+import nl.rhofman.bookstore.ejb.catalogue.service.CatalogueMessageService;
 import nl.rhofman.bookstore.ejb.jms.AbstractJmsListener;
 import nl.rhofman.exception.dao.ServiceException;
 

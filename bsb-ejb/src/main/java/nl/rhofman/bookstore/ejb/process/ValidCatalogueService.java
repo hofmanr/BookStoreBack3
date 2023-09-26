@@ -3,7 +3,7 @@ package nl.rhofman.bookstore.ejb.process;
 
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
-import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;

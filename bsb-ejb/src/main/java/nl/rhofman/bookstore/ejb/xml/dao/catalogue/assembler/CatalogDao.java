@@ -1,6 +1,6 @@
 package nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler;
 
-import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.xml.dao.Assembler;
 import nl.rhofman.bookstore.jaxb.v1.catalogue.CatalogueType;
 import org.mapstruct.InheritInverseConfiguration;

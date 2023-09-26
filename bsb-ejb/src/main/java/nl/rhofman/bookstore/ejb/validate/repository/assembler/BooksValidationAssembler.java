@@ -1,8 +1,8 @@
 package nl.rhofman.bookstore.ejb.validate.repository.assembler;
 
-import nl.rhofman.bookstore.ejb.message.domain.Author;
-import nl.rhofman.bookstore.ejb.message.domain.Book;
-import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Author;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Book;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationAssembler;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationMessage;
 import nl.rhofman.bookstore.ejb.validate.repository.Validator;

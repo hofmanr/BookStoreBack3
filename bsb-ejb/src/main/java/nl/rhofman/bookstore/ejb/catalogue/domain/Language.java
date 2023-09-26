@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.message.domain;
+package nl.rhofman.bookstore.ejb.catalogue.domain;
 
 public enum Language {
     ENGLISH("English"),

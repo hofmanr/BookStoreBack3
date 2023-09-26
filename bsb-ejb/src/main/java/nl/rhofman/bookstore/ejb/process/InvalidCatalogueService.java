@@ -1,7 +1,7 @@
 package nl.rhofman.bookstore.ejb.process;
 
 import jakarta.enterprise.event.Observes;
-import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Invalid;

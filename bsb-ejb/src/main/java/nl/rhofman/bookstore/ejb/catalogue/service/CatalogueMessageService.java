@@ -1,10 +1,10 @@
-package nl.rhofman.bookstore.ejb.receive.service;
+package nl.rhofman.bookstore.ejb.catalogue.service;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.message.dao.MessageBuilder;
 import nl.rhofman.bookstore.ejb.message.dao.MetadataBuilder;
-import nl.rhofman.bookstore.ejb.message.domain.Catalogue;
+import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
