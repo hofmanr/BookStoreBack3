@@ -2,6 +2,7 @@ package nl.rhofman.bookstore.ejb.xml.service;
 
 import jakarta.xml.bind.*;
 import jakarta.xml.bind.util.JAXBSource;
+import nl.rhofman.bookstore.jaxb.v1.catalogue.ConfirmationType;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.*;
@@ -10,6 +11,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -50,27 +52,28 @@ public abstract class JaxbService {
                 jaxbContext = JAXBContext.newInstance(jaxbObject.getClass());
                 marshallContexts().put(className, jaxbContext);
             }
-            // Alternative:
-//            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            Marshaller marshaller = jaxbContext.createMarshaller();
 //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            StringWriter writer = new StringWriter();
-//            marshaller.marshal(jaxbObject, writer);
-//            return writer.toString();
-
-            JAXBSource source = new JAXBSource(jaxbContext, jaxbObject);
-
-            TransformerFactory transformerFactory = getTransformerFactory();
-            Transformer xsltTransformer = getTransformer(transformerFactory);
-
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-
-            xsltTransformer.transform(source, result);
+            Writer writer = new StringWriter();
+            marshaller.marshal(jaxbObject, writer);
             return writer.toString();
+
+            // Alternative:
+//            JAXBSource source = new JAXBSource(jaxbContext, jaxbObject);
+//
+//            TransformerFactory transformerFactory = getTransformerFactory();
+//            Transformer xsltTransformer = getTransformer(transformerFactory);
+//
+//            StringWriter writer = new StringWriter();
+//            StreamResult result = new StreamResult(writer);
+//
+//            xsltTransformer.transform(source, result);
+//            return writer.toString();
         } catch (JAXBException e) {
             e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
+//        } catch (TransformerException e) {
+//            e.printStackTrace();
         }
         return null;
     }

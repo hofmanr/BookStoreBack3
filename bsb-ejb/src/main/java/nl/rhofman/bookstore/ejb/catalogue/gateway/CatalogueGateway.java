@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.catalogue.dao;
+package nl.rhofman.bookstore.ejb.catalogue.gateway;
 
 import nl.rhofman.bookstore.ejb.catalogue.domain.Confirmation;
 

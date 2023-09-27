@@ -1,8 +1,7 @@
-package nl.rhofman.bookstore.ejb.receive.service;
+package nl.rhofman.bookstore.ejb.catalogue.service;
 
 import jakarta.enterprise.event.Event;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
-import nl.rhofman.bookstore.ejb.catalogue.service.CatalogueMessageService;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.bookstore.ejb.xml.Catalog;

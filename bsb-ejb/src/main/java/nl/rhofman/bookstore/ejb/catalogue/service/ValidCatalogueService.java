@@ -1,11 +1,13 @@
-package nl.rhofman.bookstore.ejb.process;
+package nl.rhofman.bookstore.ejb.catalogue.service;
 
 
+import jakarta.enterprise.event.Event;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
 import nl.rhofman.bookstore.persist.service.MessageService;
@@ -14,6 +16,11 @@ public class ValidCatalogueService {
 
     @Inject
     private MessageService messageService;
+
+    @Inject
+    @Valid
+    @DomainType(Catalogue.class)
+    private Event<MessageProcessed> validEvent;
 
     public void processMessageValidatedEvent(@Observes @Valid @DomainType(Catalogue.class) MessageValidated messageValidated) {
         System.out.println("ValidCatalogueService");
@@ -29,7 +36,10 @@ public class ValidCatalogueService {
         // TODO
 
         // 3. return confirmation to sender
-        // TODO
-
+        MessageProcessed messageProcessed = new MessageProcessed(messageID,
+                messageValidated.getMessageType(),
+                header,
+                catalogue);
+        validEvent.fire(messageProcessed);
     }
 }

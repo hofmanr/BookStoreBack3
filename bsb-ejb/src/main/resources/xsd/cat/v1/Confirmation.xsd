@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.bookstore.org/v1/Confirmation"
+        xmlns:cfm="http://www.bookstore.org/v1/Confirmation"
+        elementFormDefault="qualified"
+        xmlns:hdr="http://www.bookstore.org/v1/Header">
+
+    <import schemaLocation="Header.xsd"
+            namespace="http://www.bookstore.org/v1/Header">
+    </import>
+
+    <element name="Confirmation" type="cfm:ConfirmationType"></element>
+
+    <complexType name="ConfirmationType">
+        <sequence>
+            <element name="header" type="hdr:HeaderType"></element>
+            <element name="confirmation">
+                <complexType>
+                    <sequence>
+                        <element name="success" type="boolean"></element>
+                        <element name="error" type="string">
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+</schema>

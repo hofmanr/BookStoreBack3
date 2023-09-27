@@ -37,7 +37,7 @@ public class CatalogueMessageListener extends AbstractJmsListener {
             System.out.println("Service exception with" +
                     "\n   > origin : " + ex.getOrigin().getCode() +
                     "\n   > reason : " + ex.getReason().getCode()  +
-                    "\n   > cause  : " + ex.getCause().getMessage() +
+                    "\n   > cause  : " + (ex.getCause() == null ? "Unknown" : ex.getCause().getMessage()) +
                     "\n   > message: " + ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
