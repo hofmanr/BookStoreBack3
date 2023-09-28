@@ -1,6 +1,7 @@
 package nl.rhofman.bookstore.ejb.catalogue.service;
 
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Event;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
@@ -12,6 +13,7 @@ import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
 import nl.rhofman.bookstore.persist.service.MessageService;
 
+@Dependent
 public class ValidCatalogueService {
 
     @Inject
@@ -20,7 +22,7 @@ public class ValidCatalogueService {
     @Inject
     @Valid
     @DomainType(Catalogue.class)
-    private Event<MessageProcessed> validEvent;
+    private Event<MessageProcessed> processedEvent;
 
     public void processMessageValidatedEvent(@Observes @Valid @DomainType(Catalogue.class) MessageValidated messageValidated) {
         System.out.println("ValidCatalogueService");
@@ -40,6 +42,6 @@ public class ValidCatalogueService {
                 messageValidated.getMessageType(),
                 header,
                 catalogue);
-        validEvent.fire(messageProcessed);
+        processedEvent.fire(messageProcessed);
     }
 }

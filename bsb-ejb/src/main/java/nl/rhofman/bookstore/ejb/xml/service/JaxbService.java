@@ -44,19 +44,27 @@ public abstract class JaxbService {
         return null;
     }
 
-    public String marshall(Object jaxbObject) {
+    /**
+     * Marshall JAXBElement to String
+     * Input is a JAXBElement because not every JAXB-object has a root element annotation:
+     * errormessage: com.sun.istack.SAXException2: unable to marshal type "nl.rhofman.bookstore.jaxb.v1.catalogue.ConfirmationType" as an element because it is missing an @XmlRootElement annotation
+     * see: https://howtodoinjava.com/jaxb/marshal-without-xmlrootelement/
+     * @param jaxbElement
+     * @return
+     */
+    public String marshall(JAXBElement<?> jaxbElement) {
         try {
-            String className = jaxbObject.getClass().getSimpleName();
+            String className = jaxbElement.getValue().getClass().getSimpleName();  // e.g. ConfirmationType
             JAXBContext jaxbContext = marshallContexts().get(className);
             if (jaxbContext == null) {
-                jaxbContext = JAXBContext.newInstance(jaxbObject.getClass());
+                jaxbContext = JAXBContext.newInstance(jaxbElement.getValue().getClass());
                 marshallContexts().put(className, jaxbContext);
             }
 
             Marshaller marshaller = jaxbContext.createMarshaller();
 //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             Writer writer = new StringWriter();
-            marshaller.marshal(jaxbObject, writer);
+            marshaller.marshal(jaxbElement, writer);
             return writer.toString();
 
             // Alternative:

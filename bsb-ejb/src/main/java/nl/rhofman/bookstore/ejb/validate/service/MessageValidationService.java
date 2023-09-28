@@ -1,5 +1,6 @@
 package nl.rhofman.bookstore.ejb.validate.service;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Event;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
@@ -13,6 +14,7 @@ import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
 
 import java.util.List;
 
+@Dependent
 public class MessageValidationService {
 
     @Inject
@@ -31,6 +33,7 @@ public class MessageValidationService {
         String messageType = messageReceived.getMessageType();
         Header header = messageReceived.getHeader();
         Object domainObject = messageReceived.getDomainObject();
+        System.out.println("Validate messageType " + messageType + " domainObject " + (domainObject.getClass().getSimpleName()));
         List<ValidationResult> results = validationService.validate(domainObject);
         results.forEach(System.out::println);
 

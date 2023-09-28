@@ -3,7 +3,7 @@ package nl.rhofman.bookstore.ejb.validate.repository.assembler;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Author;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Book;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
-import nl.rhofman.bookstore.ejb.validate.domain.ValidationAssembler;
+import nl.rhofman.bookstore.ejb.validate.repository.ValidationAssembler;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationMessage;
 import nl.rhofman.bookstore.ejb.validate.repository.Validator;
 import nl.rhofman.bookstore.ejb.validate.repository.rule.AuthorNameValidator;
@@ -25,7 +25,7 @@ public class BooksValidationAssembler implements ValidationAssembler<Catalogue> 
 
     private void addAuthorValidators(List<Author> authors) {
         authors.stream().forEach(a -> {
-            validators.add(new MinimumLengthValidator("authorname", a.getLastName(), 2));
+            validators.add(new MinimumLengthValidator("authorName", a.getLastName(), 2));
             validators.add(new AuthorNameValidator(a.getFirstName(), a.getInitials()));
             // Todo check uniqueness of authors per book
         });

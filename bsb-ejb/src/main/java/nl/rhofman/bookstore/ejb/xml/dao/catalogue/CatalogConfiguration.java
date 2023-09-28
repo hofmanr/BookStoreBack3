@@ -4,7 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.dao.Assembler;
 import nl.rhofman.bookstore.ejb.xml.dao.JaxbConfiguration;
-import nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler.CatalogDao;
+import nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler.CatalogAssembler;
+import nl.rhofman.bookstore.ejb.xml.dao.catalogue.assembler.ConfirmationAssembler;
 import org.mapstruct.factory.Mappers;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class CatalogConfiguration implements JaxbConfiguration {
     private static final String XSD_DIRECTORY = "/xsd/cat/v1";
 
     // XSD's for the CatalogXmlValidationService
-    private static final List<String> XSD_FILES = new ArrayList<>(Arrays.asList("Header.xsd", "Book.xsd", "Catalogue.xsd"));
+    private static final List<String> XSD_FILES = new ArrayList<>(Arrays.asList("Header.xsd", "Book.xsd", "Catalogue.xsd", "Confirmation.xsd"));
 
     // Map a Jaxb object to a corresponding assembler (for generating internal objects)
     private static final Map<String, Class<?>> JAXB_ASSEMBLER_MAP = new HashMap<>();
@@ -28,9 +29,11 @@ public class CatalogConfiguration implements JaxbConfiguration {
 
 
     static {
-        JAXB_ASSEMBLER_MAP.put("CATALOGUETYPE", CatalogDao.class);
+        JAXB_ASSEMBLER_MAP.put("CATALOGUETYPE", CatalogAssembler.class);
+        JAXB_ASSEMBLER_MAP.put("CONFIRMATIONTYPE", ConfirmationAssembler.class);
 
-        DOMAIN_ASSEMBLER_MAP.put("CATALOGUE", CatalogDao.class);
+        DOMAIN_ASSEMBLER_MAP.put("CATALOGUE", CatalogAssembler.class);
+        DOMAIN_ASSEMBLER_MAP.put("CONFIRMATION", ConfirmationAssembler.class);
     }
 
     public CatalogConfiguration() {
@@ -67,7 +70,7 @@ public class CatalogConfiguration implements JaxbConfiguration {
     @Override
     public Assembler getDomainAssembler(Object dto) {
         String className = dto.getClass().getSimpleName().toUpperCase();
-        return (Assembler) Mappers.getMapper(JAXB_ASSEMBLER_MAP.get(className));
+        return (Assembler) Mappers.getMapper(DOMAIN_ASSEMBLER_MAP.get(className));
     }
 
 }

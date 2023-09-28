@@ -13,6 +13,10 @@
                        name="java.time.LocalDateTime"
                        parseMethod="parse"
                        printMethod="toString"/>
+        <jaxb:javaType xmlType="xs:time"
+                       name="java.time.LocalTime"
+                       parseMethod="parse"
+                       printMethod="toString"/>
     </jaxb:globalBindings>
 
 </jaxb:bindings>

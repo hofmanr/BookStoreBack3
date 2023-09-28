@@ -9,9 +9,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper()
-public abstract class CatalogDao implements Assembler<Catalogue, CatalogueType> {
-    public static CatalogDao instance() {
-        return Mappers.getMapper(CatalogDao.class);
+public abstract class CatalogAssembler implements Assembler<Catalogue, CatalogueType> {
+    public static CatalogAssembler instance() {
+        return Mappers.getMapper(CatalogAssembler.class);
     }
 
     @Override

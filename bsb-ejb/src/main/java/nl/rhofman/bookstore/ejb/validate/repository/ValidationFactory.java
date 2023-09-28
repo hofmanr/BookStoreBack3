@@ -1,14 +1,15 @@
 package nl.rhofman.bookstore.ejb.validate.repository;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import nl.rhofman.bookstore.ejb.validate.domain.ValidationAssembler;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationMessageLiteral;
 
 import java.util.Collections;
 import java.util.List;
 
+@Dependent
 public class ValidationFactory {
 
     @Inject

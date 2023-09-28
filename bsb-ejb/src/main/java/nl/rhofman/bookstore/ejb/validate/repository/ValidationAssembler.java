@@ -1,4 +1,4 @@
-package nl.rhofman.bookstore.ejb.validate.domain;
+package nl.rhofman.bookstore.ejb.validate.repository;
 
 import nl.rhofman.bookstore.ejb.validate.repository.Validator;
 

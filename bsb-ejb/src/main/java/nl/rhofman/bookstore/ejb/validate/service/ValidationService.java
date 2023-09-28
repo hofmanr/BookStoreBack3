@@ -1,5 +1,6 @@
 package nl.rhofman.bookstore.ejb.validate.service;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
 import nl.rhofman.bookstore.ejb.validate.repository.ValidationFactory;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Dependent
 public class ValidationService {
 
     @Inject

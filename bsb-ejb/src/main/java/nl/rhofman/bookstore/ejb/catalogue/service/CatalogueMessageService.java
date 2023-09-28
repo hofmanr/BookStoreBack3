@@ -45,6 +45,7 @@ public class CatalogueMessageService extends MessageStoreService {
                 .build(MessageReceived.class);
 
         Catalogue catalogue = (Catalogue) messageReceived.getDomainObject();
+        System.out.println("Catalogue received with " + catalogue.getBooks().size() + " books");
 
         fireEvent(messageReceived);
     }
