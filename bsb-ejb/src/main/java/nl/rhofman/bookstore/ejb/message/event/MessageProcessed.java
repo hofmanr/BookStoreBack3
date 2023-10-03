@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MessageProcessed extends Message implements Serializable {
+public class MessageProcessed extends MessageEvent implements Serializable {
     private static final long serialVersionUID = 1L;
     private final List<ValidationResult> validationResults;
 

@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CatalogueMessageServiceTest {
+class CatalogueMessageServiceTestEvent {
 
     @Mock
     Event<MessageReceived> event;
@@ -62,7 +62,7 @@ class CatalogueMessageServiceTest {
 
     @BeforeEach
     void init() throws IOException {
-        ClassLoader classLoader = CatalogueMessageServiceTest.class.getClassLoader();
+        ClassLoader classLoader = CatalogueMessageServiceTestEvent.class.getClassLoader();
 
         File catalogue = new File(classLoader.getResource("Catalogue.xml").getFile());
         catalogueMessage = FileUtils.readFileToString(catalogue, "UTF-8");

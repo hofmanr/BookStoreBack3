@@ -20,8 +20,8 @@ public abstract class ConfirmationAssembler implements Assembler<Confirmation, C
     @Mapping(source="header.recipient", target = "recipient")
     @Mapping(source="header.messageId", target = "messageID")
     @Mapping(source="header.correlationId", target = "correlationID")
-    @Mapping(source="confirmation.success", target = "successful")
-    @Mapping(source="confirmation.error", target = "errorMessage")
+    @Mapping(source="result.success", target = "successful")
+    @Mapping(source="result.error", target = "errorMessage")
     public abstract Confirmation toDomain(ConfirmationType jaxb);
 
     @Override

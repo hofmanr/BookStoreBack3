@@ -1,10 +1,8 @@
 package nl.rhofman.bookstore.ejb.catalogue.facade;
 
-import jakarta.enterprise.event.Event;
 import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
 import nl.rhofman.bookstore.ejb.catalogue.service.CatalogueMessageService;
-import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.exception.dao.ServiceException;
 import nl.rhofman.exception.domain.ExceptionOrigin;
 import nl.rhofman.exception.domain.ExceptionReason;
@@ -15,12 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CatalogueMessageListenerTest {
+class CatalogueMessageListenerTestEvent {
 
     @Mock
     private TextMessage textMessage;

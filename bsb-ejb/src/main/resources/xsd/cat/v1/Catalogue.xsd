@@ -12,7 +12,7 @@
     <import schemaLocation="Book.xsd"
             namespace="http://www.bookstore.org/v1/Book"></import>
 
-    <element name="Catalogue" type="cat:CatalogueType"></element>
+    <element name="catalogue" type="cat:CatalogueType"></element>
 
     <complexType name="CatalogueType">
         <sequence>

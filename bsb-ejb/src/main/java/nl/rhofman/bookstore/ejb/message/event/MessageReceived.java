@@ -4,7 +4,7 @@ import nl.rhofman.bookstore.ejb.message.domain.Header;
 
 import java.io.Serializable;
 
-public class MessageReceived extends Message implements Serializable {
+public class MessageReceived extends MessageEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
 

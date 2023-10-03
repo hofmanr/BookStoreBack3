@@ -1,26 +1,26 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
 import nl.rhofman.bookstore.ejb.message.domain.Header;
-import nl.rhofman.bookstore.ejb.message.event.Message;
+import nl.rhofman.bookstore.ejb.message.event.MessageEvent;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class MessageBuilder {
+public class MessageEventBuilder {
     private Long messageID;
     private String messageType;
     private final Header header;
     private Object domainObject;
 
-    public MessageBuilder(Header header) {
+    public MessageEventBuilder(Header header) {
         this.header = header;
     }
 
-    public MessageBuilder withMessageID(Long messageID) {
+    public MessageEventBuilder withMessageID(Long messageID) {
         this.messageID = messageID;
         return this;
     }
 
-    public MessageBuilder withDomainObject(Object domainObject) {
+    public MessageEventBuilder withDomainObject(Object domainObject) {
         this.domainObject = domainObject;
         return this;
     }
@@ -43,7 +43,7 @@ public class MessageBuilder {
         }
     }
 
-    public <T extends Message> T build(Class<T> clazz) {
+    public <T extends MessageEvent> T build(Class<T> clazz) {
         validate();
         try {
             return clazz.getConstructor(Long.class, String.class, Header.class, Object.class)

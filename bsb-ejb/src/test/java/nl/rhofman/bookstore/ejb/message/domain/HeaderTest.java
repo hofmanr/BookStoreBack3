@@ -28,7 +28,7 @@ class HeaderTest {
         assertThat(header.getMessageID(), is("20230213203456854"));
         assertThat(header.getCorrelationID(), nullValue());
         assertThat(header.getMessageSender(), is("BookDelivero"));
-        assertThat(header.getMessageRecipient(), is("Bookstore"));
+        assertThat(header.getMessageRecipient(), is("BookStore"));
         LocalDateTime timeStamp = LocalDateTime.of(2023, 2, 15, 15, 21, 50);
         assertThat(header.getTimestamp(), is(timeStamp));
     }
@@ -39,7 +39,7 @@ class HeaderTest {
         String message = "<Message>\n" +
                 "    <header>\n" +
                 "        <sender>BookDelivero</sender>\n" +
-                "        <recipient>Bookstore</recipient>\n" +
+                "        <recipient>BookStore</recipient>\n" +
                 "        <messageId>20230213203456854</messageId>\n" +
                 "        <dateOfPreparation>2023-02-15</dateOfPreparation>\n" +
                 "    </header>\n" +
@@ -54,7 +54,7 @@ class HeaderTest {
         assertThat(header.getMessageID(), is("20230213203456854"));
         assertThat(header.getCorrelationID(), nullValue());
         assertThat(header.getMessageSender(), is("BookDelivero"));
-        assertThat(header.getMessageRecipient(), is("Bookstore"));
+        assertThat(header.getMessageRecipient(), is("BookStore"));
         LocalDateTime timeStamp = LocalDateTime.of(2023, 2, 15, 0, 0, 0);
         assertThat(header.getTimestamp(), is(timeStamp));
     }
