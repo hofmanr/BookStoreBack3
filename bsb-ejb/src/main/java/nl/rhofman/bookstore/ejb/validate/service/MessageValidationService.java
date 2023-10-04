@@ -4,8 +4,8 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.event.Event;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
-import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.domain.DomainTypeLiteral;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
@@ -29,19 +29,17 @@ public class MessageValidationService {
     private Event<MessageValidated> invalidEvent;
 
     public void processMessageReceivedEvent(@Observes MessageReceived messageReceived) {
-        Long messageID = messageReceived.getMessageID();
-        String messageType = messageReceived.getMessageType();
-        Header header = messageReceived.getHeader();
-        Object domainObject = messageReceived.getDomainObject();
-        System.out.println("Validate messageType " + messageType + " domainObject " + (domainObject.getClass().getSimpleName()));
+        Message message = messageReceived.getMessage();
+        Object domainObject = message.getDomainObject();
+        System.out.println("Validate message " + (domainObject.getClass().getSimpleName()));
         List<ValidationResult> results = validationService.validate(domainObject);
         results.forEach(System.out::println);
 
         if (results.isEmpty() || results.stream().allMatch(ValidationResult::isValid)) {
-            MessageValidated messageValid = new MessageValidated(messageID, messageType, header, domainObject);
+            MessageValidated messageValid = new MessageValidated(message);
             validEvent.select(new DomainTypeLiteral(domainObject.getClass())).fire(messageValid);
         } else {
-            MessageValidated messageValidated = new MessageValidated(messageID, messageType, header, domainObject, results);
+            MessageValidated messageValidated = new MessageValidated(message, results);
             invalidEvent.select(new DomainTypeLiteral(domainObject.getClass())).fire(messageValidated);
         }
     }

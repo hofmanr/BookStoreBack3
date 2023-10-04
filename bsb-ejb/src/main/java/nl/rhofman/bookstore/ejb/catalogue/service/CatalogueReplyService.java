@@ -8,11 +8,13 @@ import nl.rhofman.bookstore.ejb.catalogue.gateway.CatalogueGateway;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Confirmation;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
 import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.validate.domain.Invalid;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,24 +25,30 @@ public class CatalogueReplyService {
     private CatalogueGateway catalogueGateway;
 
     public void processInvalidMessageProcessedEvent(@Observes @Invalid @DomainType(Catalogue.class) MessageProcessed messageProcessed) {
-        Header header = messageProcessed.getHeader();
+        Message message = messageProcessed.getMessage();
         List<ValidationResult> validationResults = messageProcessed.getValidationResults();
-        String errorMessage = validationResults.isEmpty() ? "Unknown error" : validationResults.get(0).getErrorMessage();
-        sendConfirmation(header.getMessageSender(), header.getMessageID(), errorMessage);
+// TODO        catalogueGateway.sendConfirmation(constructConfirmation(message, validationResults));
     }
 
     public void processValidMessageProcessedEvent(@Observes @Valid @DomainType(Catalogue.class) MessageProcessed messageProcessed) {
-        Header header = messageProcessed.getHeader();
-        sendConfirmation(header.getMessageSender(), header.getMessageID(), null);
+        Message message = messageProcessed.getMessage();
+// TODO        catalogueGateway.sendConfirmation(constructConfirmation(message));
     }
 
+    private Confirmation constructConfirmation(Message message) {
+        return constructConfirmation(message, Collections.emptyList());
+    }
 
-    public void sendConfirmation(String recipient, String requestIdentifier, String errorMessage) {
-        Confirmation confirmation = new Confirmation("BookStore", recipient);
+    private Confirmation constructConfirmation(Message message, List<ValidationResult> validationResults) {
+        Header header = message.getHeader();
+        Confirmation confirmation = new Confirmation("BookStore", header.getMessageSender());
         confirmation.setMessageID(UUID.randomUUID().toString());
-        confirmation.setCorrelationID(requestIdentifier);
-        confirmation.setSuccessful(errorMessage == null);
+        confirmation.setCorrelationID(header.getMessageID());
+        confirmation.setSuccessful(validationResults.isEmpty());
+        String errorMessage = validationResults.isEmpty() ? null : validationResults.get(0).getErrorMessage();
         confirmation.setErrorMessage(errorMessage);
-        catalogueGateway.sendConfirmation(confirmation);
+
+        return confirmation;
     }
+
 }

@@ -1,6 +1,6 @@
 package nl.rhofman.bookstore.ejb.message.event;
 
-import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
 
 import java.io.Serializable;
@@ -12,13 +12,13 @@ public class MessageProcessed extends MessageEvent implements Serializable {
     private static final long serialVersionUID = 1L;
     private final List<ValidationResult> validationResults;
 
-    public MessageProcessed(Long messageID, String messageType, Header header, Object domainObject) {
-        super(messageID, messageType, header, domainObject);
+    public MessageProcessed(Message message) {
+        super(message);
         this.validationResults = Collections.emptyList();
     }
 
-    public MessageProcessed(Long messageID, String messageType, Header header, Object domainObject, List<ValidationResult> validationResults) {
-        super(messageID, messageType, header, domainObject);
+    public MessageProcessed(Message message, List<ValidationResult> validationResults) {
+        super(message);
         this.validationResults = validationResults;
     }
 

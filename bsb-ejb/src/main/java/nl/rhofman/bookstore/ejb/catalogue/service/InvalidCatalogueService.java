@@ -6,6 +6,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Invalid;
@@ -23,13 +24,11 @@ public class InvalidCatalogueService {
 
     public void processMessageValidatedEvent(@Observes @Invalid @DomainType(Catalogue.class) MessageValidated messageValidated) {
         System.out.println("InvalidCatalogueService");
+        Message message = messageValidated.getMessage();
         List<ValidationResult> invalidResults = messageValidated.getInvalidValidationResults();
         invalidResults.forEach(System.out::println);
 
-        MessageProcessed messageProcessed = new MessageProcessed(messageValidated.getMessageID(),
-                messageValidated.getMessageType(),
-                messageValidated.getHeader(),
-                messageValidated.getDomainObject());
+        MessageProcessed messageProcessed = new MessageProcessed(message, invalidResults);
         processedEvent.fire(messageProcessed);
     }
 

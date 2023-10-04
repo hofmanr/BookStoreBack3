@@ -7,7 +7,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
-import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
@@ -26,10 +26,9 @@ public class ValidCatalogueService {
 
     public void processMessageValidatedEvent(@Observes @Valid @DomainType(Catalogue.class) MessageValidated messageValidated) {
         System.out.println("ValidCatalogueService");
-        Long messageID = messageValidated.getMessageID();
-        Catalogue catalogue = (Catalogue) messageValidated.getDomainObject();
-        Header header = messageValidated.getHeader();
-        catalogue.getBooks().forEach(System.out::println);
+        Message message = messageValidated.getMessage();
+        Catalogue catalogue = message.getDomainObject();
+         catalogue.getBooks().forEach(System.out::println);
 
         // 1. Save message metadata
         // TODO messageService.saveMetadata(messageID, "BOOKS", "IN", header);
@@ -38,10 +37,7 @@ public class ValidCatalogueService {
         // TODO
 
         // 3. return confirmation to sender
-        MessageProcessed messageProcessed = new MessageProcessed(messageID,
-                messageValidated.getMessageType(),
-                header,
-                catalogue);
+        MessageProcessed messageProcessed = new MessageProcessed(message);
         processedEvent.fire(messageProcessed);
     }
 }

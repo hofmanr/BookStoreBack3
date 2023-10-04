@@ -1,34 +1,16 @@
 package nl.rhofman.bookstore.ejb.message.event;
 
 
-import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 
 public abstract class MessageEvent {
-    private final Long messageID;
-    private final String messageType;
-    private final Header header;
-    private final Object domainObject;
+    private final Message message;
 
-    public MessageEvent(Long messageID, String messageType, Header header, Object domainObject) {
-        this.messageID = messageID;
-        this.messageType = messageType;
-        this.header = header;
-        this.domainObject = domainObject;
+    public MessageEvent(Message message) {
+        this.message = message;
     }
 
-    public String getMessageType() {
-        return messageType;
-    }
-
-    public Long getMessageID() {
-        return messageID;
-    }
-
-    public Header getHeader() {
-        return header;
-    }
-
-    public Object getDomainObject() {
-        return domainObject;
+    public Message getMessage() {
+        return message;
     }
 }
