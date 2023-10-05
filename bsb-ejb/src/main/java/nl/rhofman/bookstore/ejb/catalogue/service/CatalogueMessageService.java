@@ -6,11 +6,15 @@ import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
+import nl.rhofman.bookstore.ejb.message.service.MessageService;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
-import nl.rhofman.bookstore.ejb.message.service.MessageStoreService;
+import nl.rhofman.bookstore.ejb.message.service.MessageReceivedService;
 
 @Dependent
-public class CatalogueMessageService extends MessageStoreService {
+public class CatalogueMessageService extends MessageReceivedService {
+
+    @Inject
+    private MessageService messageService;
 
     @Inject
     @Catalog
@@ -21,7 +25,7 @@ public class CatalogueMessageService extends MessageStoreService {
         Message message = messageBuilder.incoming().withXml(xmlMessage).build();
 
         // Store the message
-        message.save();
+        messageService.persist(message);
 
         Catalogue catalogue = message.getDomainObject();
         System.out.println("Catalogue received with " + catalogue.getBooks().size() + " books");

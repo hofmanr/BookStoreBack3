@@ -7,26 +7,26 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Messages")
-public class Message extends BaseEntity {
+public class XmlMessage extends BaseEntity {
     private static final long serialVersionUID = 34965320836372534l;
 
     @Column(name = "created", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime created;
 
     @Column(name = "message", length = 32672, nullable = false)
-    private String messageXml;
+    private String xml;
 
     // ======================================
     // =            Constructors            =
     // ======================================
 
 
-    public Message() {
+    public XmlMessage() {
     }
 
-    public Message(LocalDateTime created, String messageXml) {
+    public XmlMessage(LocalDateTime created, String xml) {
         this.created = created;
-        this.messageXml = messageXml;
+        this.xml = xml;
     }
 
     // ======================================
@@ -42,12 +42,12 @@ public class Message extends BaseEntity {
         this.created = created;
     }
 
-    public String getMessageXml() {
-        return messageXml;
+    public String getXml() {
+        return xml;
     }
 
-    public void setMessageXml(String messageXml) {
-        this.messageXml = messageXml;
+    public void setXml(String xml) {
+        this.xml = xml;
     }
 
 }

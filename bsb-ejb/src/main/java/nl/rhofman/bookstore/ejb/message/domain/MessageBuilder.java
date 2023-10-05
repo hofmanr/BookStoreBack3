@@ -5,11 +5,9 @@ import nl.rhofman.bookstore.ejb.xml.XmlUtil;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
 import nl.rhofman.bookstore.ejb.xml.service.JaxbService;
 import nl.rhofman.bookstore.ejb.xml.service.XmlValidationService;
-import nl.rhofman.bookstore.persist.service.MessageService;
 
 public abstract class MessageBuilder {
 
-    private MessageService messageService;
     private XmlValidationService xmlValidationService;
     private JaxbService jaxbService;
     private AssemblerService assemblerService;
@@ -20,12 +18,10 @@ public abstract class MessageBuilder {
 
     public MessageBuilder(XmlValidationService xmlValidationService,
                           JaxbService jaxbService,
-                          AssemblerService assemblerService,
-                          MessageService messageService) {
+                          AssemblerService assemblerService) {
         this.xmlValidationService = xmlValidationService;
         this.jaxbService = jaxbService;
         this.assemblerService = assemblerService;
-        this.messageService = messageService;
     }
 
     public abstract MessageBuilder withXml(String xml);
@@ -60,7 +56,7 @@ public abstract class MessageBuilder {
 
         Header header = new Header.HeaderBuilder(xml).build();
 
-        return new Message(messageService, direction, dto, xml, header);
+        return new Message(direction, dto, xml, header);
     }
 
     private Message dtoToMessage() {
@@ -69,7 +65,7 @@ public abstract class MessageBuilder {
         // Transform JAXB-object to (XML) string
         xml = jaxbService.marshall(getJaxbElement(jaxbObject));
 
-        return new Message(messageService, direction, domainObject, xml, null);
+        return new Message(direction, domainObject, xml, null);
     }
 
     private void validate() {

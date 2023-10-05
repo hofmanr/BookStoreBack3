@@ -1,8 +1,8 @@
 package nl.rhofman.bookstore.ejb.message.domain;
 
 import nl.rhofman.bookstore.ejb.message.dao.MetadataBuilder;
+import nl.rhofman.bookstore.ejb.xml.XmlUtil;
 import nl.rhofman.bookstore.persist.model.Metadata;
-import nl.rhofman.bookstore.persist.service.MessageService;
 
 public class Message {
 
@@ -11,23 +11,30 @@ public class Message {
     private final Header header;
     private final String direction;
     private Long messageID;
-
-    private MessageService messageService;
+    private String messageType;
 
     /**
      * Is protected so only the MessageBuilder can use the constructor
-     * @param messageService
      * @param direction
      * @param domainObject
      * @param xml
      * @param header
      */
-    protected Message(MessageService messageService, String direction, Object domainObject, String xml, Header header) {
-        this.messageService = messageService;
+    protected Message(String direction, Object domainObject, String xml, Header header) {
         this.direction = direction;
         this.domainObject = domainObject;
         this.xml = xml;
         this.header = header;
+
+        if (domainObject != null) {
+            this.messageType = domainObject.getClass().getSimpleName();
+        } else if (xml != null) {
+            this.messageType = XmlUtil.getRootElementName(xml);
+        }
+
+        if (this.xml == null || this.domainObject == null || this.direction == null) {
+            new NullPointerException("XMl and DomainObject and Direction must be present");
+        }
     }
 
     public <T> T getDomainObject() {
@@ -38,8 +45,26 @@ public class Message {
         return xml;
     }
 
-    public Header getHeader() {
-        return header;
+    public Metadata constructMetadata() {
+        if (messageID == null) {
+            new NullPointerException("XML Message is not stored");
+        }
+        if (header == null) {
+            new NullPointerException("Header is not present");
+        }
+        return new MetadataBuilder(header)
+                .withMessageId(messageID)
+                .withMessageType(messageType)
+                .withDirection(direction)
+                .build();
+    }
+
+    public void storedWithID(Long messageID) {
+        this.messageID = messageID;
+    }
+
+    public boolean isMessageStored() {
+        return this.messageID != null;
     }
 
     public boolean isIncoming() {
@@ -50,26 +75,15 @@ public class Message {
         return "OUT".equals(direction);
     }
 
-    public void save() {
-        if (messageID != null) {
-            return; // idempotent => the message is already stored
-        }
-        if (messageService == null) {
-            new NullPointerException("MessageService is mandatory");
-        }
-        if (xml == null || header == null || direction == null) {
-            new NullPointerException("XMl, Header and Direction must be present");
-        }
+    public String sender() {
+        return header == null ? null : header.getMessageSender();
+    }
 
-        nl.rhofman.bookstore.persist.model.Message storedMessage = messageService.saveMessage(xml);
-        // Store the message metadata
-        Metadata metadata = new MetadataBuilder(header)
-                .withMessageId(storedMessage.getId())
-                .withMessageType(domainObject.getClass().getSimpleName())
-                .withDirection(direction)
-                .build();
-        messageService.saveMetadata(metadata);
+    public String recipient() {
+        return header == null ? null : header.getMessageRecipient();
+    }
 
-        messageID = storedMessage.getId();
+    public String messageID() {
+        return header == null ? null : header.getMessageID();
     }
 }

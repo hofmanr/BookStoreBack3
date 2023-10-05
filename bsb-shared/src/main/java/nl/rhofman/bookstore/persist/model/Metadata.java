@@ -75,11 +75,11 @@ public class Metadata extends BaseEntityVersion {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "message_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Message message;
+    private XmlMessage XMLMessage;
 
     @OneToOne
     @JoinColumn(name = "parent_message_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Message parentMessage;
+    private XmlMessage parentXmlMessage;
 
     public Metadata() {
     }
@@ -172,12 +172,12 @@ public class Metadata extends BaseEntityVersion {
         this.parentId = parentId;
     }
 
-    public Message getParentMessage() {
-        return parentMessage;
+    public XmlMessage getParentMessage() {
+        return parentXmlMessage;
     }
 
-    public Message getMessage() {
-        return message;
+    public XmlMessage getMessage() {
+        return XMLMessage;
     }
 
     @Override

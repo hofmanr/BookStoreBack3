@@ -4,7 +4,7 @@ import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 
-public abstract class MessageStoreService {
+public abstract class MessageReceivedService {
 
     @Inject
     private Event<MessageReceived> event;

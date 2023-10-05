@@ -11,7 +11,6 @@ import nl.rhofman.bookstore.ejb.xml.service.XmlValidationService;
 import nl.rhofman.bookstore.jaxb.v1.catalogue.CatalogueType;
 import nl.rhofman.bookstore.jaxb.v1.catalogue.ObjectFactory;
 import nl.rhofman.bookstore.jaxb.v1.catalogue.ConfirmationType;
-import nl.rhofman.bookstore.persist.service.MessageService;
 
 @Dependent
 @Catalog
@@ -20,9 +19,8 @@ public class CatalogueMessageBuilder extends MessageBuilder {
     @Inject
     public CatalogueMessageBuilder(@Catalog XmlValidationService xmlValidationService,
                                    @Catalog JaxbService jaxbService,
-                                   @Catalog AssemblerService assemblerService,
-                                   MessageService messageService) {
-        super(xmlValidationService, jaxbService, assemblerService, messageService);
+                                   @Catalog AssemblerService assemblerService) {
+        super(xmlValidationService, jaxbService, assemblerService);
     }
 
     @Override

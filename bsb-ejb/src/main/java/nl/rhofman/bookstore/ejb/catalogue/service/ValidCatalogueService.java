@@ -11,13 +11,9 @@ import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.message.event.MessageValidated;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
-import nl.rhofman.bookstore.persist.service.MessageService;
 
 @Dependent
 public class ValidCatalogueService {
-
-    @Inject
-    private MessageService messageService;
 
     @Inject
     @Valid
@@ -28,15 +24,12 @@ public class ValidCatalogueService {
         System.out.println("ValidCatalogueService");
         Message message = messageValidated.getMessage();
         Catalogue catalogue = message.getDomainObject();
-         catalogue.getBooks().forEach(System.out::println);
+        catalogue.getBooks().forEach(System.out::println);
 
-        // 1. Save message metadata
-        // TODO messageService.saveMetadata(messageID, "BOOKS", "IN", header);
-
-        // 2. process message...
+        // Process message
         // TODO
 
-        // 3. return confirmation to sender
+        // Next step in the process...
         MessageProcessed messageProcessed = new MessageProcessed(message);
         processedEvent.fire(messageProcessed);
     }

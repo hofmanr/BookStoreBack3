@@ -40,10 +40,9 @@ public class CatalogueReplyService {
     }
 
     private Confirmation constructConfirmation(Message message, List<ValidationResult> validationResults) {
-        Header header = message.getHeader();
-        Confirmation confirmation = new Confirmation("BookStore", header.getMessageSender());
+        Confirmation confirmation = new Confirmation("BookStore", message.sender());
         confirmation.setMessageID(UUID.randomUUID().toString());
-        confirmation.setCorrelationID(header.getMessageID());
+        confirmation.setCorrelationID(message.messageID());
         confirmation.setSuccessful(validationResults.isEmpty());
         String errorMessage = validationResults.isEmpty() ? null : validationResults.get(0).getErrorMessage();
         confirmation.setErrorMessage(errorMessage);
