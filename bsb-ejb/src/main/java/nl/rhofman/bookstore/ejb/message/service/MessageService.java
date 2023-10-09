@@ -20,8 +20,8 @@ public class MessageService {
 
         XmlMessage storedXmlMessage = xmlMessageService.saveMessage(message.getXml());
         message.storedWithID(storedXmlMessage.getId());
+
         Metadata metadata = message.constructMetadata();
-        // Store the message metadata
         xmlMessageService.saveMetadata(metadata);
     }
 

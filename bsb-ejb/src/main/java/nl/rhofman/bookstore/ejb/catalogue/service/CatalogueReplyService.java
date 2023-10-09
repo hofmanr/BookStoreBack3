@@ -7,12 +7,14 @@ import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.catalogue.gateway.CatalogueGateway;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Confirmation;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
-import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
+import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
+import nl.rhofman.bookstore.ejb.message.service.MessageService;
 import nl.rhofman.bookstore.ejb.validate.domain.Invalid;
 import nl.rhofman.bookstore.ejb.validate.domain.Valid;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
+import nl.rhofman.bookstore.ejb.xml.Catalog;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,19 +26,39 @@ public class CatalogueReplyService {
     @Inject
     private CatalogueGateway catalogueGateway;
 
+    @Inject
+    @Catalog
+    private MessageBuilder messageBuilder;
+
+    @Inject
+    private MessageService messageService;
+
     public void processInvalidMessageProcessedEvent(@Observes @Invalid @DomainType(Catalogue.class) MessageProcessed messageProcessed) {
         Message message = messageProcessed.getMessage();
         List<ValidationResult> validationResults = messageProcessed.getValidationResults();
-// TODO        catalogueGateway.sendConfirmation(constructConfirmation(message, validationResults));
+        sendConfirmation(message, validationResults);
     }
 
     public void processValidMessageProcessedEvent(@Observes @Valid @DomainType(Catalogue.class) MessageProcessed messageProcessed) {
         Message message = messageProcessed.getMessage();
-// TODO        catalogueGateway.sendConfirmation(constructConfirmation(message));
+        sendConfirmation(message);
     }
 
-    private Confirmation constructConfirmation(Message message) {
-        return constructConfirmation(message, Collections.emptyList());
+    private void sendConfirmation(Message incomingMessage) {
+        sendConfirmation(incomingMessage, Collections.emptyList());
+    }
+
+    private void sendConfirmation(Message incomingMessage, List<ValidationResult> validationResults) {
+        Confirmation confirmation = constructConfirmation(incomingMessage, validationResults);
+
+        Message outgoingMessage = messageBuilder.outgoing()
+                .withDomainObject(confirmation)
+                .build();
+
+        // Store the message
+        messageService.persist(outgoingMessage);
+
+        catalogueGateway.sendConfirmation(outgoingMessage);
     }
 
     private Confirmation constructConfirmation(Message message, List<ValidationResult> validationResults) {

@@ -4,7 +4,6 @@ import jakarta.enterprise.event.Event;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
 import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
-import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.ejb.message.domain.MessageStub;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.bookstore.ejb.message.service.MessageService;
@@ -48,7 +47,6 @@ class CatalogueMessageServiceTest {
     CatalogueMessageService catalogueMessageService;
 
     String catalogueMessage;
-    Header header;
 
     @BeforeEach
     void init() throws IOException {
@@ -56,8 +54,6 @@ class CatalogueMessageServiceTest {
 
         File catalogue = new File(classLoader.getResource("Catalogue.xml").getFile());
         catalogueMessage = FileUtils.readFileToString(catalogue, "UTF-8");
-
-        header = new Header.HeaderBuilder(catalogueMessage).build();
     }
 
     @Test
@@ -65,7 +61,7 @@ class CatalogueMessageServiceTest {
         // Prepare
         Catalogue catalogue = new Catalogue();
         catalogue.setBooks(Collections.emptyList());
-        Message receivedMessage = new MessageStub("IN", catalogue, catalogueMessage, header);
+        Message receivedMessage = new MessageStub("IN", catalogue, catalogueMessage);
         when(messageBuilder.incoming()).thenReturn(messageBuilder);
         when(messageBuilder.withXml(anyString())).thenReturn(messageBuilder);
         when(messageBuilder.build()).thenReturn(receivedMessage);

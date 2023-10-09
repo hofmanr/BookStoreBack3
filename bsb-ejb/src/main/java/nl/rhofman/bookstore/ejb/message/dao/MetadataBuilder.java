@@ -1,19 +1,19 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
-import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
 import nl.rhofman.bookstore.persist.model.Metadata;
 
 import java.time.LocalDateTime;
 
 public class MetadataBuilder {
-    private final Header header;
+    private final BaseDto domainObject;
     private Long messageId;
     private String messageType;
     private String direction;
     private String orderNumber;
 
-    public MetadataBuilder(Header header) {
-        this.header = header;
+    public MetadataBuilder(BaseDto domainObject) {
+        this.domainObject = domainObject;
     }
 
     public MetadataBuilder withMessageId(Long messageId) {
@@ -37,8 +37,8 @@ public class MetadataBuilder {
     }
 
     private void validate() {
-        if (header == null) {
-            throw new NullPointerException("Header is missing");
+        if (domainObject == null) {
+            throw new NullPointerException("domainObject is missing");
         }
         if (messageId == null) {
             throw new NullPointerException("MessageId is missing");
@@ -57,11 +57,14 @@ public class MetadataBuilder {
     public Metadata build() {
         validate();
         Metadata metadata = MetadataMapper.instance()
-                .mapToMessageMetadata(header);
+                .mapToMessageMetadata(domainObject);
         metadata.setMessageId(messageId);
         metadata.setMessageType(messageType);
         metadata.setDirection(direction);
         metadata.setOrderNumber(orderNumber);
+        if (metadata.getCreated() == null) {
+            metadata.setCreated(LocalDateTime.now());
+        }
         metadata.setProcessed(LocalDateTime.now());
 
         return metadata;

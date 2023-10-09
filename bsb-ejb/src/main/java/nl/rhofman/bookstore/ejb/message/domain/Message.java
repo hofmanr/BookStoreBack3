@@ -6,11 +6,10 @@ import nl.rhofman.bookstore.persist.model.Metadata;
 
 public class Message {
 
-    private final Object domainObject;
+    private final BaseDto domainObject;
     private final String xml;
-    private final Header header;
     private final String direction;
-    private Long messageID;
+    private Long messageID; // ID in the database
     private String messageType;
 
     /**
@@ -18,13 +17,11 @@ public class Message {
      * @param direction
      * @param domainObject
      * @param xml
-     * @param header
      */
-    protected Message(String direction, Object domainObject, String xml, Header header) {
+    protected Message(String direction, BaseDto domainObject, String xml) {
         this.direction = direction;
         this.domainObject = domainObject;
         this.xml = xml;
-        this.header = header;
 
         if (domainObject != null) {
             this.messageType = domainObject.getClass().getSimpleName();
@@ -37,7 +34,7 @@ public class Message {
         }
     }
 
-    public <T> T getDomainObject() {
+    public <T extends BaseDto> T getDomainObject() {
         return (T) domainObject;
     }
 
@@ -49,10 +46,10 @@ public class Message {
         if (messageID == null) {
             new NullPointerException("XML Message is not stored");
         }
-        if (header == null) {
-            new NullPointerException("Header is not present");
+        if (domainObject == null) {
+            new NullPointerException("DomainObject is not present");
         }
-        return new MetadataBuilder(header)
+        return new MetadataBuilder(domainObject)
                 .withMessageId(messageID)
                 .withMessageType(messageType)
                 .withDirection(direction)
@@ -60,6 +57,9 @@ public class Message {
     }
 
     public void storedWithID(Long messageID) {
+        if (this.messageID != null) {
+            throw new IllegalStateException("Message is already stored");
+        }
         this.messageID = messageID;
     }
 
@@ -67,23 +67,15 @@ public class Message {
         return this.messageID != null;
     }
 
-    public boolean isIncoming() {
-        return "IN".equals(direction);
-    }
-
-    public boolean isOutgoing() {
-        return "OUT".equals(direction);
-    }
-
     public String sender() {
-        return header == null ? null : header.getMessageSender();
+        return domainObject == null ? null : domainObject.getSender();
     }
 
     public String recipient() {
-        return header == null ? null : header.getMessageRecipient();
+        return domainObject == null ? null : domainObject.getRecipient();
     }
 
     public String messageID() {
-        return header == null ? null : header.getMessageID();
+        return domainObject == null ? null : domainObject.getMessageID();
     }
 }

@@ -16,10 +16,15 @@ public abstract class CatalogAssembler implements Assembler<Catalogue, Catalogue
 
     @Override
     @Mapping(target="books", source="books")
+    @Mapping(target="sender", source="header.sender")
+    @Mapping(target="recipient", source="header.recipient")
+    @Mapping(target="messageID", source="header.messageId")
+    @Mapping(target="correlationID", source="header.correlationId") // TODO Date/time of preparation
     public abstract Catalogue toDomain(CatalogueType jaxbObject);
 
     @Override
-    @Mapping(target="header", ignore=true)
+    @Mapping(target="header.dateOfPreparation", ignore=true)
+    @Mapping(target="header.timeOfPreparation", ignore=true)
     @InheritInverseConfiguration
     public abstract CatalogueType toMessage(Catalogue domainObject);
 }

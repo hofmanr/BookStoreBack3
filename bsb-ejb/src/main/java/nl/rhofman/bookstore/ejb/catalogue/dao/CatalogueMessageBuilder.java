@@ -3,6 +3,7 @@ package nl.rhofman.bookstore.ejb.catalogue.dao;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBElement;
+import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
 import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
@@ -31,7 +32,7 @@ public class CatalogueMessageBuilder extends MessageBuilder {
     }
 
     @Override
-    public CatalogueMessageBuilder withDomainObject(Object domainObject) {
+    public CatalogueMessageBuilder withDomainObject(BaseDto domainObject) {
         this.domainObject = domainObject;
         this.xml = null;
         return this;
@@ -41,8 +42,8 @@ public class CatalogueMessageBuilder extends MessageBuilder {
     protected JAXBElement getJaxbElement(Object jaxbObject) {
         ObjectFactory factory = new ObjectFactory();
         return (jaxbObject instanceof CatalogueType) ?
-                factory.createConfirmation((ConfirmationType)jaxbObject) :
-                factory.createCatalogue((CatalogueType) jaxbObject);
+                factory.createCatalogue((CatalogueType) jaxbObject) :
+                factory.createConfirmation((ConfirmationType) jaxbObject);
     }
 
 }

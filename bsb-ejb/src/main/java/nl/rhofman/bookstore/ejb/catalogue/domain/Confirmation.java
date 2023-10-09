@@ -1,25 +1,14 @@
 package nl.rhofman.bookstore.ejb.catalogue.domain;
 
-public class Confirmation {
+import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
 
-    private final String sender;
-    private final String recipient;
-    private String messageID;
-    private String correlationID;
+public class Confirmation extends BaseDto {
+
     private boolean successful;
     private String errorMessage;
 
     public Confirmation(String sender, String recipient) {
-        this.sender = sender;
-        this.recipient = recipient;
-    }
-
-    public void setMessageID(String messageID) {
-        this.messageID = messageID;
-    }
-
-    public void setCorrelationID(String correlationID) {
-        this.correlationID = correlationID;
+        super(sender, recipient);
     }
 
     public void setSuccessful(boolean successful) {
@@ -28,22 +17,6 @@ public class Confirmation {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getRecipient() {
-        return recipient;
-    }
-
-    public String getMessageID() {
-        return messageID;
-    }
-
-    public String getCorrelationID() {
-        return correlationID;
     }
 
     public boolean isSuccessful() {

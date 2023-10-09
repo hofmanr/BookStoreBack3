@@ -1,8 +1,8 @@
 package nl.rhofman.bookstore.ejb.catalogue.gateway;
 
-import nl.rhofman.bookstore.ejb.catalogue.domain.Confirmation;
+import nl.rhofman.bookstore.ejb.message.domain.Message;
 
 public interface CatalogueGateway {
 
-    void sendConfirmation(Confirmation confirmation);
+    void sendConfirmation(Message message);
 }

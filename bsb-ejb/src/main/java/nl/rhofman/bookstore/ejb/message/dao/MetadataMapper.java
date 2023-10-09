@@ -1,6 +1,6 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
-import nl.rhofman.bookstore.ejb.message.domain.Header;
+import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
 import nl.rhofman.bookstore.persist.model.Metadata;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -14,5 +14,7 @@ public interface MetadataMapper {
     @Mapping(source = "messageID", target = "identification")
     @Mapping(source = "correlationID", target = "correlationId")
     @Mapping(source = "timestamp", target = "created")
-    Metadata mapToMessageMetadata(Header header);
+    @Mapping(source = "sender", target = "messageSender")
+    @Mapping(source = "recipient", target = "messageRecipient")
+    Metadata mapToMessageMetadata(BaseDto domainObject);
 }
