@@ -78,7 +78,7 @@ public class Metadata extends BaseEntityVersion {
     private XmlMessage XMLMessage;
 
     @OneToOne
-    @JoinColumn(name = "parent_message_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "message_parent_id", referencedColumnName = "id", insertable = false, updatable = false)
     private XmlMessage parentXmlMessage;
 
     public Metadata() {

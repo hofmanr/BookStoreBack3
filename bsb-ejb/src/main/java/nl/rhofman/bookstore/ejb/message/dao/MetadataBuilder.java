@@ -1,18 +1,18 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
-import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
+import nl.rhofman.bookstore.ejb.message.domain.DomainObject;
 import nl.rhofman.bookstore.persist.model.Metadata;
 
 import java.time.LocalDateTime;
 
 public class MetadataBuilder {
-    private final BaseDto domainObject;
+    private final DomainObject domainObject;
     private Long messageId;
     private String messageType;
     private String direction;
     private String orderNumber;
 
-    public MetadataBuilder(BaseDto domainObject) {
+    public MetadataBuilder(DomainObject domainObject) {
         this.domainObject = domainObject;
     }
 
@@ -38,12 +38,12 @@ public class MetadataBuilder {
 
     private void validate() {
         if (domainObject == null) {
-            throw new NullPointerException("domainObject is missing");
+            throw new NullPointerException("DomainObject is missing");
         }
         if (messageId == null) {
-            throw new NullPointerException("MessageId is missing");
+            throw new NullPointerException("Message has no ID");
         }
-        if (messageId == null) {
+        if (messageType == null) {
             throw new NullPointerException("MessageType is missing");
         }
         if (direction == null) {

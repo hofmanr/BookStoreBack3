@@ -14,7 +14,7 @@ public abstract class MessageBuilder {
     private String direction;
 
     protected String xml;
-    protected BaseDto domainObject;
+    protected DomainObject domainObject;
 
     public MessageBuilder(XmlValidationService xmlValidationService,
                           JaxbService jaxbService,
@@ -26,7 +26,7 @@ public abstract class MessageBuilder {
 
     public abstract MessageBuilder withXml(String xml);
 
-    public abstract MessageBuilder withDomainObject(BaseDto domainObject);
+    public abstract MessageBuilder withDomainObject(DomainObject domainObject);
 
     protected abstract JAXBElement getJaxbElement(Object jaxbObject);
 
@@ -52,7 +52,7 @@ public abstract class MessageBuilder {
         Object jaxbObject = jaxbService.unmarshall(messageType, xml);
 
         // Transform to domain object
-        BaseDto dto = assemblerService.toDomain(jaxbObject);
+        DomainObject dto = assemblerService.toDomain(jaxbObject);
 
         return new Message(direction, dto, xml);
     }

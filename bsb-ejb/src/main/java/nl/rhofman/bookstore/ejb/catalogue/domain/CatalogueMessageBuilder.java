@@ -1,9 +1,9 @@
-package nl.rhofman.bookstore.ejb.catalogue.dao;
+package nl.rhofman.bookstore.ejb.catalogue.domain;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBElement;
-import nl.rhofman.bookstore.ejb.message.domain.BaseDto;
+import nl.rhofman.bookstore.ejb.message.domain.DomainObject;
 import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
@@ -32,7 +32,7 @@ public class CatalogueMessageBuilder extends MessageBuilder {
     }
 
     @Override
-    public CatalogueMessageBuilder withDomainObject(BaseDto domainObject) {
+    public CatalogueMessageBuilder withDomainObject(DomainObject domainObject) {
         this.domainObject = domainObject;
         this.xml = null;
         return this;

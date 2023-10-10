@@ -6,10 +6,9 @@ import nl.rhofman.bookstore.persist.model.Metadata;
 
 public class Message {
 
-    private final BaseDto domainObject;
+    private final DomainObject domainObject;
     private final String xml;
     private final String direction;
-    private Long messageID; // ID in the database
     private String messageType;
 
     /**
@@ -18,7 +17,7 @@ public class Message {
      * @param domainObject
      * @param xml
      */
-    protected Message(String direction, BaseDto domainObject, String xml) {
+    protected Message(String direction, DomainObject domainObject, String xml) {
         this.direction = direction;
         this.domainObject = domainObject;
         this.xml = xml;
@@ -34,7 +33,7 @@ public class Message {
         }
     }
 
-    public <T extends BaseDto> T getDomainObject() {
+    public <T extends DomainObject> T getDomainObject() {
         return (T) domainObject;
     }
 
@@ -43,28 +42,32 @@ public class Message {
     }
 
     public Metadata constructMetadata() {
-        if (messageID == null) {
+        Long id = domainObject == null ? null : domainObject.id;
+        if (id == null) {
             new NullPointerException("XML Message is not stored");
         }
         if (domainObject == null) {
             new NullPointerException("DomainObject is not present");
         }
         return new MetadataBuilder(domainObject)
-                .withMessageId(messageID)
+                .withMessageId(id)
                 .withMessageType(messageType)
                 .withDirection(direction)
                 .build();
     }
 
     public void storedWithID(Long messageID) {
-        if (this.messageID != null) {
+        if (domainObject == null) {
+            throw new IllegalStateException("Domain Object is not known");
+        }
+        if (domainObject.id != null) {
             throw new IllegalStateException("Message is already stored");
         }
-        this.messageID = messageID;
+        domainObject.id = messageID;
     }
 
     public boolean isMessageStored() {
-        return this.messageID != null;
+        return domainObject == null ? false : domainObject.id != null;
     }
 
     public String sender() {

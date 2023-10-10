@@ -18,7 +18,6 @@ import nl.rhofman.bookstore.ejb.xml.Catalog;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Dependent
 public class CatalogueReplyService {
@@ -48,9 +47,10 @@ public class CatalogueReplyService {
         sendConfirmation(incomingMessage, Collections.emptyList());
     }
 
-    private void sendConfirmation(Message incomingMessage, List<ValidationResult> validationResults) {
-        Confirmation confirmation = constructConfirmation(incomingMessage, validationResults);
-
+    private void sendConfirmation(Message receivedMessage, List<ValidationResult> validationResults) {
+        Confirmation confirmation =  new Confirmation.ConfirmationBuilder(receivedMessage)
+                .withValidationResults(validationResults)
+                .build();
         Message outgoingMessage = messageBuilder.outgoing()
                 .withDomainObject(confirmation)
                 .build();
@@ -59,17 +59,6 @@ public class CatalogueReplyService {
         messageService.persist(outgoingMessage);
 
         catalogueGateway.sendConfirmation(outgoingMessage);
-    }
-
-    private Confirmation constructConfirmation(Message message, List<ValidationResult> validationResults) {
-        Confirmation confirmation = new Confirmation("BookStore", message.sender());
-        confirmation.setMessageID(UUID.randomUUID().toString());
-        confirmation.setCorrelationID(message.messageID());
-        confirmation.setSuccessful(validationResults.isEmpty());
-        String errorMessage = validationResults.isEmpty() ? null : validationResults.get(0).getErrorMessage();
-        confirmation.setErrorMessage(errorMessage);
-
-        return confirmation;
     }
 
 }

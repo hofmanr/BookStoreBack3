@@ -2,19 +2,30 @@ package nl.rhofman.bookstore.ejb.message.domain;
 
 import java.time.LocalDateTime;
 
-public abstract class BaseDto {
-    private String sender;
-    private String recipient;
-    private String messageID;
-    private String correlationID;
-    private LocalDateTime timestamp;
+public abstract class DomainObject {
 
-    public BaseDto() {
+    protected Long id; // ID of the Xml Message (=ID in the Messages table)
+    protected Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
+    protected String sender;
+    protected String recipient;
+    protected String messageID;
+    protected String correlationID;
+    protected LocalDateTime timestamp;
+
+    protected DomainObject() {
     }
 
-    public BaseDto(String sender, String recipient) {
+    public DomainObject(String sender, String recipient) {
         this.sender = sender;
         this.recipient = recipient;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getParentId() {
+        return parentId;
     }
 
     public String getSender() {
