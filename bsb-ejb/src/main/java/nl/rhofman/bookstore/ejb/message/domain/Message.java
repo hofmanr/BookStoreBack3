@@ -6,10 +6,13 @@ import nl.rhofman.bookstore.persist.model.Metadata;
 
 public class Message {
 
+    private String messageType;
+    private final String direction;
     private final DomainObject domainObject;
     private final String xml;
-    private final String direction;
-    private String messageType;
+
+    private Long id; // ID of the Xml Message (=ID in the Messages table)
+    private Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
 
     /**
      * Is protected so only the MessageBuilder can use the constructor
@@ -17,19 +20,20 @@ public class Message {
      * @param domainObject
      * @param xml
      */
-    protected Message(String direction, DomainObject domainObject, String xml) {
+    protected Message(String direction, DomainObject domainObject, String xml, Long parentId) {
+        if (xml == null && domainObject == null) {
+            new NullPointerException("XMl and DomainObject and Direction must be present");
+        }
+
         this.direction = direction;
         this.domainObject = domainObject;
         this.xml = xml;
+        this.parentId = parentId;
 
         if (domainObject != null) {
             this.messageType = domainObject.getClass().getSimpleName();
         } else if (xml != null) {
             this.messageType = XmlUtil.getRootElementName(xml);
-        }
-
-        if (this.xml == null || this.domainObject == null || this.direction == null) {
-            new NullPointerException("XMl and DomainObject and Direction must be present");
         }
     }
 
@@ -42,7 +46,6 @@ public class Message {
     }
 
     public Metadata constructMetadata() {
-        Long id = domainObject == null ? null : domainObject.id;
         if (id == null) {
             new NullPointerException("XML Message is not stored");
         }
@@ -51,34 +54,28 @@ public class Message {
         }
         return new MetadataBuilder(domainObject)
                 .withMessageId(id)
+                .withParentId(parentId)
                 .withMessageType(messageType)
                 .withDirection(direction)
                 .build();
     }
 
-    public void storedWithID(Long messageID) {
-        if (domainObject == null) {
-            throw new IllegalStateException("Domain Object is not known");
-        }
-        if (domainObject.id != null) {
+    /**
+     * Register the ID
+     * @param id is the ID of the (XML)message in the database
+     */
+    public void storedWithID(Long id) {
+        if (this.id != null) {
             throw new IllegalStateException("Message is already stored");
         }
-        domainObject.id = messageID;
+        this.id = id;
     }
 
     public boolean isMessageStored() {
-        return domainObject == null ? false : domainObject.id != null;
+        return id != null;
     }
 
-    public String sender() {
-        return domainObject == null ? null : domainObject.getSender();
-    }
-
-    public String recipient() {
-        return domainObject == null ? null : domainObject.getRecipient();
-    }
-
-    public String messageID() {
-        return domainObject == null ? null : domainObject.getMessageID();
+    public Long parentID() {
+        return parentId;
     }
 }

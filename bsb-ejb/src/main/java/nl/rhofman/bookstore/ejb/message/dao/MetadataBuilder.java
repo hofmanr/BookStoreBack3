@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class MetadataBuilder {
     private final DomainObject domainObject;
     private Long messageId;
+    private Long parentId;
     private String messageType;
     private String direction;
     private String orderNumber;
@@ -18,6 +19,11 @@ public class MetadataBuilder {
 
     public MetadataBuilder withMessageId(Long messageId) {
         this.messageId = messageId;
+        return this;
+    }
+
+    public MetadataBuilder withParentId(Long parentId) {
+        this.parentId = parentId;
         return this;
     }
 
@@ -59,6 +65,7 @@ public class MetadataBuilder {
         Metadata metadata = MetadataMapper.instance()
                 .mapToMessageMetadata(domainObject);
         metadata.setMessageId(messageId);
+        metadata.setParentId(parentId);
         metadata.setMessageType(messageType);
         metadata.setDirection(direction);
         metadata.setOrderNumber(orderNumber);

@@ -3,7 +3,6 @@ package nl.rhofman.bookstore.ejb.catalogue.domain;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBElement;
-import nl.rhofman.bookstore.ejb.message.domain.DomainObject;
 import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
@@ -22,20 +21,6 @@ public class CatalogueMessageBuilder extends MessageBuilder {
                                    @Catalog JaxbService jaxbService,
                                    @Catalog AssemblerService assemblerService) {
         super(xmlValidationService, jaxbService, assemblerService);
-    }
-
-    @Override
-    public CatalogueMessageBuilder withXml(String xml) {
-        this.xml = xml;
-        this.domainObject = null;
-        return this;
-    }
-
-    @Override
-    public CatalogueMessageBuilder withDomainObject(DomainObject domainObject) {
-        this.domainObject = domainObject;
-        this.xml = null;
-        return this;
     }
 
     @Override

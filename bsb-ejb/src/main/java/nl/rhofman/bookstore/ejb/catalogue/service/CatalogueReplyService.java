@@ -48,14 +48,15 @@ public class CatalogueReplyService {
     }
 
     private void sendConfirmation(Message receivedMessage, List<ValidationResult> validationResults) {
-        Confirmation confirmation =  new Confirmation.ConfirmationBuilder(receivedMessage)
+        Confirmation confirmation = new Confirmation.ConfirmationBuilder(receivedMessage.getDomainObject())
                 .withValidationResults(validationResults)
                 .build();
         Message outgoingMessage = messageBuilder.outgoing()
                 .withDomainObject(confirmation)
+                .withReceivedMessage(receivedMessage)
                 .build();
 
-        // Store the message
+        // Store the message // TODO message_parent_id is missing in table MessageMetadata
         messageService.persist(outgoingMessage);
 
         catalogueGateway.sendConfirmation(outgoingMessage);

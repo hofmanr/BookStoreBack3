@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 public abstract class DomainObject {
 
-    protected Long id; // ID of the Xml Message (=ID in the Messages table)
-    protected Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
     protected String sender;
     protected String recipient;
     protected String messageID;
@@ -19,15 +17,6 @@ public abstract class DomainObject {
         this.sender = sender;
         this.recipient = recipient;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
     public String getSender() {
         return sender;
     }

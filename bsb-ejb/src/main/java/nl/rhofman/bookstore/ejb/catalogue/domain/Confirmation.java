@@ -1,9 +1,9 @@
 package nl.rhofman.bookstore.ejb.catalogue.domain;
 
 import nl.rhofman.bookstore.ejb.message.domain.DomainObject;
-import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.validate.domain.ValidationResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,12 +18,12 @@ public class Confirmation extends DomainObject {
     }
 
     private Confirmation(ConfirmationBuilder builder) {
-        super("BookStore", builder.receivedMessage.sender());
-        Message receivedMessage = builder.receivedMessage;
+        super("BookStore", builder.receivedObject.getSender());
+        DomainObject receivedObject = builder.receivedObject;
 
-        this.parentId = receivedMessage.getDomainObject().getId();
         this.messageID = UUID.randomUUID().toString();
-        this.correlationID = receivedMessage.messageID();
+        this.correlationID = receivedObject.getMessageID();
+        this.timestamp = LocalDateTime.now();
 
         List<ValidationResult> validationResults = builder.validationResults;
         this.successful = validationResults.isEmpty();
@@ -50,11 +50,11 @@ public class Confirmation extends DomainObject {
 
     public static class ConfirmationBuilder {
 
-        private Message receivedMessage;
+        private DomainObject receivedObject;
         private List<ValidationResult> validationResults;
 
-        public ConfirmationBuilder(Message receivedMessage) {
-            this.receivedMessage = receivedMessage;
+        public ConfirmationBuilder(DomainObject receivedObject) {
+            this.receivedObject = receivedObject;
         }
 
         public ConfirmationBuilder withValidationResults(List<ValidationResult> validationResults) {

@@ -154,6 +154,10 @@ public class BookService extends AbstractService {
         return execute(() -> bookRepository.findByIsbn(isbn), "Error searching a Book for the given ISBN");
     }
 
+    public Category findCategory(String name) {
+        return categoryService.findByName(name);
+    }
+
     /**
      * Keyword must exist in Title or Description
      * @param keyword

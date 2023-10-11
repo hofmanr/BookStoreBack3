@@ -12,6 +12,7 @@ public abstract class MessageBuilder {
     private JaxbService jaxbService;
     private AssemblerService assemblerService;
     private String direction;
+    private Long parentId;
 
     protected String xml;
     protected DomainObject domainObject;
@@ -24,9 +25,22 @@ public abstract class MessageBuilder {
         this.assemblerService = assemblerService;
     }
 
-    public abstract MessageBuilder withXml(String xml);
+    public MessageBuilder withXml(String xml) {
+        this.xml = xml;
+        this.domainObject = null;
+        return this;
+    }
 
-    public abstract MessageBuilder withDomainObject(DomainObject domainObject);
+    public MessageBuilder withDomainObject(DomainObject domainObject) {
+        this.domainObject = domainObject;
+        this.xml = null;
+        return this;
+    }
+
+    public MessageBuilder withReceivedMessage(Message receivedMessage) {
+        this.parentId = receivedMessage.parentID();
+        return this;
+    }
 
     protected abstract JAXBElement getJaxbElement(Object jaxbObject);
 
@@ -54,7 +68,7 @@ public abstract class MessageBuilder {
         // Transform to domain object
         DomainObject dto = assemblerService.toDomain(jaxbObject);
 
-        return new Message(direction, dto, xml);
+        return new Message(direction, dto, xml, parentId);
     }
 
     private Message dtoToMessage() {
@@ -63,7 +77,7 @@ public abstract class MessageBuilder {
         // Transform JAXB-object to (XML) string
         xml = jaxbService.marshall(getJaxbElement(jaxbObject));
 
-        return new Message(direction, domainObject, xml);
+        return new Message(direction, domainObject, xml, parentId);
     }
 
     private void validate() {
