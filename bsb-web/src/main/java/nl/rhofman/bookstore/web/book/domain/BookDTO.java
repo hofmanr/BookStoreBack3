@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @JsonbPropertyOrder({"id", "title", "description", "isbn", "authors", "publicationDate",
-"language", "nbOfPages", "category", "rank", "unitCost", "publisher", "imageUrl"})
+"language", "nrOfPages", "category", "rank", "unitCost", "publisher", "imageUrl"})
 public class BookDTO {
     private Long id;
 
@@ -31,7 +31,7 @@ public class BookDTO {
     @Past(message = "Publication Date should be in the past")
     private LocalDate publicationDate;
 
-    private Integer nbOfPages;
+    private Integer nrOfPages;
 
     @JsonbTypeAdapter(LanguageAdapter.class)
     private LanguageDTO language;
@@ -93,12 +93,12 @@ public class BookDTO {
         this.publicationDate = publicationDate;
     }
 
-    public Integer getNbOfPages() {
-        return nbOfPages;
+    public Integer getNrOfPages() {
+        return nrOfPages;
     }
 
-    public void setNbOfPages(Integer nbOfPages) {
-        this.nbOfPages = nbOfPages;
+    public void setNrOfPages(Integer nROfPages) {
+        this.nrOfPages = nrOfPages;
     }
 
     public LanguageDTO getLanguage() {

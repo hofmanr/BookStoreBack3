@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cat:catalogue xmlns:bok="http://www.bookstore.org/v1/Book" xmlns:cat="http://www.bookstore.org/v1/Catalogue" xmlns:hdr="http://www.bookstore.org/v1/Header" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bookstore.org/v1/Catalogue Catalogue.xsd ">
     <cat:header>
-        <hdr:sender>BookDelivero</hdr:sender>
+        <hdr:sender>BookDeliveroo</hdr:sender>
         <hdr:recipient>BookStore</hdr:recipient>
         <hdr:messageId>20230213203456854</hdr:messageId>
         <hdr:dateOfPreparation>2023-02-15</hdr:dateOfPreparation>
@@ -10,6 +10,7 @@
     <cat:books>
         <cat:book>
             <bok:title>Jakarta EE</bok:title>
+            <bok:description>All you need to know about Jakarta EE</bok:description>
             <bok:authors>
                 <bok:author>
                     <bok:lastName>Bien</bok:lastName>
@@ -18,9 +19,14 @@
             </bok:authors>
             <bok:language>EN</bok:language>
             <bok:unitCost>45.75</bok:unitCost>
+            <bok:nrOfPages>364</bok:nrOfPages>
+            <bok:publisher>Apress</bok:publisher>
+            <bok:category>Business</bok:category>
+            <bok:imageURL>https://m.media-amazon.com/images/I/410mEGY7PlL._SX348_BO1,204,203,200_.jpg</bok:imageURL>
         </cat:book>
         <cat:book>
             <bok:title>My First Book</bok:title>
+            <bok:description>Experimental book with no goal</bok:description>
             <bok:authors>
                 <bok:author>
                     <bok:lastName>Jones</bok:lastName>
@@ -29,6 +35,9 @@
             </bok:authors>
             <bok:language>EN</bok:language>
             <bok:unitCost>32.50</bok:unitCost>
+            <bok:nrOfPages>126</bok:nrOfPages>
+            <bok:publisher>Penguin Books</bok:publisher>
+            <bok:category>Non-fiction novel</bok:category>
         </cat:book>
     </cat:books>
 </cat:catalogue>

@@ -15,7 +15,7 @@ public class Book {
     private Integer nrOfPages;
     private String publisher;
     private String category;
-    private String imageURL;
+    private String imageUrl;
 
     public String getTitle() {
         return title;
@@ -97,12 +97,12 @@ public class Book {
         this.category = category;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -110,6 +110,8 @@ public class Book {
         return "Book{" +
                 "title='" + title + '\'' +
                 ", isbn='" + isbn + '\'' +
+                ", nrOfPages='" + nrOfPages + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", publicationDate=" + publicationDate +
                 ", publisher='" + publisher + '\'' +
                 '}';

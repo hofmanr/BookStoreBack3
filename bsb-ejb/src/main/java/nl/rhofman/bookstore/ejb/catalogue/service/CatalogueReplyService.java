@@ -56,7 +56,7 @@ public class CatalogueReplyService {
                 .withReceivedMessage(receivedMessage)
                 .build();
 
-        // Store the message // TODO message_parent_id is missing in table MessageMetadata
+        // Store the message
         messageService.persist(outgoingMessage);
 
         catalogueGateway.sendConfirmation(outgoingMessage);

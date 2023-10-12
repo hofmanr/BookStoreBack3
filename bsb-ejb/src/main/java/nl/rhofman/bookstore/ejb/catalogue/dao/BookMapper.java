@@ -2,8 +2,8 @@ package nl.rhofman.bookstore.ejb.catalogue.dao;
 
 import jakarta.inject.Inject;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Book;
-import nl.rhofman.bookstore.persist.model.Category;
-import nl.rhofman.bookstore.persist.service.BookService;
+import nl.rhofman.bookstore.persist.service.CategoryService;
+import nl.rhofman.bookstore.persist.service.PublisherService;
 import org.mapstruct.*;
 import org.mapstruct.MappingConstants.ComponentModel;
 
@@ -11,7 +11,10 @@ import org.mapstruct.MappingConstants.ComponentModel;
 public abstract class BookMapper {
 
     @Inject
-    private BookService bookService;
+    private CategoryService categoryService;
+
+    @Inject
+    private PublisherService publisherService;
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "publisher", ignore = true)
@@ -19,8 +22,13 @@ public abstract class BookMapper {
 
     @AfterMapping
     protected void mapOtherValues(@MappingTarget nl.rhofman.bookstore.persist.model.Book targetBook, Book sourceBook) {
-        Category category = bookService.findCategory("Business");
-        targetBook.setCategory(category);
+        if (sourceBook.getCategory() != null) {
+            targetBook.setCategory(categoryService.findByName(sourceBook.getCategory()));
+        }
+
+        if (sourceBook.getPublisher() != null) {
+            targetBook.setPublisher(publisherService.findByName(sourceBook.getPublisher()));
+        }
     }
 
 }

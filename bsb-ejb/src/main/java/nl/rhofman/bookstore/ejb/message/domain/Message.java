@@ -6,13 +6,12 @@ import nl.rhofman.bookstore.persist.model.Metadata;
 
 public class Message {
 
+    private Long id; // ID of the Xml Message (=ID in the Messages table)
+    private Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
     private String messageType;
     private final String direction;
     private final DomainObject domainObject;
     private final String xml;
-
-    private Long id; // ID of the Xml Message (=ID in the Messages table)
-    private Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
 
     /**
      * Is protected so only the MessageBuilder can use the constructor
@@ -75,6 +74,9 @@ public class Message {
         return id != null;
     }
 
+    public Long id() {
+        return id;
+    }
     public Long parentID() {
         return parentId;
     }

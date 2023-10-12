@@ -53,7 +53,7 @@ public class Book extends BaseEntityVersion {
     private Date publicationDate;
 
     @Column(name = "nr_of_pages")
-    private Integer nbOfPages;
+    private Integer nrOfPages;
 
     @Column(name = "language")
     // use LanguageConverter and not @Enumerated
@@ -80,12 +80,12 @@ public class Book extends BaseEntityVersion {
     public Book() {
     }
 
-    public Book(String isbn, String title, String description, Float unitCost, Integer nbOfPages, Language language, String imageUrl) {
+    public Book(String isbn, String title, String description, Float unitCost, Integer nrOfPages, Language language, String imageUrl) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
         this.unitCost = unitCost;
-        this.nbOfPages = nbOfPages;
+        this.nrOfPages = nrOfPages;
         this.language = language;
         this.imageUrl = imageUrl;
     }
@@ -142,12 +142,12 @@ public class Book extends BaseEntityVersion {
         this.isbn = isbn;
     }
 
-    public Integer getNbOfPages() {
-        return nbOfPages;
+    public Integer getNrOfPages() {
+        return nrOfPages;
     }
 
-    public void setNbOfPages(Integer nbOfPages) {
-        this.nbOfPages = nbOfPages;
+    public void setNrOfPages(Integer nrOfPages) {
+        this.nrOfPages = nrOfPages;
     }
 
     public Date getPublicationDate() {
@@ -246,8 +246,8 @@ public class Book extends BaseEntityVersion {
             result += ", unitCost: " + unitCost;
         if (isbn != null && !isbn.trim().isEmpty())
             result += ", isbn: " + isbn;
-        if (nbOfPages != null)
-            result += ", nbOfPage: " + nbOfPages;
+        if (nrOfPages != null)
+            result += ", nrOfPage: " + nrOfPages;
         if (publicationDate != null)
             result += ", publicationDate: " + publicationDate;
         if (language != null)

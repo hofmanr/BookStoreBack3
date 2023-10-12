@@ -38,7 +38,8 @@ public abstract class MessageBuilder {
     }
 
     public MessageBuilder withReceivedMessage(Message receivedMessage) {
-        this.parentId = receivedMessage.parentID();
+        // Only store the reference (ID) of the message in the database
+        this.parentId = receivedMessage.id();
         return this;
     }
 

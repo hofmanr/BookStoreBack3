@@ -20,7 +20,7 @@ public class ValidCatalogueService {
     @Inject
     private BookService bookService;
 
-    // Make it a CDI bean (inject persistent services for lookup Category and publishers)
+    // Make it a CDI bean (for injecting services for lookup Category and publishers)
     @Inject
     private BookMapper bookMapper;
 
@@ -35,7 +35,7 @@ public class ValidCatalogueService {
         Catalogue catalogue = message.getDomainObject();
         catalogue.getBooks().forEach(System.out::println);
 
-        // Process message // TODO
+        // Process message
         catalogue.getBooks().stream()
                 .map(bookMapper::mapToPersistentBook)
                 .forEach(bookService::create);
