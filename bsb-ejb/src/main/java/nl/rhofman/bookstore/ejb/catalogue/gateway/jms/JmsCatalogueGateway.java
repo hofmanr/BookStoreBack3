@@ -3,9 +3,10 @@ package nl.rhofman.bookstore.ejb.catalogue.gateway.jms;
 import jakarta.jms.JMSContext;
 import jakarta.jms.Queue;
 import nl.rhofman.bookstore.ejb.catalogue.gateway.CatalogueGateway;
+import nl.rhofman.bookstore.ejb.jms.AbstractJmsGateway;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
 
-public class JmsCatalogueGateway implements CatalogueGateway {
+public class JmsCatalogueGateway extends AbstractJmsGateway implements CatalogueGateway {
 
     private final Queue queue;
     private final JMSContext jmsContext;
@@ -17,7 +18,6 @@ public class JmsCatalogueGateway implements CatalogueGateway {
 
     @Override
     public void sendConfirmation(Message message) {
-        String xmlMessage = message.getXml();
-        jmsContext.createProducer().send(queue, jmsContext.createTextMessage(xmlMessage));
+        sendMessage(jmsContext, queue, message.getXml());
     }
 }
