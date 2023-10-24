@@ -1,12 +1,23 @@
-package nl.rhofman.bookstore.ejb.message.domain;
+package nl.rhofman.bookstore.ejb.message.dao;
 
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBElement;
+import nl.rhofman.bookstore.ejb.message.domain.*;
 import nl.rhofman.bookstore.ejb.xml.XmlUtil;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
 import nl.rhofman.bookstore.ejb.xml.service.JaxbService;
 import nl.rhofman.bookstore.ejb.xml.service.XmlValidationService;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 public abstract class MessageBuilder {
+
+    @Inject
+    @Any
+    Instance<JmsDomainObject> jmsDomainObjectInstances;
 
     private XmlValidationService xmlValidationService;
     private JaxbService jaxbService;
@@ -16,6 +27,7 @@ public abstract class MessageBuilder {
 
     protected String xml;
     protected DomainObject domainObject;
+    private Message receivedMessage;
 
     public MessageBuilder(XmlValidationService xmlValidationService,
                           JaxbService jaxbService,
@@ -67,18 +79,38 @@ public abstract class MessageBuilder {
         Object jaxbObject = jaxbService.unmarshall(messageType, xml);
 
         // Transform to domain object
-        DomainObject dto = assemblerService.toDomain(jaxbObject);
+        JmsDomainObject dto = assemblerService.toDomain(jaxbObject);
 
         return new Message(direction, dto, xml, parentId);
     }
 
     private Message dtoToMessage() {
+        Instance<JmsDomainObject> jmsDomainObjectInstance = jmsDomainObjectInstances.select(new DomainTypeLiteral(domainObject.getClass()));
+        JmsDomainObject dto = jmsDomainObjectInstance.get();
+        dto.setDomainObject(domainObject);
+        Header header = new Header();
+        if (receivedMessage != null) {
+            Header receivedMessageHeader = receivedMessage.header();
+            header.setSender("BookStore");
+            header.setRecipient(receivedMessageHeader.getSender());
+            header.setMessageID(UUID.randomUUID().toString());
+            header.setCorrelationID(receivedMessageHeader.getMessageID());
+            header.setTimestamp(LocalDateTime.now());
+
+            dto.withHeader(header);
+        }
+
         // Construct xml
-        Object jaxbObject = assemblerService.toMessage(domainObject);
+        Object jaxbObject = assemblerService.toMessage(dto);
         // Transform JAXB-object to (XML) string
         xml = jaxbService.marshall(getJaxbElement(jaxbObject));
 
-        return new Message(direction, domainObject, xml, parentId);
+        Message message = new Message(direction, dto, xml, parentId);
+
+        // Because of a memory issue in CDI:
+        jmsDomainObjectInstance.destroy(dto);
+
+        return message;
     }
 
     private void validate() {

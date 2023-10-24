@@ -8,6 +8,7 @@ public class Message {
 
     private Long id; // ID of the Xml Message (=ID in the Messages table)
     private Long parentId; // ID of the parent (incoming) Xml Message (=ID in the Messages table)
+    private Header header;
     private String messageType;
     private final String direction;
     private final DomainObject domainObject;
@@ -16,16 +17,18 @@ public class Message {
     /**
      * Is protected so only the MessageBuilder can use the constructor
      * @param direction
-     * @param domainObject
+     * @param jmsDomainObject
      * @param xml
+     * @param parentId
      */
-    protected Message(String direction, DomainObject domainObject, String xml, Long parentId) {
-        if (xml == null && domainObject == null) {
-            new NullPointerException("XMl and DomainObject and Direction must be present");
+    public Message(String direction, JmsDomainObject jmsDomainObject, String xml, Long parentId) {
+        if ((xml != null && jmsDomainObject == null) || (xml == null && jmsDomainObject != null)) {
+            new NullPointerException("XMl or DomainObject must be present");
         }
 
+        this.header = jmsDomainObject.hasHeader();
         this.direction = direction;
-        this.domainObject = domainObject;
+        this.domainObject = jmsDomainObject.getDomainObject();
         this.xml = xml;
         this.parentId = parentId;
 
@@ -51,7 +54,7 @@ public class Message {
         if (domainObject == null) {
             new NullPointerException("DomainObject is not present");
         }
-        return new MetadataBuilder(domainObject)
+        return new MetadataBuilder(header)
                 .withMessageId(id)
                 .withParentId(parentId)
                 .withMessageType(messageType)
@@ -79,5 +82,9 @@ public class Message {
     }
     public Long parentID() {
         return parentId;
+    }
+
+    public Header header() {
+        return header;
     }
 }

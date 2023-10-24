@@ -12,10 +12,6 @@ public class Catalogue extends DomainObject {
         super();
     }
 
-    public Catalogue(String sender, String recipient) {
-        super(sender, recipient);
-    }
-
     public List<Book> getBooks() {
         return books;
     }

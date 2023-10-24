@@ -2,13 +2,11 @@ package nl.rhofman.bookstore.ejb.catalogue.service;
 
 import jakarta.enterprise.event.Event;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Catalogue;
-import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
+import nl.rhofman.bookstore.ejb.catalogue.domain.JmsCatalogue;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
 import nl.rhofman.bookstore.ejb.message.domain.MessageStub;
 import nl.rhofman.bookstore.ejb.message.event.MessageReceived;
 import nl.rhofman.bookstore.ejb.message.service.MessageService;
-import nl.rhofman.bookstore.ejb.xml.Catalog;
-import nl.rhofman.bookstore.persist.model.XmlMessage;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +26,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CatalogueMessageServiceTest {
@@ -38,10 +35,6 @@ class CatalogueMessageServiceTest {
 
     @Mock
     MessageService messageService;
-
-    @Mock
-    @Catalog
-    MessageBuilder messageBuilder;
 
     @InjectMocks
     CatalogueMessageService catalogueMessageService;
@@ -61,15 +54,12 @@ class CatalogueMessageServiceTest {
         // Prepare
         Catalogue catalogue = new Catalogue();
         catalogue.setBooks(Collections.emptyList());
-        Message receivedMessage = new MessageStub("IN", catalogue, catalogueMessage);
-        when(messageBuilder.incoming()).thenReturn(messageBuilder);
-        when(messageBuilder.withXml(anyString())).thenReturn(messageBuilder);
-        when(messageBuilder.build()).thenReturn(receivedMessage);
-        XmlMessage storedXmlMessage = new XmlMessage();
-        storedXmlMessage.setId(1L);
+        JmsCatalogue jmsCatalogue = new JmsCatalogue();
+        jmsCatalogue.setDomainObject(catalogue);
+        Message receivedMessage = new MessageStub("IN", jmsCatalogue, catalogueMessage);
 
         // Execute
-        catalogueMessageService.processMessageReceived(catalogueMessage);
+        catalogueMessageService.processMessageReceived(receivedMessage);
 
         // Verify
         verify(messageService).persist(any(Message.class));
@@ -82,7 +72,5 @@ class CatalogueMessageServiceTest {
         assertThat(eventMessage.getDomainObject().getClass().getSimpleName(), is("Catalogue"));
         Catalogue messageCatalogue = eventMessage.getDomainObject();
         assertThat(messageCatalogue.getBooks().size(), is(0));
-//        Header messageHeader = eventMessage.getHeader();
-//        assertThat(messageHeader, hasToString(header.toString()));
     }
 }

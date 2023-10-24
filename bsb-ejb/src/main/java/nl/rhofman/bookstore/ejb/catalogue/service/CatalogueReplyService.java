@@ -8,7 +8,7 @@ import nl.rhofman.bookstore.ejb.catalogue.gateway.CatalogueGateway;
 import nl.rhofman.bookstore.ejb.catalogue.domain.Confirmation;
 import nl.rhofman.bookstore.ejb.message.domain.DomainType;
 import nl.rhofman.bookstore.ejb.message.domain.Message;
-import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
+import nl.rhofman.bookstore.ejb.message.dao.MessageBuilder;
 import nl.rhofman.bookstore.ejb.message.event.MessageProcessed;
 import nl.rhofman.bookstore.ejb.message.service.MessageService;
 import nl.rhofman.bookstore.ejb.validate.domain.Invalid;

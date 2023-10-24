@@ -1,20 +1,20 @@
 package nl.rhofman.bookstore.ejb.message.dao;
 
-import nl.rhofman.bookstore.ejb.message.domain.DomainObject;
+import nl.rhofman.bookstore.ejb.message.domain.Header;
 import nl.rhofman.bookstore.persist.model.Metadata;
 
 import java.time.LocalDateTime;
 
 public class MetadataBuilder {
-    private final DomainObject domainObject;
+    private final Header header;
     private Long messageId;
     private Long parentId;
     private String messageType;
     private String direction;
     private String orderNumber;
 
-    public MetadataBuilder(DomainObject domainObject) {
-        this.domainObject = domainObject;
+    public MetadataBuilder(Header header) {
+        this.header = header;
     }
 
     public MetadataBuilder withMessageId(Long messageId) {
@@ -43,8 +43,8 @@ public class MetadataBuilder {
     }
 
     private void validate() {
-        if (domainObject == null) {
-            throw new NullPointerException("DomainObject is missing");
+        if (header == null) {
+            throw new NullPointerException("Header info is missing");
         }
         if (messageId == null) {
             throw new NullPointerException("Message has no ID");
@@ -63,7 +63,7 @@ public class MetadataBuilder {
     public Metadata build() {
         validate();
         Metadata metadata = MetadataMapper.instance()
-                .mapToMessageMetadata(domainObject);
+                .mapToMessageMetadata(header);
         metadata.setMessageId(messageId);
         metadata.setParentId(parentId);
         metadata.setMessageType(messageType);

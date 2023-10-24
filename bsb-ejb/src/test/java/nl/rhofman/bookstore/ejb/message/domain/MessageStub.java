@@ -1,7 +1,7 @@
 package nl.rhofman.bookstore.ejb.message.domain;
 
 public class MessageStub extends Message {
-    public MessageStub(String direction, DomainObject domainObject, String xml) {
-        super(direction, domainObject, xml, null);
+    public MessageStub(String direction, JmsDomainObject jmsDomainObject, String xml) {
+        super(direction, jmsDomainObject, xml, null);
     }
 }

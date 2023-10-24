@@ -7,6 +7,18 @@
     <module-name>bsb-ejb</module-name>
     <display-name>Bookstore EJBs</display-name>
     <enterprise-beans>
+        <session>
+            <ejb-name>TimerEJB</ejb-name>
+            <ejb-class>nl.rhofman.bookstore.ejb.scheduler.facade.TimerBean</ejb-class>
+            <session-type>Singleton</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+        <session>
+            <ejb-name>SchedulerTimerServiceEJB</ejb-name>
+            <ejb-class>nl.rhofman.bookstore.ejb.scheduler.service.SchedulerTimerService</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
         <message-driven>
             <ejb-name>CatalogueMessageListener</ejb-name>
             <ejb-class>nl.rhofman.bookstore.ejb.catalogue.facade.CatalogueMessageListener</ejb-class>
@@ -33,6 +45,27 @@
                 <res-auth>Container</res-auth>
             </resource-ref>
         </message-driven>
+<!--        <message-driven>-->
+<!--            <ejb-name>JobTriggerListener</ejb-name>-->
+<!--            <ejb-class>nl.rhofman.bookstore.ejb.scheduler.facade.JobTriggerListener</ejb-class>-->
+<!--            <messaging-type>jakarta.jms.MessageListener</messaging-type>-->
+<!--            <transaction-type>Container</transaction-type>-->
+<!--            <message-destination-type>jakarta.jms.Queue</message-destination-type>-->
+<!--            <activation-config>-->
+<!--                <activation-config-property>-->
+<!--                    <activation-config-property-name>acknowledgeMode</activation-config-property-name>-->
+<!--                    <activation-config-property-value>Auto-acknowledge</activation-config-property-value>-->
+<!--                </activation-config-property>-->
+<!--                <activation-config-property>-->
+<!--                    <activation-config-property-name>subscriptionDurability</activation-config-property-name>-->
+<!--                    <activation-config-property-value>Durable</activation-config-property-value>-->
+<!--                </activation-config-property>-->
+<!--                <activation-config-property>-->
+<!--                    <activation-config-property-name>destinationType</activation-config-property-name>-->
+<!--                    <activation-config-property-value>jakarta.jms.Queue</activation-config-property-value>-->
+<!--                </activation-config-property>-->
+<!--            </activation-config>-->
+<!--        </message-driven>-->
     </enterprise-beans>
 
 </ejb-jar>

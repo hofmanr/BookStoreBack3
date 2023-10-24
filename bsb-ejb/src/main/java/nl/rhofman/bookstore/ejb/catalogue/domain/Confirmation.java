@@ -12,18 +12,11 @@ public class Confirmation extends DomainObject {
     private boolean successful;
     private String errorMessage;
 
-    public Confirmation(String sender, String recipient ) {
-        this.sender = sender;
-        this.recipient = recipient;
+    public Confirmation() {
     }
 
     private Confirmation(ConfirmationBuilder builder) {
-        super("BookStore", builder.receivedObject.getSender());
-        DomainObject receivedObject = builder.receivedObject;
-
-        this.messageID = UUID.randomUUID().toString();
-        this.correlationID = receivedObject.getMessageID();
-        this.timestamp = LocalDateTime.now();
+        super();
 
         List<ValidationResult> validationResults = builder.validationResults;
         this.successful = validationResults.isEmpty();

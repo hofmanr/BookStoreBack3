@@ -1,9 +1,9 @@
-package nl.rhofman.bookstore.ejb.catalogue.domain;
+package nl.rhofman.bookstore.ejb.catalogue.dao;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBElement;
-import nl.rhofman.bookstore.ejb.message.domain.MessageBuilder;
+import nl.rhofman.bookstore.ejb.message.dao.MessageBuilder;
 import nl.rhofman.bookstore.ejb.xml.Catalog;
 import nl.rhofman.bookstore.ejb.xml.service.AssemblerService;
 import nl.rhofman.bookstore.ejb.xml.service.JaxbService;
